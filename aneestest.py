@@ -12,7 +12,8 @@ def get_db_connection():
         password="Kk0551426772",
         
         host="localhost"
-    )
+    ) 
+
 
 # Sign-up Route
 @app.route("/signup", methods=["POST"])
@@ -58,6 +59,24 @@ def signin():
         return jsonify({"message": "Login successful", "user_id": user[0]}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
+# Home Page Route
+@app.route("/home", methods=["GET"])
+def home():
+    response = {  
+        
+        "choices": [
+            {"title": "Talk to Me", "description": "Chat for diagnosis"},
+            {"title": "Treatment", "description": "View recommended treatments"},
+            {"title": "Emergency", "description": "Get emergency help"}
+        ],
+        "navigation": [
+            "Home",
+            "Social Space",
+            "Progress Tracker",
+            "Profile"
+        ]
+    }
+    return jsonify(response), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
