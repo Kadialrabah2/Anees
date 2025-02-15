@@ -7,11 +7,11 @@ app = Flask(__name__)
 # Database connection
 def get_db_connection():
     return psycopg2.connect(
-        dbname="AneesTest",
-        user="postgres",
-        password="Kk0551426772",
+        dbname="aneesdatabase",
+        user="aneesdatabase_user",
+        password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
         
-        host="localhost"
+        host="dpg-cuob70l6l47c73cbtgqg-a"
     ) 
 
 
