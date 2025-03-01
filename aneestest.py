@@ -7,36 +7,47 @@ app = Flask(__name__)
 # Database connection
 def get_db_connection():
     return psycopg2.connect(
-        dbname="aneesdatabase",
+       dbname="aneesdatabase",
         user="aneesdatabase_user",
         password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
         
         host="dpg-cuob70l6l47c73cbtgqg-a"
     ) 
 
-
 # Sign-up Route
 @app.route("/signup", methods=["POST"])
 def signup():
-    data = request.json
+    data = request.get_json()  # Ensure request body is JSON
+    
+    if not data:
+        return jsonify({"error": "Invalid request format"}), 400
+
     username = data.get("username")
     password = data.get("password")
+    email = data.get("email")
 
-    if not username or not password:
-        return jsonify({"error": "Username and password are required"}), 400
+    if not username or not password or not email:
+        return jsonify({"error": "All fields are required"}), 400
+    
+    # Basic email format validation
+    if "@" not in email or "." not in email:
+        return jsonify({"error": "Invalid email format"}), 400
 
     hashed_password = generate_password_hash(password)
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_password))
+        cur.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)", 
+                    (username, hashed_password, email))
         conn.commit()
-        cur.close()
-        conn.close()
         return jsonify({"message": "User created successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        cur.close()
+        conn.close()
+
 
 # Sign-in Route
 @app.route("/signin", methods=["POST"])
