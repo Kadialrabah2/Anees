@@ -7,8 +7,8 @@ app = Flask(__name__)
 # Database connection
 def get_db_connection():
     return psycopg2.connect(
-       dbname="aneesdatabase",
-        user="aneesdatabase_user",
+       dbname="aneestest",
+        user="kadialrabah",
         password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
         
         host="dpg-cuob70l6l47c73cbtgqg-a"
@@ -70,6 +70,94 @@ def signin():
         return jsonify({"message": "Login successful", "user_id": user[0]}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
+    
+    # Helper function to generate a random reset token
+def generate_reset_token():
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=20))
+
+# Simulated function to send reset email (replace with actual email service)
+def send_reset_email(email, token):
+    reset_link = f"https://anees-rus4.onrender.com/reset_password/{token}"
+    print(f"Reset password link (send this to {email}): {reset_link}")
+
+    # Request Password Reset Route
+@app.route("/request_reset_password", methods=["POST"])
+def request_reset_password():
+    data = request.json
+    email = data.get("email")
+
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Check if the email exists
+        cur.execute("SELECT id FROM users WHERE email = %s", (email,))
+        user = cur.fetchone()
+
+        if user:
+            reset_token = generate_reset_token()
+
+            # Save the reset token in the database for this user
+            cur.execute(
+                "INSERT INTO password_reset_tokens (user_id, token) VALUES (%s, %s)", 
+                (user[0], reset_token)
+            )
+            conn.commit()
+
+            send_reset_email(email, reset_token)
+
+            cur.close()
+            conn.close()
+
+            return jsonify({"message": "Password reset email sent!"}), 200
+        else:
+            return jsonify({"error": "Email not found"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    # Reset Password Route
+@app.route("/reset_password/<token>", methods=["POST"])
+def reset_password(token):
+    data = request.json
+    new_password = data.get("new_password")
+
+    if not new_password:
+        return jsonify({"error": "New password is required"}), 400
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Get the user based on the reset token
+        cur.execute("SELECT user_id FROM password_reset_tokens WHERE token = %s", (token,))
+        user_token = cur.fetchone()
+
+        if user_token:
+            user_id = user_token[0]
+            hashed_password = generate_password_hash(new_password)
+
+            # Update the user's password
+            cur.execute("UPDATE users SET password = %s WHERE id = %s", (hashed_password, user_id))
+            conn.commit()
+
+            # Delete the used reset token
+            cur.execute("DELETE FROM password_reset_tokens WHERE token = %s", (token,))
+            conn.commit()
+
+            cur.close()
+            conn.close()
+
+            return jsonify({"message": "Password reset successfully!"}), 200
+        else:
+            return jsonify({"error": "Invalid or expired token"}), 400
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Home Page Route
 @app.route("/home", methods=["GET"])
 def home():
