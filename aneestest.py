@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 import random
 import string
 import psycopg2
@@ -6,8 +6,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from flask_session import Session
 
 app = Flask(__name__)
+
+# Configure session
+app.config["SECRET_KEY"] = "12345"
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 # Database connection
 def get_db_connection():
@@ -16,16 +22,16 @@ def get_db_connection():
         user="aneesdatabase_user",
         password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
         host="dpg-cuob70l6l47c73cbtgqg-a"
-    ) 
+    )
 
-# Helper function to generate a random 5-digit reset code
+# generate a random 5-digit reset code
 def generate_reset_code():
-    return ''.join(random.choices(string.digits, k=5))  # Generates a 5-digit number
+    return ''.join(random.choices(string.digits, k=5))
 
-# Function to send reset email using Gmail SMTP
+# send reset email using gmail smtp
 def send_reset_email(email, code):
-    sender_email = "aneeschatbot@gmail.com"  
-    sender_password = "ieax yvmp isgv bsqi"  
+    sender_email = "aneeschatbot@gmail.com"
+    sender_password = "ieax yvmp isgv bsqi"
 
     subject = "Password Reset Code"
     body = f"Your password reset code is: {code}"
@@ -34,20 +40,14 @@ def send_reset_email(email, code):
     msg['From'] = sender_email
     msg['To'] = email
     msg['Subject'] = subject
-
-    # Add the body to the email
     msg.attach(MIMEText(body, 'plain'))
 
-    # Create the SMTP session
     try:
         server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()  # Start TLS encryption
+        server.starttls()
         server.login(sender_email, sender_password)
-
-        # Send email
         server.sendmail(sender_email, email, msg.as_string())
-        server.quit()  # Terminate the session
-
+        server.quit()
         print(f"Reset code sent to {email}")
     except Exception as e:
         print(f"Error sending email: {e}")
@@ -56,7 +56,6 @@ def send_reset_email(email, code):
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
-    
     if not data:
         return jsonify({"error": "Invalid request format"}), 400
 
@@ -66,8 +65,7 @@ def signup():
 
     if not username or not password or not email:
         return jsonify({"error": "All fields are required"}), 400
-    
-    # Basic email format validation
+
     if "@" not in email or "." not in email:
         return jsonify({"error": "Invalid email format"}), 400
 
@@ -85,7 +83,6 @@ def signup():
     finally:
         cur.close()
         conn.close()
-
 
 # Sign-in Route
 @app.route("/signin", methods=["POST"])
@@ -105,110 +102,53 @@ def signin():
     conn.close()
 
     if user and check_password_hash(user[1], password):
-        return jsonify({"message": "Login successful", "user_id": user[0]}), 200
+        session["user_id"] = user[0]  # Store user ID in session
+        return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
 
-
-# Request Password Reset Route
-@app.route("/request_reset_password", methods=["POST"])
-def request_reset_password():
-    data = request.json
-    email = data.get("email")
-
-    if not email:
-        return jsonify({"error": "Email is required"}), 400
+# Emergency Contacts Route
+@app.route("/emergency", methods=["GET"])
+def get_emergency_contacts():
+    user_id = session.get("user_id")  # get user id from session
+    if not user_id:
+        return jsonify({"error": "User not authenticated"}), 401
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
+        cur.execute("SELECT name, phone FROM emergency_contacts WHERE user_id = %s", (user_id,))
+        contacts = cur.fetchall()
+        cur.close()
+        conn.close()
 
-        # Check if the email exists
-        cur.execute("SELECT id FROM users WHERE email = %s", (email,))
-        user = cur.fetchone()
-
-        if user:
-            reset_code = generate_reset_code()
-
-            # Save the reset code in the database
-            cur.execute(
-                "INSERT INTO password_reset_codes (user_id, code, expires_at) VALUES (%s, %s, NOW() + INTERVAL '10 minutes')", 
-                (user[0], reset_code)
-            )
-            conn.commit()
-
-            # Send the reset code via email
-            send_reset_email(email, reset_code)
-
-            cur.close()
-            conn.close()
-
-            return jsonify({"message": "Password reset email sent!"}), 200
-        else:
-            return jsonify({"error": "Email not found"}), 404
-
+        contacts = [{"name": row[0], "phone": row[1]} for row in contacts] if contacts else [{"name": "Father", "phone": "0000000"}]
+        return jsonify({"contacts": contacts, "mental_health_center": "https://ncmh.org.sa/"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Add Emergency Contact Route
+@app.route("/add_emergency_contact", methods=["POST"])
+def add_emergency_contact():
+    user_id = session.get("user_id")
+    data = request.get_json()
+    name = data.get("name")
+    phone = data.get("phone")
 
-# Reset Password Route
-@app.route("/reset_password/<code>", methods=["POST"])
-def reset_password(code):
-    data = request.json
-    new_password = data.get("new_password")
-
-    if not new_password:
-        return jsonify({"error": "New password is required"}), 400
+    if not user_id or not name or not phone:
+        return jsonify({"error": "Name and phone are required"}), 400
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-
-        # Get the user based on the reset code
-        cur.execute("SELECT user_id FROM password_reset_codes WHERE code = %s", (code,))
-        user_code = cur.fetchone()
-
-        if user_code:
-            user_id = user_code[0]
-            hashed_password = generate_password_hash(new_password)
-
-            # Update the user's password
-            cur.execute("UPDATE users SET password = %s WHERE id = %s", (hashed_password, user_id))
-            conn.commit()
-
-            # Delete the used reset code
-            cur.execute("DELETE FROM password_reset_codes WHERE code = %s", (code,))
-            conn.commit()
-
-            cur.close()
-            conn.close()
-
-            return jsonify({"message": "Password reset successfully!"}), 200
-        else:
-            return jsonify({"error": "Invalid or expired reset code"}), 400
-
+        cur.execute("INSERT INTO emergency_contacts (user_id, name, phone) VALUES (%s, %s, %s)",
+                    (user_id, name, phone))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return jsonify({"message": "Emergency contact added successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# Home Page Route
-@app.route("/home", methods=["GET"])
-def home():
-    response = {  
-        "choices": [
-            {"title": "Talk to Me", "description": "Chat for diagnosis"},
-            {"title": "Treatment", "description": "View recommended treatments"},
-            {"title": "Emergency", "description": "Get emergency help"}
-        ],
-        "navigation": [
-            "Home",
-            "Social Space",
-            "Progress Tracker",
-            "Profile"
-        ]
-    }
-    return jsonify(response), 200
-
 
 if __name__ == "__main__":
     app.run(debug=True)
