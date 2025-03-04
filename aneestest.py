@@ -3,23 +3,59 @@ import random
 import string
 import psycopg2
 from werkzeug.security import generate_password_hash, check_password_hash
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 
 # Database connection
 def get_db_connection():
     return psycopg2.connect(
-       dbname="aneesdatabase",
+        dbname="aneesdatabase",
         user="aneesdatabase_user",
         password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
-        
         host="dpg-cuob70l6l47c73cbtgqg-a"
     ) 
+
+# Helper function to generate a random 5-digit reset code
+def generate_reset_code():
+    return ''.join(random.choices(string.digits, k=5))  # Generates a 5-digit number
+
+# Function to send reset email using Gmail SMTP
+def send_reset_email(email, code):
+    sender_email = "aneeschatbot@gmail.com"  
+    sender_password = "ieax yvmp isgv bsqi"  
+
+    subject = "Password Reset Code"
+    body = f"Your password reset code is: {code}"
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = email
+    msg['Subject'] = subject
+
+    # Add the body to the email
+    msg.attach(MIMEText(body, 'plain'))
+
+    # Create the SMTP session
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()  # Start TLS encryption
+        server.login(sender_email, sender_password)
+
+        # Send email
+        server.sendmail(sender_email, email, msg.as_string())
+        server.quit()  # Terminate the session
+
+        print(f"Reset code sent to {email}")
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
 # Sign-up Route
 @app.route("/signup", methods=["POST"])
 def signup():
-    data = request.get_json()  # Ensure request body is JSON
+    data = request.get_json()
     
     if not data:
         return jsonify({"error": "Invalid request format"}), 400
@@ -72,17 +108,9 @@ def signin():
         return jsonify({"message": "Login successful", "user_id": user[0]}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
-    
-    # Helper function to generate a random reset token
-def generate_reset_token():
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=20))
 
-# Simulated function to send reset email (replace with actual email service)
-def send_reset_email(email, token):
-    reset_link = f"https://anees-rus4.onrender.com/reset_password/{token}"
-    print(f"Reset password link (send this to {email}): {reset_link}")
 
-    # Request Password Reset Route
+# Request Password Reset Route
 @app.route("/request_reset_password", methods=["POST"])
 def request_reset_password():
     data = request.json
@@ -100,16 +128,17 @@ def request_reset_password():
         user = cur.fetchone()
 
         if user:
-            reset_token = generate_reset_token()
+            reset_code = generate_reset_code()
 
-            # Save the reset token in the database for this user
+            # Save the reset code in the database
             cur.execute(
-                "INSERT INTO password_reset_tokens (user_id, token) VALUES (%s, %s)", 
-                (user[0], reset_token)
+                "INSERT INTO password_reset_codes (user_id, code, expires_at) VALUES (%s, %s, NOW() + INTERVAL '10 minutes')", 
+                (user[0], reset_code)
             )
             conn.commit()
 
-            send_reset_email(email, reset_token)
+            # Send the reset code via email
+            send_reset_email(email, reset_code)
 
             cur.close()
             conn.close()
@@ -120,10 +149,11 @@ def request_reset_password():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-    # Reset Password Route
-@app.route("/reset_password/<token>", methods=["POST"])
-def reset_password(token):
+
+
+# Reset Password Route
+@app.route("/reset_password/<code>", methods=["POST"])
+def reset_password(code):
     data = request.json
     new_password = data.get("new_password")
 
@@ -134,20 +164,20 @@ def reset_password(token):
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Get the user based on the reset token
-        cur.execute("SELECT user_id FROM password_reset_tokens WHERE token = %s", (token,))
-        user_token = cur.fetchone()
+        # Get the user based on the reset code
+        cur.execute("SELECT user_id FROM password_reset_codes WHERE code = %s", (code,))
+        user_code = cur.fetchone()
 
-        if user_token:
-            user_id = user_token[0]
+        if user_code:
+            user_id = user_code[0]
             hashed_password = generate_password_hash(new_password)
 
             # Update the user's password
             cur.execute("UPDATE users SET password = %s WHERE id = %s", (hashed_password, user_id))
             conn.commit()
 
-            # Delete the used reset token
-            cur.execute("DELETE FROM password_reset_tokens WHERE token = %s", (token,))
+            # Delete the used reset code
+            cur.execute("DELETE FROM password_reset_codes WHERE code = %s", (code,))
             conn.commit()
 
             cur.close()
@@ -155,16 +185,16 @@ def reset_password(token):
 
             return jsonify({"message": "Password reset successfully!"}), 200
         else:
-            return jsonify({"error": "Invalid or expired token"}), 400
+            return jsonify({"error": "Invalid or expired reset code"}), 400
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 # Home Page Route
 @app.route("/home", methods=["GET"])
 def home():
     response = {  
-        
         "choices": [
             {"title": "Talk to Me", "description": "Chat for diagnosis"},
             {"title": "Treatment", "description": "View recommended treatments"},
@@ -178,6 +208,7 @@ def home():
         ]
     }
     return jsonify(response), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
