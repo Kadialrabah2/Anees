@@ -313,5 +313,101 @@ def add_emergency_contact():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/search_users", methods=["GET"])
+def search_users():
+    search_term = request.args.get("username", "")
+
+    if not search_term:
+        return jsonify({"error": "Username is required"}), 400
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT id, username FROM users WHERE username LIKE %s", (f"%{search_term}%",))
+        users = cur.fetchall()
+
+        if not users:
+            return jsonify({"message": "No users found"}), 404
+        
+        user_list = [{"id": user[0], "username": user[1]} for user in users]
+        return jsonify(user_list), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cur.close()
+        conn.close()
+
+@app.route("/send_message", methods=["POST"])
+def send_message():
+    data = request.json
+    sender_id = data.get("sender_id")
+    receiver_id = data.get("receiver_id")
+    content = data.get("content")
+
+    if not sender_id or not receiver_id or not content:
+        return jsonify({"error": "Sender ID, receiver ID, and content are required"}), 400
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Insert the message into the database
+        cur.execute(
+            "INSERT INTO messages (sender_id, receiver_id, content) VALUES (%s, %s, %s)",
+            (sender_id, receiver_id, content)
+        )
+        conn.commit()
+        return jsonify({"message": "Message sent successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        cur.close()
+        conn.close()
+
+@app.route("/chat_history/<int:user_id>", methods=["GET"])
+def get_chat_history(user_id):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Get messages where the user is either the sender or receiver
+        cur.execute("""
+            SELECT sender_id, receiver_id, content, timestamp
+            FROM messages
+            WHERE sender_id = %s OR receiver_id = %s
+            ORDER BY timestamp ASC
+        """, (user_id, user_id))
+        messages = cur.fetchall()
+
+        if not messages:
+
+            return jsonify({"message": "No chat history found"}), 404
+        # Format the messages into a list of dictionaries
+        chat_history = [
+
+            {
+
+                "sender_id": message[0],
+
+                "receiver_id": message[1],
+
+                "content": message[2],
+
+                "timestamp": message[3].strftime("%Y-%m-%d %H:%M:%S")
+            }
+            for message in messages
+        ]
+        return jsonify(chat_history), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    finally:
+        cur.close()
+        conn.close()
+
 if __name__ == "__main__":
     app.run(debug=True)
