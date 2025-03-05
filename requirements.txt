@@ -2,13 +2,9 @@ Flask
 gunicorn
 psycopg2
 flask-session
-<<<<<<< HEAD
-
 langchain_groq 
 langchain_core 
 langchain_community
 pypdf
 chromadb
 sentence_transformers
-=======
->>>>>>> 0261cc61be54c8a5423f19382d2776e4ec941266
