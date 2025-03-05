@@ -84,7 +84,7 @@ def send_reset_email(email, code):
             <p>Hey buddy,</p>
             <p>Uh-oh! Did you forget your password? No worries, I got your back! 🎒</p>
             <p>Just enter this magic code in the app, and you'll be good to go:</p>
-            <p class="code">{generate_reset_code}</p>
+            <p class="code">{code}</p>
             <p>Hurry! it wont last forever</p>
             <p>Need help? I'm always here for you. 💙</p>
         <div class="footer">
@@ -96,7 +96,7 @@ def send_reset_email(email, code):
     </html>
     """
 
-    subject = "🔐 Your FriendBot Reset Code!"
+    subject = "🔐 Your Reset Code!"
     
 
     msg = MIMEMultipart()
