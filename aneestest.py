@@ -29,7 +29,7 @@ def generate_reset_code():
     return ''.join(random.choices(string.digits, k=5))
 
 # send reset email using gmail smtp
-def send_reset_email(email, reset_code):
+def send_reset_email(email,code):
     sender_email = "aneeschatbot@gmail.com"
     sender_password = "ieax yvmp isgv bsqi"
 
@@ -84,7 +84,7 @@ def send_reset_email(email, reset_code):
             <p>Hey buddy,</p>
             <p>Uh-oh! Did you forget your password? No worries, I got your back! 🎒</p>
             <p>Just enter this magic code in the app, and you'll be good to go:</p>
-            <p class="code">{reset_code}</p>
+            <p class="code">{code}</p>
             <p>Hurry! it wont last forever</p>
             <p>Need help? I'm always here for you. 💙</p>
         <div class="footer">
@@ -195,7 +195,7 @@ def reset_password(code):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-    
+
 # Sign-up Route
 @app.route("/signup", methods=["POST"])
 def signup():
