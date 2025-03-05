@@ -33,15 +33,78 @@ def send_reset_email(email, code):
     sender_email = "aneeschatbot@gmail.com"
     sender_password = "ieax yvmp isgv bsqi"
 
-    subject = "Password Reset Code"
-    body = f"Your password reset code is: {code}"
+ # HTML email content
+    html_content = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                padding: 20px;
+            }}
+            .container {{
+                background: #ffffff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                max-width: 500px;
+                margin: auto;
+                text-align: center;
+            }}
+            .logo {{
+                width: 100px;
+                margin-bottom: 20px;
+            }}
+            .button {{
+                display: inline-block;
+                background-color: #007BFF;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-top: 20px;
+            }}
+            .code {{
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+            }}
+            .footer {{
+                margin-top: 20px;
+                font-size: 12px;
+                color: #666;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <img class="logo" src="https://example.com/logo.png" alt="Company Logo">
+            <h2>Password Reset Request</h2>
+            <p>Hey buddy,</p>
+            <p>Uh-oh! Did you forget your password? No worries, I got your back! 🎒</p>
+            <p>Just enter this magic code in the app, and you'll be good to go:</p>
+            <p class="code">{generate_reset_code}</p>
+            <p>Hurry! it wont last forever</p>
+            <p>Need help? I'm always here for you. 💙</p>
+        <div class="footer">
+            <p>Your friendly bot 🤖</p>
+            <p>&copy; 2025 Anees. Always here for you! 🫂</p>
+        </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    subject = "🔐 Your FriendBot Reset Code!"
+    
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = email
     msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
-
+    msg.attach(MIMEText(html_content, 'html'))
+    
     try:
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
