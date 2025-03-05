@@ -2,3 +2,10 @@ Flask
 gunicorn
 psycopg2
 flask-session
+
+langchain_groq 
+langchain_core 
+langchain_community
+pypdf
+chromadb
+sentence_transformers
