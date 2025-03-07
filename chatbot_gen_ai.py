@@ -16,7 +16,10 @@ def initialize_llm():
   return llm
 
 def create_vector_db():
-  loader = DirectoryLoader("C:/Users/Layan/Downloads/Anees-main/Anees-main/data/", glob = '*.pdf', loader_cls = PyPDFLoader)
+
+  data_path = os.path.join(os.getcwd(), "data")  # Get the correct path
+  loader = DirectoryLoader(data_path, glob="*.pdf", loader_cls=PyPDFLoader)
+
   documents = loader.load()
   text_splitter = RecursiveCharacterTextSplitter(chunk_size = 500, chunk_overlap = 50)
   texts = text_splitter.split_documents(documents)
@@ -31,16 +34,16 @@ def create_vector_db():
 def setup_qa_chain(vector_db, llm):
   retriever = vector_db.as_retriever()
   memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
-  prompt_templates = """ You are a supportive and empathetic mental health chatbot.
+  prompt_templates = """ You are a supportive and empathetic mental health chatbot. 
 Your goal is to provide thoughtful, kind, and well-informed responses in the same language as the user's question.
 
-**Previous Conversation History:**
+**Previous Conversation History:** 
     {chat_history}
 
-**Context (What you know):**
+**Context (What you know):** 
 {context}
 
-**User Question:**
+**User Question:** 
 {question}
 
 **Chatbot Response (in the same language as the user’s input):** """
@@ -52,7 +55,7 @@ Your goal is to provide thoughtful, kind, and well-informed responses in the sam
         retriever=retriever,
         chain_type_kwargs={"prompt": PROMPT, "memory": memory}
     )
-
+    
   return qa_chain
 
 
