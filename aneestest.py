@@ -16,6 +16,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 
+
 app = Flask(__name__)
 
 # Configure session
@@ -258,61 +259,7 @@ def signin():
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
-
-#diagnosis gen ai chatbot
-app.secret_key = 'your_secret_key'
-
-def initialize_llm():
-    llm = ChatGroq(
-        temperature = 0,
-        groq_api_key = "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",
-        model_name = "llama-3.3-70b-versatile"
-    )
-    return llm
-
-def create_vector_db():
-    data_path = "path_to_your_data"
-    loader = DirectoryLoader(data_path, glob="*.pdf", loader_cls=PyPDFLoader)
-    documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size = 500, chunk_overlap = 50)
-    texts = text_splitter.split_documents(documents)
-    embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
-    vector_db = Chroma.from_documents(texts, embeddings, persist_directory='./chroma_db')
-    vector_db.persist()
-    return vector_db
-
-def setup_qa_chain(vector_db, llm):
-    # Retrieve user_id from session
-    user_id = session.get("user_id")
-    if not user_id:
-        return jsonify({"error": "User is not signed in!"}), 401  # Handle user not signed in
-
-    retriever = vector_db.as_retriever()
-    memory = ConversationBufferMemory(memory_key=f"chat_history_{user_id}", input_key="question")
-
-    prompt_templates = """ You are a supportive and empathetic mental health chatbot. 
-    Your goal is to provide thoughtful, kind, and well-informed responses in the same language as the user's question.
-
-    **Previous Conversation History:** 
-    {chat_history}
-
-    **Context (What you know):** 
-    {context}
-
-    **User Question:** 
-    {question}
-
-    **Chatbot Response (in the same language as the user’s input):** """
-    
-    PROMPT = PromptTemplate(template=prompt_templates, input_variables=['chat_history', 'context', 'question'])
-
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",
-        retriever=retriever,
-        chain_type_kwargs={"prompt": PROMPT, "memory": memory}
-    )
-    return qa_chain
+   
 
 @app.route("/chat", methods=["POST"])
 def chat():
