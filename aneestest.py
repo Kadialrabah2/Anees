@@ -15,7 +15,7 @@ from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
-
+import subprocess
 
 app = Flask(__name__)
 
@@ -255,7 +255,11 @@ def signin():
     conn.close()
 
     if user and check_password_hash(user[1], password):
-        session["user_id"] = user[0]  # Store user ID in session
+        #session["user_id"] = user[0]  # Store user ID in session
+        user_id = user[0] 
+        session["user_id"] = user_id
+        print(f"User {user_id} signed in.")
+        subprocess.Popen(["python", "chatbot_gen_ai.py", str(user_id)])
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401

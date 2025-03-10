@@ -7,6 +7,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 import os
+import sys
+import psycopg2
+
 def initialize_llm():
   llm = ChatGroq(
     temperature = 0,
@@ -58,8 +61,39 @@ Your goal is to provide thoughtful, kind, and well-informed responses in the sam
     
   return qa_chain
 
+def get_db_connection():
+    return psycopg2.connect(
+        dbname="aneesdatabase",
+        user="aneesdatabase_user",
+        password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
+        host="dpg-cuob70l6l47c73cbtgqg-a"
+    )
+
+def save_chat_to_db(user_id, message, role):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO chat_history (user_id, message, role) VALUES (%s, %s, %s)", (user_id, message, role))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def get_chat_history(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT message, role FROM chat_history WHERE user_id = %s ORDER BY timestamp", (user_id,))
+    history = cur.fetchall()
+    cur.close()
+    conn.close()
+    return history
+
 
 def main():
+  if len(sys.argv) < 2:
+      print("Error: No user ID provided.")
+      return
+
+  user_id = sys.argv[1]
+   
   print("Intializing Chatbot.........")
   llm = initialize_llm()
 
