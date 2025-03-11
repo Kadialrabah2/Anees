@@ -11,6 +11,12 @@ import sys
 import psycopg2
 import chromadb
 from chromadb.config import Settings
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, World!"
 
 # Initialize ChromaDB client
 client = chromadb.Client(Settings(persist_directory="./chroma_db"))
@@ -18,10 +24,11 @@ client = chromadb.Client(Settings(persist_directory="./chroma_db"))
 def get_db_connection():
     try:
         conn = psycopg2.connect(
-            dbname="aneesdatabase",
-            user="aneesdatabase_user",
-            password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
-            host="dpg-cuob70l6l47c73cbtgqg-a",
+            dbname="",
+            user="",
+            password="",
+            host="",
+            port=""
             
         )
         print("Database connection successful!")
