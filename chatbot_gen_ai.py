@@ -5,12 +5,60 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
+from psycopg2 import sql
 from langchain.memory import ConversationBufferMemory
 import os
 import sys
 import psycopg2
 import chromadb
-from chromadb.config import Settings
+from psycopg2 import sql
+
+DB_CONFIG = {
+    "dbname": "postgre_chatbot",
+    "user": "postgre_chatbot_user",
+    "password": "XhauYxUl4Y5eDSjVAthcSeU3Fe73LXLQ",
+    "host": "dpg-cv87b85umphs738beo80-a.oregon-postgres.render.com",
+    "port": "5432"
+}
+
+def save_message(user_id, message, role):
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        query = sql.SQL("""
+            INSERT INTO conversations (user_id, message, role)
+            VALUES (%s, %s, %s)
+        """)
+        cursor.execute(query, (user_id, message, role))
+        conn.commit()
+    except Exception as e:
+        print(f"Error saving message: {e}")
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+# Function to retrieve conversation history for a user
+def get_conversation_history(user_id, limit=10):
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        query = sql.SQL("""
+            SELECT role, message FROM conversations
+            WHERE user_id = %s
+            ORDER BY timestamp DESC
+            LIMIT %s
+        """)
+        cursor.execute(query, (user_id, limit))
+        rows = cursor.fetchall()
+        return rows
+    except Exception as e:
+        print(f"Error retrieving conversation history: {e}")
+        return []
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
 
 def initialize_llm():
   llm = ChatGroq(
@@ -39,7 +87,9 @@ def create_vector_db():
 def setup_qa_chain(vector_db, llm, user_id):
   retriever = vector_db.as_retriever()
   memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
-
+  chat_history = get_conversation_history(user_id)
+  for role, message in chat_history:
+      memory.save_context({"question": message}, {"output": message})
   prompt_templates = """ You are a supportive and empathetic mental health chatbot. 
 Your goal is to provide thoughtful, kind, and well-informed responses in the same language as the user's question.
 
@@ -88,9 +138,10 @@ def main():
     if query.lower() == "exit":
           print("Chatbot: Take care of yourself, goodbye!")
           break
-
+    save_message(user_id, query, "user")
     response = qa_chain.run(query)
     print(f"Chatbot: {response}")
+    save_message(user_id, response, "assistant")
 
 if __name__ == "__main__":
   main()
