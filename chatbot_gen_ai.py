@@ -11,69 +11,6 @@ import sys
 import psycopg2
 import chromadb
 from chromadb.config import Settings
-from flask import Flask
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Hello, World!"
-
-# Initialize ChromaDB client
-client = chromadb.Client(Settings(persist_directory="./chroma_db"))
-
-def get_db_connection():
-    try:
-        conn = psycopg2.connect(
-            dbname="",
-            user="",
-            password="",
-            host="",
-            port=""
-            
-        )
-        print("Database connection successful!")
-        return conn
-    except psycopg2.OperationalError as e:
-        print(f"OperationalError: {e}")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-    return None
-
-def save_chat_to_db(user_id, message, role):
-    conn = get_db_connection()
-    if conn is None:
-        print("Failed to connect to the database.")
-        return
-
-    try:
-        cur = conn.cursor()
-        cur.execute("INSERT INTO chat_history (user_id, message, role) VALUES (%s, %s, %s)", (user_id, message, role))
-        conn.commit()
-        print(f"Saved message: {message}, Role: {role}")
-    except Exception as e:
-        print(f"Error saving chat history: {e}")
-    finally:
-        cur.close()
-        conn.close()
-
-def get_chat_history(user_id):
-    conn = get_db_connection()
-    if conn is None:
-        print("Failed to connect to the database.")
-        return []
-
-    try:
-        cur = conn.cursor()
-        cur.execute("SELECT message, role FROM chat_history WHERE user_id = %s ORDER BY timestamp", (user_id,))
-        history = cur.fetchall()
-        print(f"Retrieved chat history: {history}")
-        return history
-    except Exception as e:
-        print(f"Error retrieving chat history: {e}")
-        return []
-    finally:
-        cur.close()
-        conn.close()
 
 def initialize_llm():
   llm = ChatGroq(
@@ -102,14 +39,6 @@ def create_vector_db():
 def setup_qa_chain(vector_db, llm, user_id):
   retriever = vector_db.as_retriever()
   memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
-  #Load chat history from PostgreSQL
-  chat_history = get_chat_history(user_id)
-  for message, role in chat_history:
-      if role == "user":
-          memory.chat_memory.add_user_message(message)
-      elif role == "bot":
-          memory.chat_memory.add_ai_message(message)
-
 
   prompt_templates = """ You are a supportive and empathetic mental health chatbot. 
 Your goal is to provide thoughtful, kind, and well-informed responses in the same language as the user's question.
@@ -155,15 +84,12 @@ def main():
   qa_chain = setup_qa_chain(vector_db, llm, user_id)
 
   while True:
-    query = input("\nHuman: ")
-    if query.lower()  == "exit":
-      print("Chatbot: Take Care of yourself, Goodbye!")
-      break
-    #get bot response
+    query = input(f"\nUser {user_id}: ") 
+    if query.lower() == "exit":
+          print("Chatbot: Take care of yourself, goodbye!")
+          break
+
     response = qa_chain.run(query)
-    #save conversation to database
-    save_chat_to_db(user_id, query, "user")
-    save_chat_to_db(user_id, response, "bot")
     print(f"Chatbot: {response}")
 
 if __name__ == "__main__":
