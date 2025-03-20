@@ -5,11 +5,16 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
+<<<<<<< HEAD
+=======
+from psycopg2 import sql
+>>>>>>> f2610ab7ecccb062ff3248fc78ff87b588ade233
 from langchain.memory import ConversationBufferMemory
 import os
 import sys
 import psycopg2
 import chromadb
+<<<<<<< HEAD
 from chromadb.config import Settings
 from flask import Flask
 app = Flask(__name__)
@@ -74,6 +79,56 @@ def get_chat_history(user_id):
     finally:
         cur.close()
         conn.close()
+=======
+from psycopg2 import sql
+
+DB_CONFIG = {
+    "dbname": "postgre_chatbot",
+    "user": "postgre_chatbot_user",
+    "password": "XhauYxUl4Y5eDSjVAthcSeU3Fe73LXLQ",
+    "host": "dpg-cv87b85umphs738beo80-a.oregon-postgres.render.com",
+    "port": "5432"
+}
+
+def save_message(user_id, message, role):
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        query = sql.SQL("""
+            INSERT INTO conversations (user_id, message, role)
+            VALUES (%s, %s, %s)
+        """)
+        cursor.execute(query, (user_id, message, role))
+        conn.commit()
+    except Exception as e:
+        print(f"Error saving message: {e}")
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+# Function to retrieve conversation history for a user
+def get_conversation_history(user_id, limit=10):
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        query = sql.SQL("""
+            SELECT role, message FROM conversations
+            WHERE user_id = %s
+            ORDER BY timestamp DESC
+            LIMIT %s
+        """)
+        cursor.execute(query, (user_id, limit))
+        rows = cursor.fetchall()
+        return rows
+    except Exception as e:
+        print(f"Error retrieving conversation history: {e}")
+        return []
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+>>>>>>> f2610ab7ecccb062ff3248fc78ff87b588ade233
 
 def initialize_llm():
   llm = ChatGroq(
@@ -102,6 +157,7 @@ def create_vector_db():
 def setup_qa_chain(vector_db, llm, user_id):
   retriever = vector_db.as_retriever()
   memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
+<<<<<<< HEAD
   #Load chat history from PostgreSQL
   chat_history = get_chat_history(user_id)
   for message, role in chat_history:
@@ -111,6 +167,11 @@ def setup_qa_chain(vector_db, llm, user_id):
           memory.chat_memory.add_ai_message(message)
 
 
+=======
+  chat_history = get_conversation_history(user_id)
+  for role, message in chat_history:
+      memory.save_context({"question": message}, {"output": message})
+>>>>>>> f2610ab7ecccb062ff3248fc78ff87b588ade233
   prompt_templates = """ You are a supportive and empathetic mental health chatbot. 
 Your goal is to provide thoughtful, kind, and well-informed responses in the same language as the user's question.
 
@@ -155,6 +216,7 @@ def main():
   qa_chain = setup_qa_chain(vector_db, llm, user_id)
 
   while True:
+<<<<<<< HEAD
     query = input("\nHuman: ")
     if query.lower()  == "exit":
       print("Chatbot: Take Care of yourself, Goodbye!")
@@ -165,6 +227,16 @@ def main():
     save_chat_to_db(user_id, query, "user")
     save_chat_to_db(user_id, response, "bot")
     print(f"Chatbot: {response}")
+=======
+    query = input(f"\nUser {user_id}: ") 
+    if query.lower() == "exit":
+          print("Chatbot: Take care of yourself, goodbye!")
+          break
+    save_message(user_id, query, "user")
+    response = qa_chain.run(query)
+    print(f"Chatbot: {response}")
+    save_message(user_id, response, "assistant")
+>>>>>>> f2610ab7ecccb062ff3248fc78ff87b588ade233
 
 if __name__ == "__main__":
   main()
