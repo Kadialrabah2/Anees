@@ -70,7 +70,7 @@ def initialize_llm():
 
 def create_vector_db():
 
-  data_path = os.path.join(os.getcwd(), "data/physical_activityDATA") 
+  data_path = os.path.join(os.getcwd(), "data/acceptance_commitmentDATA")  
   loader = DirectoryLoader(data_path, glob="*.pdf", loader_cls=PyPDFLoader)
 
   documents = loader.load()
@@ -90,21 +90,21 @@ def setup_qa_chain(vector_db, llm, user_id):
   chat_history = get_conversation_history(user_id)
   for role, message in chat_history:
       memory.save_context({"question": message}, {"output": message})
-  prompt_templates = """ You are an expert in the relationship between physical activity and mental health, specializing in how movement impacts emotional well-being.
-You provide evidence-based insights on how exercise reduces stress, improves mood, and enhances cognitive function.
+  prompt_templates = """ You are an expert in Acceptance and Commitment Therapy (ACT), helping individuals embrace their emotions and build psychological flexibility. 
+You use mindfulness, cognitive defusion, and value-based action strategies to help users manage difficult emotions and improve their quality of life.
 
 **Rules:
 - Always respond in the same language as the user's input.
 - Be concise but informative.
-- Provide practical exercise recommendations and mental health benefits.
+- Provide actionable mindfulness techniques and exercises.
 
-Previous Conversation History: 
+Previous Conversation History:
     {chat_history}
 
-Context: 
+Context:
 {context}
 
-User Question: 
+User Question:
 {question}
 
 Chatbot Response (in the same language as the user’s input): """
@@ -118,6 +118,7 @@ Chatbot Response (in the same language as the user’s input): """
     )
     
   return qa_chain
+
 def main():
   if len(sys.argv) < 2:
       print("Error: No user ID provided.")

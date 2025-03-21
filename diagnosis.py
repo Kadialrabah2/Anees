@@ -12,6 +12,17 @@ import sys
 import psycopg2
 import chromadb
 from psycopg2 import sql
+from datasets import load_dataset
+import re
+
+english_dataset = load_dataset("marmikpandya/mental-health",split="train")
+arabic_dataset = load_dataset("Ahmed-Selem/Shifaa_Arabic_Mental_Health_Consultations", split="train")
+qa_pairs = {}
+for row in english_dataset:
+    qa_pairs[row["input"]] = row["output"]
+
+for row in arabic_dataset:
+    qa_pairs[row["question"]] = row["answer"]
 
 DB_CONFIG = {
     "dbname": "postgre_chatbot",
@@ -23,7 +34,7 @@ DB_CONFIG = {
 
 def save_message(user_id, message, role):
     try:
-        conn = psycopg2.connect(DB_CONFIG)
+        conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
         query = sql.SQL("""
             INSERT INTO conversations (user_id, message, role)
@@ -38,8 +49,8 @@ def save_message(user_id, message, role):
             cursor.close()
             conn.close()
 
-# Function to retrieve conversation history for a user
-def get_conversation_history(user_id, limit=10):
+
+def get_conversation_history(user_id, limit=50):
     try:
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
@@ -70,7 +81,7 @@ def initialize_llm():
 
 def create_vector_db():
 
-  data_path = os.path.join(os.getcwd(), "data/physical_activityDATA") 
+  data_path = os.path.join(os.getcwd(), "data/diagnosisDATA")  
   loader = DirectoryLoader(data_path, glob="*.pdf", loader_cls=PyPDFLoader)
 
   documents = loader.load()
@@ -90,24 +101,22 @@ def setup_qa_chain(vector_db, llm, user_id):
   chat_history = get_conversation_history(user_id)
   for role, message in chat_history:
       memory.save_context({"question": message}, {"output": message})
-  prompt_templates = """ You are an expert in the relationship between physical activity and mental health, specializing in how movement impacts emotional well-being.
-You provide evidence-based insights on how exercise reduces stress, improves mood, and enhances cognitive function.
+  prompt_templates = """ You are a supportive mental health chatbot.
+Please provide empathetic and helpful responses to the user’s queries.
 
-**Rules:
+**Rules:**
 - Always respond in the same language as the user's input.
 - Be concise but informative.
-- Provide practical exercise recommendations and mental health benefits.
+- If relevant, provide self-care suggestions.
+- Do NOT give medical advice or diagnose.
 
-Previous Conversation History: 
-    {chat_history}
-
-Context: 
+**Context:** 
 {context}
 
-User Question: 
+**User Question:** 
 {question}
 
-Chatbot Response (in the same language as the user’s input): """
+**Chatbot Response:** """
   PROMPT = PromptTemplate(template=prompt_templates, input_variables=['chat_history', 'context', 'question'])
 
   qa_chain = RetrievalQA.from_chain_type(
@@ -118,6 +127,7 @@ Chatbot Response (in the same language as the user’s input): """
     )
     
   return qa_chain
+
 def main():
   if len(sys.argv) < 2:
       print("Error: No user ID provided.")
@@ -143,7 +153,14 @@ def main():
           print("Chatbot: Take care of yourself, goodbye!")
           break
     save_message(user_id, query, "user")
-    response = qa_chain.run(query)
+
+    for question, answer in qa_pairs.items():
+        if query.lower() in question.lower():
+            response = answer  # Use dataset answer
+            break
+    else:
+      response = qa_chain.run(query) # call AI
+
     if not response:
         response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
     print(f"Chatbot: {response}")

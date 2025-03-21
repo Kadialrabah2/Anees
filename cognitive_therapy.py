@@ -13,6 +13,7 @@ import psycopg2
 import chromadb
 from psycopg2 import sql
 
+
 DB_CONFIG = {
     "dbname": "postgre_chatbot",
     "user": "postgre_chatbot_user",
@@ -23,7 +24,7 @@ DB_CONFIG = {
 
 def save_message(user_id, message, role):
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
+        conn = psycopg2.connect(DB_CONFIG)
         cursor = conn.cursor()
         query = sql.SQL("""
             INSERT INTO conversations (user_id, message, role)
@@ -70,14 +71,19 @@ def initialize_llm():
 
 def create_vector_db():
 
-  data_path = os.path.join(os.getcwd(), "data")  # Get the correct path
+  data_path = os.path.join(os.getcwd(), "data/cognitive_therapyDATA")  
   loader = DirectoryLoader(data_path, glob="*.pdf", loader_cls=PyPDFLoader)
 
   documents = loader.load()
   text_splitter = RecursiveCharacterTextSplitter(chunk_size = 500, chunk_overlap = 50)
   texts = text_splitter.split_documents(documents)
   embeddings = HuggingFaceEmbeddings(model_name = 'sentence-transformers/all-MiniLM-L6-v2')
-  vector_db = Chroma.from_documents(texts, embeddings, persist_directory = './chroma_db')
+  vector_db = Chroma.from_documents(
+    texts, 
+    embeddings, 
+    persist_directory="./chroma_db",
+    collection_metadata={"hnsw:space": "cosine"}  # for fast searches
+)
   vector_db.persist()
 
   print("ChromaDB created and data saved")
@@ -90,19 +96,23 @@ def setup_qa_chain(vector_db, llm, user_id):
   chat_history = get_conversation_history(user_id)
   for role, message in chat_history:
       memory.save_context({"question": message}, {"output": message})
-  prompt_templates = """ You are a supportive and empathetic mental health chatbot. 
-Your goal is to provide thoughtful, kind, and well-informed responses in the same language as the user's question.
+  prompt_templates = """ You are an expert in Cognitive Therapy, specializing in helping individuals identify and challenge negative thought patterns to improve their mental well-being. 
+You use evidence-based techniques such as cognitive restructuring, thought reframing, and behavioral experiments to guide users toward healthier thinking.
 
-**Previous Conversation History:** 
+**Rules:
+- Always respond in the same language as the user's input.
+- Be concise but informative.
+- Provide practical strategies and exercises where relevant
+Previous Conversation History:
     {chat_history}
 
-**Context (What you know):** 
+Context:
 {context}
 
-**User Question:** 
+User Question:
 {question}
 
-**Chatbot Response (in the same language as the user’s input):** """
+Chatbot Response (in the same language as the user’s input): """
   PROMPT = PromptTemplate(template=prompt_templates, input_variables=['chat_history', 'context', 'question'])
 
   qa_chain = RetrievalQA.from_chain_type(
@@ -139,7 +149,16 @@ def main():
           print("Chatbot: Take care of yourself, goodbye!")
           break
     save_message(user_id, query, "user")
-    response = qa_chain.run(query)
+
+    for question, answer in qa_pairs.items():
+        if query.lower() in question.lower():
+            response = answer  # Use dataset answer
+            break
+    else:
+      response = qa_chain.run(query) # call AI
+
+    if not response:
+        response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
     print(f"Chatbot: {response}")
     save_message(user_id, response, "assistant")
 

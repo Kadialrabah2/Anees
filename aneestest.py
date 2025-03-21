@@ -259,7 +259,10 @@ def signin():
         user_id = user[0] 
         session["user_id"] = user_id
         print(f"User {user_id} signed in.")
-        subprocess.Popen(["python", "chatbot_gen_ai.py", str(user_id)])
+        subprocess.Popen(["python", "diagnosis.py", str(user_id)])
+        subprocess.Popen(["python", "cognitive_therapy.py", str(user_id)])
+        subprocess.Popen(["python", "acceptance_commitment.py", str(user_id)])
+        subprocess.Popen(["python", "physical_activity.py", str(user_id)])
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
