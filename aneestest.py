@@ -92,12 +92,12 @@ def send_reset_email(email,code):
             <h2>Password Reset Request</h2>
             <p>Hey buddy,</p>
             <p>Uh-oh! Did you forget your password? No worries, I got your back! 🎒</p>
-            <p>Just enter this magic code in the app, and you'll be good to go:</p>
+            <p>Just enter this code in the app, and you'll be good to go:</p>
             <p class="code">{code}</p>
             <p>Hurry! it wont last forever</p>
             <p>Need help? I'm always here for you. 💙</p>
         <div class="footer">
-            <p>Your friendly bot 🤖</p>
+            <p>Your friend 🤖</p>
             <p>&copy; 2025 Anees. Always here for you! 🫂</p>
         </div>
         </div>
@@ -356,7 +356,7 @@ def add_emergency_contact():
 @app.route("/search_users", methods=["GET"])
 def search_users():
     search_term = request.args.get("username", "")
-
+#https://anees-rus4.onrender.com/search_users?username=kadi
     if not search_term:
         return jsonify({"error": "Username is required"}), 400
 
@@ -385,6 +385,12 @@ def send_message():
     sender_id = data.get("sender_id")
     receiver_id = data.get("receiver_id")
     content = data.get("content")
+#https://anees-rus4.onrender.com/send_message
+#{
+#  "sender_id": 7,
+#  "receiver_id": 6,
+#  "content": "Hello, how are you?"
+#``}
 
     if not sender_id or not receiver_id or not content:
         return jsonify({"error": "Sender ID, receiver ID, and content are required"}), 400
