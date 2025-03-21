@@ -23,8 +23,9 @@ DB_CONFIG = {
 }
 
 def save_message(user_id, message, role):
+    conn = None
     try:
-        conn = psycopg2.connect(DB_CONFIG)
+        conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
         query = sql.SQL("""
             INSERT INTO conversations (user_id, message, role)
@@ -149,14 +150,7 @@ def main():
           print("Chatbot: Take care of yourself, goodbye!")
           break
     save_message(user_id, query, "user")
-
-    for question, answer in qa_pairs.items():
-        if query.lower() in question.lower():
-            response = answer  # Use dataset answer
-            break
-    else:
-      response = qa_chain.run(query) # call AI
-
+    response = qa_chain.run(query) # call AI
     if not response:
         response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
     print(f"Chatbot: {response}")

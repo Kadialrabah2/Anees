@@ -23,7 +23,7 @@ DB_CONFIG = {
 
 def save_message(user_id, message, role):
     try:
-        conn = psycopg2.connect(DB_CONFIG)
+        conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
         query = sql.SQL("""
             INSERT INTO conversations (user_id, message, role)
@@ -40,6 +40,7 @@ def save_message(user_id, message, role):
 
 # Function to retrieve conversation history for a user
 def get_conversation_history(user_id, limit=10):
+    conn = None
     try:
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()

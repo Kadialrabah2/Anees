@@ -22,8 +22,9 @@ DB_CONFIG = {
 }
 
 def save_message(user_id, message, role):
+    conn = None
     try:
-        conn = psycopg2.connect(DB_CONFIG)
+        conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
         query = sql.SQL("""
             INSERT INTO conversations (user_id, message, role)

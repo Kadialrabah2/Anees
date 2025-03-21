@@ -22,7 +22,7 @@ for row in english_dataset:
     qa_pairs[row["input"]] = row["output"]
 
 for row in arabic_dataset:
-    qa_pairs[row["question"]] = row["answer"]
+    qa_pairs[row["Question"]] = row["Answer"]
 
 DB_CONFIG = {
     "dbname": "postgre_chatbot",
