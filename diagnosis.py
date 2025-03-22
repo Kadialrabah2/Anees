@@ -12,17 +12,6 @@ import sys
 import psycopg2
 import chromadb
 from psycopg2 import sql
-from datasets import load_dataset
-import re
-
-english_dataset = load_dataset("marmikpandya/mental-health",split="train")
-arabic_dataset = load_dataset("Ahmed-Selem/Shifaa_Arabic_Mental_Health_Consultations", split="train")
-qa_pairs = {}
-for row in english_dataset:
-    qa_pairs[row["input"]] = row["output"]
-
-for row in arabic_dataset:
-    qa_pairs[row["Question"]] = row["Answer"]
 
 DB_CONFIG = {
     "dbname": "postgre_chatbot",
@@ -33,6 +22,7 @@ DB_CONFIG = {
 }
 
 def save_message(user_id, message, role):
+    conn = None
     try:
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
@@ -116,7 +106,7 @@ Please provide empathetic and helpful responses to the user’s queries.
 **User Question:** 
 {question}
 
-**Chatbot Response:** """
+**Chatbot Response (in the same language as the user’s input)** """
   PROMPT = PromptTemplate(template=prompt_templates, input_variables=['chat_history', 'context', 'question'])
 
   qa_chain = RetrievalQA.from_chain_type(
@@ -153,14 +143,7 @@ def main():
           print("Chatbot: Take care of yourself, goodbye!")
           break
     save_message(user_id, query, "user")
-
-    for question, answer in qa_pairs.items():
-        if query.lower() in question.lower():
-            response = answer  # Use dataset answer
-            break
-    else:
-      response = qa_chain.run(query) # call AI
-
+    response = qa_chain.run(query)
     if not response:
         response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
     print(f"Chatbot: {response}")
