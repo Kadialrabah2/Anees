@@ -14,17 +14,17 @@ import chromadb
 from psycopg2 import sql
 
 DB_CONFIG = {
-    "dbname": "postgre_chatbot",
-    "user": "postgre_chatbot_user",
-    "password": "XhauYxUl4Y5eDSjVAthcSeU3Fe73LXLQ",
-    "host": "dpg-cv87b85umphs738beo80-a.oregon-postgres.render.com",
+    "dbname": "neondb",
+    "user": "neondb_owner",
+    "password": "npg_5jbqJcQnrk7K",
+    "host": "ep-small-snowflake-a59tq9qy-pooler.us-east-2.aws.neon.tech",
     "port": "5432"
 }
-
 def save_message(user_id, message, role):
     conn = None
+    cursor = None
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
+        conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
         cursor = conn.cursor()
         query = sql.SQL("""
             INSERT INTO conversations (user_id, message, role)
@@ -35,14 +35,19 @@ def save_message(user_id, message, role):
     except Exception as e:
         print(f"Error saving message: {e}")
     finally:
-        if conn:
+      try:
+        if cursor:
             cursor.close()
+        if conn:
             conn.close()
+      except:
+        pass
+
 
 
 def get_conversation_history(user_id, limit=50):
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
+        conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
         cursor = conn.cursor()
         query = sql.SQL("""
             SELECT role, message FROM conversations
