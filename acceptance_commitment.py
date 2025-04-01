@@ -123,6 +123,7 @@ Chatbot Response (in the same language as the user’s input): """
     )
     
   return qa_chain
+
 def main():
   if len(sys.argv) < 2:
       print("Error: No user ID provided.")
@@ -152,7 +153,6 @@ def main():
     if not response:
         response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
     print(f"Chatbot: {response}")
-    save_message(user_id, response, "assistant")
 
 if __name__ == "__main__":
   main()

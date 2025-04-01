@@ -8,3 +8,4 @@ langchain_community
 pypdf
 chromadb
 sentence_transformers
+matplotlib

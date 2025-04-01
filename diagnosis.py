@@ -12,6 +12,7 @@ import sys
 import psycopg2
 import chromadb
 from psycopg2 import sql
+import matplotlib.pyplot as plt
 
 DB_CONFIG = {
     "dbname": "neondb",
@@ -42,8 +43,6 @@ def save_message(user_id, message, role):
             conn.close()
       except:
         pass
-
-
 
 def get_conversation_history(user_id, limit=50):
     try:
@@ -96,22 +95,27 @@ def setup_qa_chain(vector_db, llm, user_id):
   chat_history = get_conversation_history(user_id)
   for role, message in chat_history:
       memory.save_context({"question": message}, {"output": message})
-  prompt_templates = """ You are a supportive mental health chatbot.
-Please provide empathetic and helpful responses to the user’s queries.
+  prompt_templates = """ You are a mental health diagnostic support chatbot.
 
-**Rules:**
-- Always respond in the same language as the user's input.
-- Be concise but informative.
-- If relevant, provide self-care suggestions.
-- Do NOT give medical advice or diagnose.
+Your role is to help users by:
+- Gathering information about their mental health symptoms.
+- Identifying possible mental health conditions based on the information they provide.
+- Encouraging users to consult with licensed mental health professionals for an official diagnosis.
+- Avoiding giving direct medical advice, treatment plans, or therapeutic recommendations.
+- Avoiding mindfulness, breathing exercises, or self-care suggestions unless the user explicitly asks for them.
 
-**Context:** 
+Guidelines:
+- Be clear, informative, and respectful.
+- Only respond based on the information provided by the user.
+- Always respond in the same language as the user.
+- If unsure, politely ask the user to clarify their symptoms.
+
 {context}
 
-**User Question:** 
+User Question:
 {question}
 
-**Chatbot Response (in the same language as the user’s input)** """
+Chatbot Response: (in the same language as the user’s input)** """
   PROMPT = PromptTemplate(template=prompt_templates, input_variables=['chat_history', 'context', 'question'])
 
   qa_chain = RetrievalQA.from_chain_type(
@@ -122,6 +126,41 @@ Please provide empathetic and helpful responses to the user’s queries.
     )
     
   return qa_chain
+
+def calculate_mood_level(text):
+    stress_keywords = ["stress", "tension", "nervous", "anxiety"]
+    anxiety_keywords = ["anxious", "worry", "fear"]
+    panic_keywords = ["panic", "attack", "overwhelmed"]
+    loneliness_keywords = ["lonely", "isolated", "alone"]
+    burnout_keywords = ["burnout", "exhausted", "tired"]
+    depression_keywords = ["depressed", "down", "sad", "hopeless"]
+
+    stress_level = sum(word in text.lower() for word in stress_keywords) * 25
+    anxiety_level = sum(word in text.lower() for word in anxiety_keywords) * 25
+    panic_level = sum(word in text.lower() for word in panic_keywords) * 25
+    loneliness_level = sum(word in text.lower() for word in loneliness_keywords) * 25
+    burnout_level = sum(word in text.lower() for word in burnout_keywords) * 25
+    depression_level = sum(word in text.lower() for word in depression_keywords) * 25
+
+    return {
+        "stress_level": min(stress_level, 100),
+        "anxiety_level": min(anxiety_level, 100),
+        "panic_level": min(panic_level, 100),
+        "loneliness_level": min(loneliness_level, 100),
+        "burnout_level": min(burnout_level, 100),
+        "depression_level": min(depression_level, 100)
+    }
+
+def display_progress_bar(levels):
+    categories = ["Stress", "Anxiety", "Panic", "Loneliness", "Burnout", "Depression"]
+    values = [levels['stress_level'], levels['anxiety_level'], levels['panic_level'],
+              levels['loneliness_level'], levels['burnout_level'], levels['depression_level']]
+
+    plt.figure(figsize=(10, 6))
+    plt.barh(categories, values, color='lightblue')
+    plt.xlabel("Level")
+    plt.title("Mood Tracker")
+    plt.show()
 
 def main():
   if len(sys.argv) < 2:
@@ -141,17 +180,19 @@ def main():
     embeddings = HuggingFaceEmbeddings(model_name = 'sentence-transformers/all-MiniLM-L6-v2')
     vector_db = Chroma(persist_directory=db_path, embedding_function=embeddings)
   qa_chain = setup_qa_chain(vector_db, llm, user_id)
-
+  conversation = []
   while True:
     query = input(f"\nUser {user_id}: ") 
     if query.lower() == "exit":
           print("Chatbot: Take care of yourself, goodbye!")
           break
-    save_message(user_id, query, "user")
     response = qa_chain.run(query)
     if not response:
         response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
     print(f"Chatbot: {response}")
+    conversation.append(query)  # حفظ السؤال
+    mood_levels = calculate_mood_level(" ".join(conversation))  # تحليل المزاج بناءً على المحادثة
+    display_progress_bar(mood_levels)  # عرض التقدم بصريًا
     save_message(user_id, response, "assistant")
 
 if __name__ == "__main__":
