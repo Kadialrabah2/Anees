@@ -5,81 +5,13 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
-<<<<<<< HEAD
-=======
 from psycopg2 import sql
->>>>>>> f2610ab7ecccb062ff3248fc78ff87b588ade233
 from langchain.memory import ConversationBufferMemory
 import os
 import sys
 import psycopg2
 import chromadb
-<<<<<<< HEAD
-from chromadb.config import Settings
-from flask import Flask
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Hello, World!"
-
-# Initialize ChromaDB client
-client = chromadb.Client(Settings(persist_directory="./chroma_db"))
-
-def get_db_connection():
-    try:
-        conn = psycopg2.connect(
-            dbname="",
-            user="",
-            password="",
-            host="",
-            port=""
-            
-        )
-        print("Database connection successful!")
-        return conn
-    except psycopg2.OperationalError as e:
-        print(f"OperationalError: {e}")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-    return None
-
-def save_chat_to_db(user_id, message, role):
-    conn = get_db_connection()
-    if conn is None:
-        print("Failed to connect to the database.")
-        return
-
-    try:
-        cur = conn.cursor()
-        cur.execute("INSERT INTO chat_history (user_id, message, role) VALUES (%s, %s, %s)", (user_id, message, role))
-        conn.commit()
-        print(f"Saved message: {message}, Role: {role}")
-    except Exception as e:
-        print(f"Error saving chat history: {e}")
-    finally:
-        cur.close()
-        conn.close()
-
-def get_chat_history(user_id):
-    conn = get_db_connection()
-    if conn is None:
-        print("Failed to connect to the database.")
-        return []
-
-    try:
-        cur = conn.cursor()
-        cur.execute("SELECT message, role FROM chat_history WHERE user_id = %s ORDER BY timestamp", (user_id,))
-        history = cur.fetchall()
-        print(f"Retrieved chat history: {history}")
-        return history
-    except Exception as e:
-        print(f"Error retrieving chat history: {e}")
-        return []
-    finally:
-        cur.close()
-        conn.close()
-=======
+import matplotlib.pyplot as plt
 from psycopg2 import sql
 
 DB_CONFIG = {
@@ -128,7 +60,6 @@ def get_conversation_history(user_id, limit=10):
         if conn:
             cursor.close()
             conn.close()
->>>>>>> f2610ab7ecccb062ff3248fc78ff87b588ade233
 
 def initialize_llm():
   llm = ChatGroq(
@@ -157,21 +88,9 @@ def create_vector_db():
 def setup_qa_chain(vector_db, llm, user_id):
   retriever = vector_db.as_retriever()
   memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
-<<<<<<< HEAD
-  #Load chat history from PostgreSQL
-  chat_history = get_chat_history(user_id)
-  for message, role in chat_history:
-      if role == "user":
-          memory.chat_memory.add_user_message(message)
-      elif role == "bot":
-          memory.chat_memory.add_ai_message(message)
-
-
-=======
   chat_history = get_conversation_history(user_id)
   for role, message in chat_history:
       memory.save_context({"question": message}, {"output": message})
->>>>>>> f2610ab7ecccb062ff3248fc78ff87b588ade233
   prompt_templates = """ You are a supportive and empathetic mental health chatbot. 
 Your goal is to provide thoughtful, kind, and well-informed responses in the same language as the user's question.
 
@@ -196,6 +115,41 @@ Your goal is to provide thoughtful, kind, and well-informed responses in the sam
     
   return qa_chain
 
+def calculate_mood_level(text):
+    stress_keywords = ["stress", "tension", "nervous", "anxiety"]
+    anxiety_keywords = ["anxious", "worry", "fear"]
+    panic_keywords = ["panic", "attack", "overwhelmed"]
+    loneliness_keywords = ["lonely", "isolated", "alone"]
+    burnout_keywords = ["burnout", "exhausted", "tired"]
+    depression_keywords = ["depressed", "down", "sad", "hopeless"]
+
+    stress_level = sum(word in text.lower() for word in stress_keywords) * 25
+    anxiety_level = sum(word in text.lower() for word in anxiety_keywords) * 25
+    panic_level = sum(word in text.lower() for word in panic_keywords) * 25
+    loneliness_level = sum(word in text.lower() for word in loneliness_keywords) * 25
+    burnout_level = sum(word in text.lower() for word in burnout_keywords) * 25
+    depression_level = sum(word in text.lower() for word in depression_keywords) * 25
+
+    return {
+        "stress_level": min(stress_level, 100),
+        "anxiety_level": min(anxiety_level, 100),
+        "panic_level": min(panic_level, 100),
+        "loneliness_level": min(loneliness_level, 100),
+        "burnout_level": min(burnout_level, 100),
+        "depression_level": min(depression_level, 100)
+    }
+
+def display_progress_bar(levels):
+    categories = ["Stress", "Anxiety", "Panic", "Loneliness", "Burnout", "Depression"]
+    values = [levels['stress_level'], levels['anxiety_level'], levels['panic_level'],
+              levels['loneliness_level'], levels['burnout_level'], levels['depression_level']]
+
+    plt.figure(figsize=(10, 6))
+    plt.barh(categories, values, color='lightblue')
+    plt.xlabel("Level")
+    plt.title("Mood Tracker")
+    plt.show()
+
 def main():
   if len(sys.argv) < 2:
       print("Error: No user ID provided.")
@@ -216,18 +170,6 @@ def main():
   qa_chain = setup_qa_chain(vector_db, llm, user_id)
 
   while True:
-<<<<<<< HEAD
-    query = input("\nHuman: ")
-    if query.lower()  == "exit":
-      print("Chatbot: Take Care of yourself, Goodbye!")
-      break
-    #get bot response
-    response = qa_chain.run(query)
-    #save conversation to database
-    save_chat_to_db(user_id, query, "user")
-    save_chat_to_db(user_id, response, "bot")
-    print(f"Chatbot: {response}")
-=======
     query = input(f"\nUser {user_id}: ") 
     if query.lower() == "exit":
           print("Chatbot: Take care of yourself, goodbye!")
@@ -236,7 +178,21 @@ def main():
     response = qa_chain.run(query)
     print(f"Chatbot: {response}")
     save_message(user_id, response, "assistant")
->>>>>>> f2610ab7ecccb062ff3248fc78ff87b588ade233
+    conversation = []  # قائمة لتخزين المحادثات السابقة
+
+  while True:
+    query = input("\nHuman: ")
+    if query.lower() == "exit":
+        print("Chatbot: Take Care of yourself, Goodbye!")
+        break
+
+    response = qa_chain.run(query)
+    print(f"Chatbot: {response}")
+
+    conversation.append(query)  # حفظ السؤال
+    mood_levels = calculate_mood_level(" ".join(conversation))  # تحليل المزاج بناءً على المحادثة
+    display_progress_bar(mood_levels)  # عرض التقدم بصريًا
+
 
 if __name__ == "__main__":
   main()
