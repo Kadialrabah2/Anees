@@ -130,7 +130,7 @@ def main():
       return
 
   user_id = sys.argv[1]
-   
+  user_age = int(sys.argv[1]) 
   print(f"Initializing Chatbot for user: {user_id}")
   llm = initialize_llm()
 

@@ -249,24 +249,111 @@ def signin():
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, password FROM users WHERE username = %s", (username,))
+    cur.execute("SELECT id, password, age FROM users WHERE username = %s", (username,))
     user = cur.fetchone()
     cur.close()
     conn.close()
 
     if user and check_password_hash(user[1], password):
         #session["user_id"] = user[0]  # Store user ID in session
-        user_id = user[0] 
+        user_id = user[0]
+        user_age = user[2]
         session["user_id"] = user_id
         print(f"User {user_id} signed in.")
-        subprocess.Popen(["python", "diagnosis.py", str(user_id)])
-        subprocess.Popen(["python", "cognitive_therapy.py", str(user_id)])
-        subprocess.Popen(["python", "acceptance_commitment.py", str(user_id)])
-        subprocess.Popen(["python", "physical_activity.py", str(user_id)])
+        subprocess.Popen(["python", "diagnosis.py", str(user_id), str(user_age)])
+        subprocess.Popen(["python", "cognitive_therapy.py", str(user_id), str(user_age)])
+        subprocess.Popen(["python", "acceptance_commitment.py", str(user_id), str(user_age)])
+        subprocess.Popen(["python", "physical_activity.py", str(user_id), str(user_age)])
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
-   
+ #profile page  
+@app.route("/profile", methods=["GET"])
+def get_profile():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "User not authenticated"}), 401
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT username, age, email, bot_name, chat_password FROM users WHERE id = %s", (user_id,))
+        user = cur.fetchone()
+
+        cur.close()
+        conn.close()
+
+        if user:
+            return jsonify({
+                "username": user[0],
+                "age": user[1],
+                "email": user[2],
+                "bot_name": user[3],
+                "chat_password": user[4]
+            }), 200
+        else:
+            return jsonify({"error": "User not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+#update profile
+@app.route("/update_profile", methods=["POST"])
+def update_profile():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "User not authenticated"}), 401
+
+    data = request.json
+    username = data.get("username")
+    age = data.get("age")
+    email = data.get("email")
+    password = data.get("password")  # plaintext
+    bot_name = data.get("bot_name")
+    chat_password = data.get("chat_password")
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Only update fields that are provided
+        updates = []
+        values = []
+
+        if username:
+            updates.append("username = %s")
+            values.append(username)
+        if age:
+            updates.append("age = %s")
+            values.append(age)
+        if email:
+            updates.append("email = %s")
+            values.append(email)
+        if password:
+            hashed = generate_password_hash(password)
+            updates.append("password = %s")
+            values.append(hashed)
+        if bot_name:
+            updates.append("bot_name = %s")
+            values.append(bot_name)
+        if chat_password:
+            updates.append("chat_password = %s")
+            values.append(chat_password)
+
+        if not updates:
+            return jsonify({"message": "No fields to update"}), 400
+
+        update_query = f"UPDATE users SET {', '.join(updates)} WHERE id = %s"
+        values.append(user_id)
+
+        cur.execute(update_query, tuple(values))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify({"message": "Profile updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route("/chat", methods=["POST"])
 def chat():
