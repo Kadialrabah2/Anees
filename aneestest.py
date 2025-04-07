@@ -16,6 +16,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 import subprocess
+from flask import render_template
 
 app = Flask(__name__)
 
@@ -267,7 +268,7 @@ def signin():
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
- #profile page  
+#profile page  
 @app.route("/profile", methods=["GET"])
 def get_profile():
     user_id = session.get("user_id")
@@ -353,7 +354,12 @@ def update_profile():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    return render_template('profile.html')
 
+#new route to show the HTML profile page
+@app.route('/profile_page')
+def profile_page():
+    return render_template('profile.html')
 
 @app.route("/chat", methods=["POST"])
 def chat():
