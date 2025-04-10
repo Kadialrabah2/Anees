@@ -354,34 +354,37 @@ def update_profile():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    return render_template('profile.html')
+#TEEEEEEEEEEEESSSSSSSSSSSSSSSTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+@app.route("/profile_test", methods=["POST"])
+def get_profile_test():
+    data = request.get_json()
+    user_id = data.get("user_id")
 
-#new route to show the HTML profile page
-@app.route('/profile_page')
-def profile_page():
-    return render_template('profile.html')
+    if not user_id:
+        return jsonify({"error": "User ID is missing"}), 400
 
-@app.route("/chat", methods=["POST"])
-def chat():
-    if "user_id" not in session:
-        return jsonify({"error": "You must be signed in to chat!"}), 401
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT username, age, email, bot_name, chat_password FROM users WHERE id = %s", (user_id,))
+        user = cur.fetchone()
 
-    # Get query from user
-    query = request.json.get("query")
-    if not query:
-        return jsonify({"error": "Query is required"}), 400
+        cur.close()
+        conn.close()
 
-    # Initialize LLM and Vector DB
-    llm = initialize_llm()
-    vector_db = create_vector_db()
-    qa_chain = setup_qa_chain(vector_db, llm)
+        if user:
+            return jsonify({
+                "username": user[0],
+                "age": user[1],
+                "email": user[2],
+                "bot_name": user[3],
+                "chat_password": user[4]
+            }), 200
+        else:
+            return jsonify({"error": "User not found"}), 404
 
-    # Get the response
-    response = qa_chain.run(query)
-    return jsonify({"response": response})
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # Home Page Route
