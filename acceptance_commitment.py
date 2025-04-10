@@ -12,6 +12,7 @@ import sys
 import psycopg2
 import chromadb
 from psycopg2 import sql
+import time
 
 DB_CONFIG = {
     "dbname": "neondb",
@@ -123,7 +124,26 @@ Chatbot Response (in the same language as the user’s input): """
     )
     
   return qa_chain
-
+def get_latest_user_message(user_id):
+    try:
+        conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
+        cursor = conn.cursor()
+        query = sql.SQL("""
+            SELECT message FROM conversations
+            WHERE user_id = %s AND role = 'user'
+            ORDER BY timestamp DESC
+            LIMIT 1
+        """)
+        cursor.execute(query, (user_id,))
+        result = cursor.fetchone()
+        return result[0] if result else None
+    except Exception as e:
+        print(f"Error checking new message: {e}")
+        return None
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
 def main():
   if len(sys.argv) < 2:
       print("Error: No user ID provided.")
@@ -142,17 +162,18 @@ def main():
     embeddings = HuggingFaceEmbeddings(model_name = 'sentence-transformers/all-MiniLM-L6-v2')
     vector_db = Chroma(persist_directory=db_path, embedding_function=embeddings)
   qa_chain = setup_qa_chain(vector_db, llm, user_id)
+  last_seen = None
 
   while True:
-    query = input(f"\nUser {user_id}: ") 
-    if query.lower() == "exit":
-          print("Chatbot: Take care of yourself, goodbye!")
-          break
-    save_message(user_id, query, "user")
-    response = qa_chain.run(query)
-    if not response:
-        response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
-    print(f"Chatbot: {response}")
+    message = get_latest_user_message(user_id)
+    if message and message != last_seen:
+        print(f"New message from {user_id}: {message}")
+        response = qa_chain.run(message)
+        save_message(user_id, message, "user")
+        save_message(user_id, response, "assistant")
+        print(f"Bot: {response}")
+        last_seen = message
+    time.sleep(5)
 
 if __name__ == "__main__":
   main()
