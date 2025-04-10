@@ -11,8 +11,9 @@ from psycopg2 import sql
 import os
 import psycopg2
 import chromadb
+from flask import Blueprint
 
-app = Flask(__name__)
+acceptance_bp = Blueprint('acceptance', __name__)
 
 DB_CONFIG = {
     "dbname": "neondb",
@@ -122,7 +123,7 @@ Chatbot Response (in the same language as the user’s input): """
     )
     return qa_chain
 
-@app.route("/acceptance_commitment", methods=["POST"])
+@acceptance_bp.route("/acceptance_commitment", methods=["POST"])
 def chat():
     data = request.get_json()
     user_id = str(data.get("user_id"))
