@@ -354,38 +354,6 @@ def update_profile():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-#TEEEEEEEEEEEESSSSSSSSSSSSSSSTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-@app.route("/profile_test", methods=["POST"])
-def get_profile_test():
-    data = request.get_json()
-    user_id = data.get("user_id")
-
-    if not user_id:
-        return jsonify({"error": "User ID is missing"}), 400
-
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT username, age, email, bot_name, chat_password FROM users WHERE id = %s", (user_id,))
-        user = cur.fetchone()
-
-        cur.close()
-        conn.close()
-
-        if user:
-            return jsonify({
-                "username": user[0],
-                "age": user[1],
-                "email": user[2],
-                "bot_name": user[3],
-                "chat_password": user[4]
-            }), 200
-        else:
-            return jsonify({"error": "User not found"}), 404
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 
 # Home Page Route
 @app.route("/home", methods=["GET"])
