@@ -132,8 +132,8 @@ def chat():
     if not user_id or not message:
         return jsonify({"error": "Missing user_id or message"}), 400
 
-    llm = initialize_llm()
-    vector_db = create_or_load_vector_db()
+    #llm = initialize_llm()
+    #vector_db = create_or_load_vector_db()
     qa_chain = setup_qa_chain(vector_db, llm, user_id)
 
     response = qa_chain.run(message)
