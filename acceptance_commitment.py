@@ -122,7 +122,8 @@ Chatbot Response (in the same language as the user’s input): """
         chain_type_kwargs={"prompt": PROMPT, "memory": memory}
     )
     return qa_chain
-
+llm = initialize_llm()
+vector_db = create_or_load_vector_db()
 @acceptance_bp.route("/acceptance_commitment", methods=["POST"])
 def chat():
     data = request.get_json()
@@ -132,8 +133,6 @@ def chat():
     if not user_id or not message:
         return jsonify({"error": "Missing user_id or message"}), 400
 
-    #llm = initialize_llm()
-    #vector_db = create_or_load_vector_db()
     qa_chain = setup_qa_chain(vector_db, llm, user_id)
 
     response = qa_chain.run(message)
