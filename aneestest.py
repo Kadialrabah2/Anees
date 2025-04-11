@@ -16,9 +16,11 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 import subprocess
+from flask import render_template
+from acceptance_commitment import acceptance_bp
 
 app = Flask(__name__)
-
+app.register_blueprint(acceptance_bp)
 # Configure session
 app.config["SECRET_KEY"] = "12345"
 app.config["SESSION_TYPE"] = "filesystem"
@@ -249,45 +251,142 @@ def signin():
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, password FROM users WHERE username = %s", (username,))
+    cur.execute("SELECT id, password, age FROM users WHERE username = %s", (username,))
     user = cur.fetchone()
     cur.close()
     conn.close()
 
     if user and check_password_hash(user[1], password):
         #session["user_id"] = user[0]  # Store user ID in session
-        user_id = user[0] 
+        user_id = user[0]
+        user_age = user[2]
         session["user_id"] = user_id
         print(f"User {user_id} signed in.")
-        subprocess.Popen(["python", "chatbot_gen_ai.py", str(user_id)])
+        subprocess.Popen(["python", "diagnosis.py", str(user_id), str(user_age)])
+        subprocess.Popen(["python", "cognitive_therapy.py", str(user_id), str(user_age)])
+        subprocess.Popen(["python", "acceptance_commitment.py", str(user_id), str(user_age)])
+        subprocess.Popen(["python", "physical_activity.py", str(user_id), str(user_age)])
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
-   
+#profile page  
+@app.route("/profile", methods=["GET"])
+def get_profile():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "User not authenticated"}), 401
 
-@app.route("/chat", methods=["POST"])
-def chat():
-    if "user_id" not in session:
-        return jsonify({"error": "You must be signed in to chat!"}), 401
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT username, age, email, bot_name, chat_password FROM users WHERE id = %s", (user_id,))
+        user = cur.fetchone()
 
-    # Get query from user
-    query = request.json.get("query")
-    if not query:
-        return jsonify({"error": "Query is required"}), 400
+        cur.close()
+        conn.close()
 
-    # Initialize LLM and Vector DB
-    llm = initialize_llm()
-    vector_db = create_vector_db()
-    qa_chain = setup_qa_chain(vector_db, llm)
+        if user:
+            return jsonify({
+                "username": user[0],
+                "age": user[1],
+                "email": user[2],
+                "bot_name": user[3],
+                "chat_password": user[4]
+            }), 200
+        else:
+            return jsonify({"error": "User not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+#update profile
+@app.route("/update_profile", methods=["POST"])
+def update_profile():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "User not authenticated"}), 401
 
-    # Get the response
-    response = qa_chain.run(query)
-    return jsonify({"response": response})
+    data = request.json
+    username = data.get("username")
+    age = data.get("age")
+    email = data.get("email")
+    password = data.get("password")  # plaintext
+    bot_name = data.get("bot_name")
+    chat_password = data.get("chat_password")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
 
+        # Only update fields that are provided
+        updates = []
+        values = []
 
+        if username:
+            updates.append("username = %s")
+            values.append(username)
+        if age:
+            updates.append("age = %s")
+            values.append(age)
+        if email:
+            updates.append("email = %s")
+            values.append(email)
+        if password:
+            hashed = generate_password_hash(password)
+            updates.append("password = %s")
+            values.append(hashed)
+        if bot_name:
+            updates.append("bot_name = %s")
+            values.append(bot_name)
+        if chat_password:
+            updates.append("chat_password = %s")
+            values.append(chat_password)
+
+        if not updates:
+            return jsonify({"message": "No fields to update"}), 400
+
+        update_query = f"UPDATE users SET {', '.join(updates)} WHERE id = %s"
+        values.append(user_id)
+
+        cur.execute(update_query, tuple(values))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify({"message": "Profile updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+#chat password page
+@app.route("/chat_password", methods=["POST"])
+def verify_chat_password():
+    user_id = session.get("user_id")  # Use session to get current user
+
+    if not user_id:
+        return jsonify({"error": "User not authenticated"}), 401
+
+    data = request.get_json()
+    entered_password = data.get("chat_password")
+
+    if not entered_password or len(entered_password) != 6:
+        return jsonify({"error": "Invalid password format"}), 400
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute("SELECT chat_password FROM users WHERE id = %s", (user_id,))
+        result = cur.fetchone()
+
+        cur.close()
+        conn.close()
+
+        if result and result[0] == entered_password:
+            return jsonify({"message": "Password verified successfully"}), 200
+        else:
+            return jsonify({"error": "Incorrect chat password"}), 403
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 # Home Page Route
 @app.route("/home", methods=["GET"])
 def home():
@@ -451,6 +550,5 @@ def get_chat_history(user_id):
     finally:
         cur.close()
         conn.close()
-
 if __name__ == "__main__":
     app.run(debug=True)
