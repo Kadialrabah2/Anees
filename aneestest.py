@@ -17,10 +17,8 @@ from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 import subprocess
 from flask import render_template
-from acceptance_commitment import acceptance_bp
 
 app = Flask(__name__)
-app.register_blueprint(acceptance_bp)
 # Configure session
 app.config["SECRET_KEY"] = "12345"
 app.config["SESSION_TYPE"] = "filesystem"
