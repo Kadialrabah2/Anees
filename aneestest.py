@@ -243,23 +243,28 @@ def signup():
 @app.route("/signin", methods=["POST"])
 def signin():
     data = request.json
-    username = data.get("username")
+    username_or_email = data.get("username")  # This could be email or username
     password = data.get("password")
 
-    if not username or not password:
+    if not username_or_email or not password:
         return jsonify({"error": "Username and password are required"}), 400
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, password, age FROM users WHERE username = %s", (username,))
+
+    # Check if it's an email or username and adjust the query accordingly
+    if "@" in username_or_email:  # Assuming email contains "@"
+        cur.execute("SELECT id, password FROM users WHERE email = %s", (username_or_email,))
+    else:
+        cur.execute("SELECT id, password FROM users WHERE username = %s", (username_or_email,))
+   
     user = cur.fetchone()
     cur.close()
     conn.close()
 
     if user and check_password_hash(user[1], password):
-        #session["user_id"] = user[0]  # Store user ID in session
+        # session["user_id"] = user[0]  # Store user ID in session
         user_id = user[0]
-        user_age = user[2]
         session["user_id"] = user_id
         print(f"User {user_id} signed in.")
         subprocess.Popen(["python", "diagnosis.py", str(user_id), str(user_age)])
@@ -269,6 +274,7 @@ def signin():
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
+
 #profile page  
 @app.route("/profile", methods=["GET"])
 def get_profile():
