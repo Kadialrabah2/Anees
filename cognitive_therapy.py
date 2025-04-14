@@ -1,4 +1,4 @@
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
@@ -134,7 +134,6 @@ def main():
       return
 
   user_id = sys.argv[1]
-  user_age = int(sys.argv[1])
    
   print(f"Initializing Chatbot for user: {user_id}")
   llm = initialize_llm()
