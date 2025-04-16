@@ -128,12 +128,12 @@ Chatbot Response: (in the same language as the user’s input)** """
   return qa_chain
 
 def calculate_mood_level(text):
-    stress_keywords = ["stress", "tension", "nervous", "anxiety"]
-    anxiety_keywords = ["anxious", "worry", "fear"]
-    panic_keywords = ["panic", "attack", "overwhelmed"]
-    loneliness_keywords = ["lonely", "isolated", "alone"]
-    burnout_keywords = ["burnout", "exhausted", "tired"]
-    depression_keywords = ["depressed", "down", "sad", "hopeless"]
+    stress_keywords = ["stress", "tension", "nervous", "anxiety","الإجهاد", "التوتر", "العصبية", "القلق"]
+    anxiety_keywords = ["anxious", "worry", "fear","قلق", "خوف"]
+    panic_keywords = ["panic", "attack", "overwhelmed","ذعر","هجوم", "مُثقل"]
+    loneliness_keywords = ["lonely", "isolated", "alone","وحيد"و "منعزل"و "وحده"]
+    burnout_keywords = ["burnout", "exhausted", "tired","الإرهاق", "التعب"]
+    depression_keywords = ["depressed", "down", "sad", "hopeless","مكتئب", "حزين", "يائس"]
 
     stress_level = sum(word in text.lower() for word in stress_keywords) * 25
     anxiety_level = sum(word in text.lower() for word in anxiety_keywords) * 25
@@ -193,8 +193,10 @@ def main():
     print(f"Chatbot: {response}")
     conversation.append(query)  # حفظ السؤال
     mood_levels = calculate_mood_level(" ".join(conversation))  # تحليل المزاج بناءً على المحادثة
-    display_progress_bar(mood_levels)  # عرض التقدم بصريًا
     save_message(user_id, response, "assistant")
+
+  display_progress_bar(mood_levels)  # عرض التقدم بصريًا
+
 
 if __name__ == "__main__":
   main()
