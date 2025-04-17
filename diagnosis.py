@@ -151,17 +151,6 @@ def calculate_mood_level(text):
         "depression_level": min(depression_level, 100)
     }
 
-def display_progress_bar(levels):
-    categories = ["Stress", "Anxiety", "Panic", "Loneliness", "Burnout", "Depression"]
-    values = [levels['stress_level'], levels['anxiety_level'], levels['panic_level'],
-              levels['loneliness_level'], levels['burnout_level'], levels['depression_level']]
-
-    plt.figure(figsize=(10, 6))
-    plt.barh(categories, values, color='lightblue')
-    plt.xlabel("Level")
-    plt.title("Mood Tracker")
-    plt.show()
-
 def main():
   if len(sys.argv) < 2:
       print("Error: No user ID provided.")
@@ -192,10 +181,8 @@ def main():
         response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
     print(f"Chatbot: {response}")
     conversation.append(query)  # حفظ السؤال
-    mood_levels = calculate_mood_level(" ".join(conversation))  # تحليل المزاج بناءً على المحادثة
     save_message(user_id, response, "assistant")
-
-  display_progress_bar(mood_levels)  # عرض التقدم بصريًا
+  mood_levels = calculate_mood_level(" ".join(conversation))  # تحليل المزاج بناءً على المحادثة
 
 
 if __name__ == "__main__":
