@@ -1,0 +1,1 @@
+ C:\\Users\\Layan\\OneDrive\\Desktop\\GP2\\Anees2\\Anees\\.dart_tool\\flutter_build\\ca92734566c142466792db5d78bb79c2\\native_assets.yaml: 
