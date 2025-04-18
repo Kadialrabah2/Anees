@@ -43,7 +43,7 @@ llm = ChatGroq(
     model_name="llama-3.3-70b-versatile"
 )
 
-# Now we import chat modules with access to shared models
+# Import chatbot modules
 from diagnosis import get_diagnosis_response
 from cognitive_therapy import get_cognitive_response
 from acceptance_commitment import get_act_response
@@ -58,7 +58,7 @@ def get_db_connection():
         host="dpg-cuob70l6l47c73cbtgqg-a"
     )
 
-# Utility to load Chroma DB only when needed
+# Load Chroma vector DB on-demand to avoid OOM
 def load_vector_db(path):
     if os.path.exists(path):
         return Chroma(persist_directory=path, embedding_function=embedding_model)
@@ -79,12 +79,7 @@ def load_vector_db(path):
         db.persist()
         return db
 
-# Replace usage in chatbot routes
-def get_diagnosis_db():
-    global diagnosis_vector_db
-    if diagnosis_vector_db is None:
-        diagnosis_vector_db = load_vector_db("./chroma_db/diagnosis")
-    return diagnosis_vector_db
+# Lazy-load functions
 
 def get_cognitive_db():
     global cognitive_vector_db
@@ -103,6 +98,12 @@ def get_physical_db():
     if physical_vector_db is None:
         physical_vector_db = load_vector_db("./chroma_db/physical")
     return physical_vector_db
+
+def get_diagnosis_db():
+    global diagnosis_vector_db
+    if diagnosis_vector_db is None:
+        diagnosis_vector_db = load_vector_db("./chroma_db/diagnosis")
+    return diagnosis_vector_db
 
 # generate a random 5-digit reset code
 def generate_reset_code():
@@ -659,6 +660,22 @@ def physical_route():
         response = get_physical_response(user_id, message, get_physical_db(), llm)
 
         return jsonify({"response": response})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/diagnosis', methods=['POST'])
+def diagnosis_route():
+    try:
+        data = request.get_json()
+        message = data.get("message")
+        user_id = data.get("user_id")
+
+        result = get_diagnosis_response(user_id, message, get_diagnosis_db(), llm)
+
+        return jsonify({
+            "response": result["reply"],
+            "mood_analysis": result["mood"]
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
