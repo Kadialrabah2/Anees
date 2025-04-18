@@ -1,17 +1,14 @@
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
-from psycopg2 import sql
 from langchain.memory import ConversationBufferMemory
-import os
-import sys
-import psycopg2
-import chromadb
 from psycopg2 import sql
+import psycopg2
+import os
 
 DB_CONFIG = {
     "dbname": "neondb",
@@ -20,85 +17,75 @@ DB_CONFIG = {
     "host": "ep-small-snowflake-a59tq9qy-pooler.us-east-2.aws.neon.tech",
     "port": "5432"
 }
+
+embedding_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+
+db_path = "./chroma_db"
+if os.path.exists(db_path):
+    vector_db = Chroma(persist_directory=db_path, embedding_function=embedding_model)
+else:
+    data_path = os.path.join(os.getcwd(), "data/acceptance_commitmentDATA")
+    loader = DirectoryLoader(data_path, glob="*.pdf", loader_cls=PyPDFLoader)
+    documents = loader.load()
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    texts = splitter.split_documents(documents)
+    vector_db = Chroma.from_documents(
+        texts, 
+        embedding_model, 
+        persist_directory=db_path,
+        collection_metadata={"hnsw:space": "cosine"}
+    )
+    vector_db.persist()
+
+llm = ChatGroq(
+    temperature=0,
+    groq_api_key="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",
+    model_name="llama-3.3-70b-versatile"
+)
+
 def save_message(user_id, message, role):
-    conn = None
+    conn, cur = None, None
     try:
         conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
-        cursor = conn.cursor()
-        query = sql.SQL("""
-            INSERT INTO conversations (user_id, message, role)
-            VALUES (%s, %s, %s)
-        """)
-        cursor.execute(query, (user_id, message, role))
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO conversations (user_id, message, role) VALUES (%s, %s, %s)",
+            (user_id, message, role)
+        )
         conn.commit()
     except Exception as e:
-        print(f"Error saving message: {e}")
+        print("DB Save Error:", e)
     finally:
-        if conn:
-            cursor.close()
-            conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
-# Function to retrieve conversation history for a user
 def get_conversation_history(user_id, limit=10):
+    conn, cur = None, None
     try:
         conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
-        cursor = conn.cursor()
-        query = sql.SQL("""
+        cur = conn.cursor()
+        cur.execute("""
             SELECT role, message FROM conversations
-            WHERE user_id = %s
-            ORDER BY timestamp DESC
-            LIMIT %s
-        """)
-        cursor.execute(query, (user_id, limit))
-        rows = cursor.fetchall()
-        return rows
+            WHERE user_id = %s ORDER BY timestamp DESC LIMIT %s
+        """, (user_id, limit))
+        return cur.fetchall()
     except Exception as e:
-        print(f"Error retrieving conversation history: {e}")
+        print("DB Read Error:", e)
         return []
     finally:
-        if conn:
-            cursor.close()
-            conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
-def initialize_llm():
-  llm = ChatGroq(
-    temperature = 0,
-    groq_api_key = "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",
-    model_name = "llama-3.3-70b-versatile"
-)
-  return llm
+def setup_qa_chain(user_id):
+    retriever = vector_db.as_retriever()
+    memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
+    for role, msg in get_conversation_history(user_id):
+        memory.save_context({"question": msg}, {"output": msg})
 
-def create_vector_db():
-
-  data_path = os.path.join(os.getcwd(), "data/acceptance_commitmentDATA")  
-  loader = DirectoryLoader(data_path, glob="*.pdf", loader_cls=PyPDFLoader)
-
-  documents = loader.load()
-  text_splitter = RecursiveCharacterTextSplitter(chunk_size = 500, chunk_overlap = 50)
-  texts = text_splitter.split_documents(documents)
-  embeddings = HuggingFaceEmbeddings(model_name = 'sentence-transformers/all-MiniLM-L6-v2')
-  vector_db = Chroma.from_documents(
-    texts, 
-    embeddings, 
-    persist_directory="./chroma_db",
-    collection_metadata={"hnsw:space": "cosine"}  # for fast searches
-)
-  vector_db.persist()
-
-  print("ChromaDB created and data saved")
-
-  return vector_db
-
-def setup_qa_chain(vector_db, llm, user_id):
-  retriever = vector_db.as_retriever()
-  memory = ConversationBufferMemory(memory_key="chat_history", input_key="question")
-  chat_history = get_conversation_history(user_id)
-  for role, message in chat_history:
-      memory.save_context({"question": message}, {"output": message})
-  prompt_templates = """ You are an expert in Acceptance and Commitment Therapy (ACT), helping individuals embrace their emotions and build psychological flexibility.
+    prompt_template = """ You are an expert in Acceptance and Commitment Therapy (ACT), helping individuals embrace their emotions and build psychological flexibility.
 You use mindfulness, cognitive defusion, and value-based action strategies to help users manage difficult emotions and improve their quality of life.
 
-**Rules:
+**Rules:**
 - Always respond in the same language as the user's input.
 - Be concise but informative.
 - Provide actionable mindfulness techniques and exercises.
@@ -116,35 +103,24 @@ Context:
 User Question:
 {question}
 
-Chatbot Response: """
-  PROMPT = PromptTemplate(template=prompt_templates, input_variables=['chat_history', 'context', 'question'])
+Chatbot Response:"""
 
-  qa_chain = RetrievalQA.from_chain_type(
+    prompt = PromptTemplate(template=prompt_template, input_variables=['chat_history', 'context', 'question'])
+
+    return RetrievalQA.from_chain_type(
         llm=llm,
         chain_type="stuff",
         retriever=retriever,
-        chain_type_kwargs={"prompt": PROMPT, "memory": memory}
+        chain_type_kwargs={"prompt": prompt, "memory": memory}
     )
-    
-  return qa_chain
 
 def get_act_response(user_id, message):
-    db_path = "./chroma_db"
-    
-    if not os.path.exists(db_path):
-        vector_db = create_vector_db()
-    else:
-        embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
-        vector_db = Chroma(persist_directory=db_path, embedding_function=embeddings)
-
-    llm = initialize_llm()
-    qa_chain = setup_qa_chain(vector_db, llm, user_id)
+    qa_chain = setup_qa_chain(user_id)
 
     save_message(user_id, message, "user")
     response = qa_chain.run(message)
-
     if not response:
         response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details?"
-        
+
     save_message(user_id, response, "assistant")
     return response

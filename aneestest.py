@@ -557,8 +557,6 @@ def get_chat_history(user_id):
 
 @app.route('/diagnosis', methods=['POST']) 
 def diagnosis_route():
-    conn = None
-    cur = None
     try:
         data = request.get_json()
         message = data.get("message")
@@ -572,20 +570,9 @@ def diagnosis_route():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        try:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
-        except:
-            pass
-
 
 @app.route('/cognitive', methods=['POST'])
 def cognitive_route():
-    conn = None
-    cur = None
     try:
         data = request.get_json()
         message = data.get("message")
@@ -596,20 +583,9 @@ def cognitive_route():
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        try:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
-        except:
-            pass
-
 
 @app.route('/act', methods=['POST'])
 def act_route():
-    conn = None
-    cur = None
     try:
         data = request.get_json()
         message = data.get("message")
@@ -620,20 +596,9 @@ def act_route():
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        try:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
-        except:
-            pass
-
 
 @app.route('/physical', methods=['POST'])
 def physical_route():
-    conn = None
-    cur = None
     try:
         data = request.get_json()
         message = data.get("message")
@@ -644,15 +609,6 @@ def physical_route():
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        try:
-            if cur:
-                cur.close()
-            if conn:
-                conn.close()
-        except:
-            pass
-
 
 if __name__ == "__main__":
     app.run(debug=True)
