@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'chat/physical_activity.dart';
 import 'chat/mindfulness.dart';
-import 'chat/healthy_lifestyle.dart';
+import 'chat/cognitive_therapy.dart';
 
 class TreatmentPage extends StatelessWidget {
   @override

@@ -1,4 +1,4 @@
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
@@ -115,7 +115,7 @@ Guidelines:
 User Question:
 {question}
 
-Chatbot Response: (in the same language as the user’s input)** """
+Chatbot Response:** """
   PROMPT = PromptTemplate(template=prompt_templates, input_variables=['chat_history', 'context', 'question'])
 
   qa_chain = RetrievalQA.from_chain_type(
@@ -131,7 +131,7 @@ def calculate_mood_level(text):
     stress_keywords = ["stress", "tension", "nervous", "anxiety","الإجهاد", "التوتر", "العصبية", "القلق"]
     anxiety_keywords = ["anxious", "worry", "fear","قلق", "خوف"]
     panic_keywords = ["panic", "attack", "overwhelmed","ذعر","هجوم", "مُثقل"]
-    loneliness_keywords = ["lonely", "isolated", "alone","وحيد"و "منعزل"و "وحده"]
+    loneliness_keywords = ["lonely", "isolated", "alone","وحيد", "منعزل", "وحده"]
     burnout_keywords = ["burnout", "exhausted", "tired","الإرهاق", "التعب"]
     depression_keywords = ["depressed", "down", "sad", "hopeless","مكتئب", "حزين", "يائس"]
 
@@ -152,38 +152,31 @@ def calculate_mood_level(text):
     }
 
 def main():
-  if len(sys.argv) < 2:
-      print("Error: No user ID provided.")
-      return
+  def get_diagnosis_response(user_id, message):
+    db_path = "./chroma_db"
 
-  user_id = sys.argv[1]
-  user_age = int(sys.argv[1])
-   
-  print(f"Initializing Chatbot for user: {user_id}")
-  llm = initialize_llm()
+    if not os.path.exists(db_path):
+        vector_db = create_vector_db()
+    else:
+        embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+        vector_db = Chroma(persist_directory=db_path, embedding_function=embeddings)
 
-  db_path = "/content/chroma_db"
+    llm = initialize_llm()
+    qa_chain = setup_qa_chain(vector_db, llm, user_id)
 
-  if not os.path.exists(db_path):
-    vector_db  = create_vector_db()
-  else:
-    embeddings = HuggingFaceEmbeddings(model_name = 'sentence-transformers/all-MiniLM-L6-v2')
-    vector_db = Chroma(persist_directory=db_path, embedding_function=embeddings)
-  qa_chain = setup_qa_chain(vector_db, llm, user_id)
-  conversation = []
-  while True:
-    query = input(f"\nUser {user_id}: ") 
-    if query.lower() == "exit":
-          print("Chatbot: Take care of yourself, goodbye!")
-          break
-    response = qa_chain.run(query)
+    save_message(user_id, message, "user")
+    response = qa_chain.run(message)
+
     if not response:
-        response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
-    print(f"Chatbot: {response}")
-    conversation.append(query)  # حفظ السؤال
-    save_message(user_id, response, "assistant")
-  mood_levels = calculate_mood_level(" ".join(conversation))  # تحليل المزاج بناءً على المحادثة
+        response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details?"
 
+    save_message(user_id, response, "assistant")
+
+    mood_levels = calculate_mood_level(message)  # Mood analysis on the last message
+    return {
+        "reply": response,
+        "mood": mood_levels
+    }
 
 if __name__ == "__main__":
   main()

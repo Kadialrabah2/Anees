@@ -1,4 +1,4 @@
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
@@ -111,7 +111,7 @@ Context:
 User Question: 
 {question}
 
-Chatbot Response (in the same language as the user’s input): """
+Chatbot Response : """
   PROMPT = PromptTemplate(template=prompt_templates, input_variables=['chat_history', 'context', 'question'])
 
   qa_chain = RetrievalQA.from_chain_type(
@@ -123,35 +123,26 @@ Chatbot Response (in the same language as the user’s input): """
     
   return qa_chain
 def main():
-  if len(sys.argv) < 2:
-      print("Error: No user ID provided.")
-      return
+  def get_physical_response(user_id, message):
+    db_path = "./chroma_db"
+    
+    if not os.path.exists(db_path):
+        vector_db = create_vector_db()
+    else:
+        embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+        vector_db = Chroma(persist_directory=db_path, embedding_function=embeddings)
 
-  user_id = sys.argv[1]
-  user_age = int(sys.argv[1]) 
-  print(f"Initializing Chatbot for user: {user_id}")
-  llm = initialize_llm()
+    llm = initialize_llm()
+    qa_chain = setup_qa_chain(vector_db, llm, user_id)
 
-  db_path = "/content/chroma_db"
+    save_message(user_id, message, "user")
+    response = qa_chain.run(message)
 
-  if not os.path.exists(db_path):
-    vector_db  = create_vector_db()
-  else:
-    embeddings = HuggingFaceEmbeddings(model_name = 'sentence-transformers/all-MiniLM-L6-v2')
-    vector_db = Chroma(persist_directory=db_path, embedding_function=embeddings)
-  qa_chain = setup_qa_chain(vector_db, llm, user_id)
-
-  while True:
-    query = input(f"\nUser {user_id}: ") 
-    if query.lower() == "exit":
-          print("Chatbot: Take care of yourself, goodbye!")
-          break
-    save_message(user_id, query, "user")
-    response = qa_chain.run(query)
     if not response:
-        response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details or rephrase your question?"
-    print(f"Chatbot: {response}")
+        response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details?"
+        
     save_message(user_id, response, "assistant")
+    return response
 
 if __name__ == "__main__":
   main()
