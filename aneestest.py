@@ -23,53 +23,18 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 embedding_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
-base_data_path = os.path.join(os.getcwd(), "data")
 
+base_data_path = os.path.join(os.getcwd(), "data")
 cognitive_path = os.path.join(base_data_path, "cognitive_therapyDATA")
 act_path = os.path.join(base_data_path, "act_therapyDATA")
 physical_path = os.path.join(base_data_path, "physical_therapyDATA")
 diagnosis_path = os.path.join(base_data_path, "diagnosisDATA")
 
-# Cognitive Therapy DB
-cognitive_db_path = "./chroma_db/cognitive"
-if os.path.exists(cognitive_db_path):
-    cognitive_vector_db = Chroma(persist_directory=cognitive_db_path, embedding_function=embedding_model)
-else:
-    loader = DirectoryLoader(cognitive_path, glob="*.pdf", loader_cls=PyPDFLoader)
-    texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
-    cognitive_vector_db = Chroma.from_documents(texts, embedding_model, persist_directory=cognitive_db_path)
-    cognitive_vector_db.persist()
-
-# ACT Therapy DB
-act_db_path = "./chroma_db/act"
-if os.path.exists(act_db_path):
-    act_vector_db = Chroma(persist_directory=act_db_path, embedding_function=embedding_model)
-else:
-    loader = DirectoryLoader(act_path, glob="*.pdf", loader_cls=PyPDFLoader)
-    texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
-    act_vector_db = Chroma.from_documents(texts, embedding_model, persist_directory=act_db_path)
-    act_vector_db.persist()
-
-# Physical Therapy DB
-physical_db_path = "./chroma_db/physical"
-if os.path.exists(physical_db_path):
-    physical_vector_db = Chroma(persist_directory=physical_db_path, embedding_function=embedding_model)
-else:
-    loader = DirectoryLoader(physical_path, glob="*.pdf", loader_cls=PyPDFLoader)
-    texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
-    physical_vector_db = Chroma.from_documents(texts, embedding_model, persist_directory=physical_db_path)
-    physical_vector_db.persist()
-
-# Diagnosis DB
-diagnosis_db_path = "./chroma_db/diagnosis"
-if os.path.exists(diagnosis_db_path):
-    diagnosis_vector_db = Chroma(persist_directory=diagnosis_db_path, embedding_function=embedding_model)
-else:
-    loader = DirectoryLoader(diagnosis_path, glob="*.pdf", loader_cls=PyPDFLoader)
-    texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
-    diagnosis_vector_db = Chroma.from_documents(texts, embedding_model, persist_directory=diagnosis_db_path)
-    diagnosis_vector_db.persist()
-
+# Remove vector DB loading from global scope to reduce memory
+cognitive_vector_db = None
+act_vector_db = None
+physical_vector_db = None
+diagnosis_vector_db = None
 
 # Shared LLM
 llm = ChatGroq(
@@ -92,6 +57,52 @@ def get_db_connection():
         password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
         host="dpg-cuob70l6l47c73cbtgqg-a"
     )
+
+# Utility to load Chroma DB only when needed
+def load_vector_db(path):
+    if os.path.exists(path):
+        return Chroma(persist_directory=path, embedding_function=embedding_model)
+    else:
+        if path.endswith("cognitive"):
+            loader = DirectoryLoader(cognitive_path, glob="*.pdf", loader_cls=PyPDFLoader)
+        elif path.endswith("act"):
+            loader = DirectoryLoader(act_path, glob="*.pdf", loader_cls=PyPDFLoader)
+        elif path.endswith("physical"):
+            loader = DirectoryLoader(physical_path, glob="*.pdf", loader_cls=PyPDFLoader)
+        elif path.endswith("diagnosis"):
+            loader = DirectoryLoader(diagnosis_path, glob="*.pdf", loader_cls=PyPDFLoader)
+        else:
+            raise ValueError("Unknown DB path")
+
+        texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
+        db = Chroma.from_documents(texts, embedding_model, persist_directory=path)
+        db.persist()
+        return db
+
+# Replace usage in chatbot routes
+def get_diagnosis_db():
+    global diagnosis_vector_db
+    if diagnosis_vector_db is None:
+        diagnosis_vector_db = load_vector_db("./chroma_db/diagnosis")
+    return diagnosis_vector_db
+
+def get_cognitive_db():
+    global cognitive_vector_db
+    if cognitive_vector_db is None:
+        cognitive_vector_db = load_vector_db("./chroma_db/cognitive")
+    return cognitive_vector_db
+
+def get_act_db():
+    global act_vector_db
+    if act_vector_db is None:
+        act_vector_db = load_vector_db("./chroma_db/act")
+    return act_vector_db
+
+def get_physical_db():
+    global physical_vector_db
+    if physical_vector_db is None:
+        physical_vector_db = load_vector_db("./chroma_db/physical")
+    return physical_vector_db
 
 # generate a random 5-digit reset code
 def generate_reset_code():
@@ -612,22 +623,6 @@ def get_chat_history(user_id):
         cur.close()
         conn.close()
 
-@app.route('/diagnosis', methods=['POST'])
-def diagnosis_route():
-    try:
-        data = request.get_json()
-        message = data.get("message")
-        user_id = data.get("user_id")
-
-        result = get_diagnosis_response(user_id, message, diagnosis_vector_db, llm)
-
-        return jsonify({
-            "response": result["reply"],
-            "mood_analysis": result["mood"]
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 @app.route('/cognitive', methods=['POST'])
 def cognitive_route():
     try:
@@ -635,7 +630,7 @@ def cognitive_route():
         message = data.get("message")
         user_id = data.get("user_id")
 
-        response = get_cognitive_response(user_id, message, cognitive_vector_db, llm)
+        response = get_cognitive_response(user_id, message, get_cognitive_db(), llm)
 
         return jsonify({"response": response})
     except Exception as e:
@@ -648,7 +643,7 @@ def act_route():
         message = data.get("message")
         user_id = data.get("user_id")
 
-        response = get_act_response(user_id, message, act_vector_db, llm)
+        response = get_act_response(user_id, message, get_act_db(), llm)
 
         return jsonify({"response": response})
     except Exception as e:
@@ -661,7 +656,7 @@ def physical_route():
         message = data.get("message")
         user_id = data.get("user_id")
 
-        response = get_physical_response(user_id, message, physical_vector_db, llm)
+        response = get_physical_response(user_id, message, get_physical_db(), llm)
 
         return jsonify({"response": response})
     except Exception as e:
