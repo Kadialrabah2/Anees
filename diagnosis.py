@@ -151,8 +151,8 @@ def calculate_mood_level(text):
         "depression_level": min(depression_level, 100)
     }
 
-def main():
-  def get_diagnosis_response(user_id, message):
+
+def get_diagnosis_response(user_id, message):
     db_path = "./chroma_db"
 
     if not os.path.exists(db_path):
@@ -177,6 +177,3 @@ def main():
         "reply": response,
         "mood": mood_levels
     }
-
-if __name__ == "__main__":
-  main()

@@ -130,8 +130,7 @@ Chatbot Response: """
     
   return qa_chain
 
-def main():
-  def get_cognitive_response(user_id, message):
+def get_cognitive_response(user_id, message):
     db_path = "./chroma_db"
     
     if not os.path.exists(db_path):
@@ -151,6 +150,3 @@ def main():
         
     save_message(user_id, response, "assistant")
     return response
-
-if __name__ == "__main__":
-  main()
