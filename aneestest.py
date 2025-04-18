@@ -10,17 +10,10 @@ from flask_session import Session
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.vectorstores import Chroma
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
-from langchain.memory import ConversationBufferMemory
-import subprocess
 from flask import render_template
-from diagnosis import get_diagnosis_response
-from cognitive_therapy import get_cognitive_response
-from acceptance_commitment import get_act_response
-from physical_activity import get_physical_response
+import os
 
 app = Flask(__name__)
 app.debug = True
@@ -28,6 +21,62 @@ app.debug = True
 app.config["SECRET_KEY"] = "12345"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+embedding_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+
+# Cognitive Therapy DB
+cognitive_db_path = "./chroma_db/cognitive"
+if os.path.exists(cognitive_db_path):
+    cognitive_vector_db = Chroma(persist_directory=cognitive_db_path, embedding_function=embedding_model)
+else:
+    loader = DirectoryLoader(cognitive_path, glob="*.pdf", loader_cls=PyPDFLoader)
+    texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
+    cognitive_vector_db = Chroma.from_documents(texts, embedding_model, persist_directory=cognitive_db_path)
+    cognitive_vector_db.persist()
+
+# ACT Therapy DB
+act_db_path = "./chroma_db/act"
+if os.path.exists(act_db_path):
+    act_vector_db = Chroma(persist_directory=act_db_path, embedding_function=embedding_model)
+else:
+    loader = DirectoryLoader(act_path, glob="*.pdf", loader_cls=PyPDFLoader)
+    texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
+    act_vector_db = Chroma.from_documents(texts, embedding_model, persist_directory=act_db_path)
+    act_vector_db.persist()
+
+# Physical Therapy DB
+physical_db_path = "./chroma_db/physical"
+if os.path.exists(physical_db_path):
+    physical_vector_db = Chroma(persist_directory=physical_db_path, embedding_function=embedding_model)
+else:
+    loader = DirectoryLoader(physical_path, glob="*.pdf", loader_cls=PyPDFLoader)
+    texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
+    physical_vector_db = Chroma.from_documents(texts, embedding_model, persist_directory=physical_db_path)
+    physical_vector_db.persist()
+
+# Diagnosis DB
+diagnosis_db_path = "./chroma_db/diagnosis"
+if os.path.exists(diagnosis_db_path):
+    diagnosis_vector_db = Chroma(persist_directory=diagnosis_db_path, embedding_function=embedding_model)
+else:
+    loader = DirectoryLoader(diagnosis_path, glob="*.pdf", loader_cls=PyPDFLoader)
+    texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
+    diagnosis_vector_db = Chroma.from_documents(texts, embedding_model, persist_directory=diagnosis_db_path)
+    diagnosis_vector_db.persist()
+
+
+# Shared LLM
+llm = ChatGroq(
+    temperature=0,
+    groq_api_key="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",
+    model_name="llama-3.3-70b-versatile"
+)
+
+# Now we import chat modules with access to shared models
+from diagnosis import get_diagnosis_response
+from cognitive_therapy import get_cognitive_response
+from acceptance_commitment import get_act_response
+from physical_activity import get_physical_response
 
 # Database connection
 def get_db_connection():
@@ -557,14 +606,14 @@ def get_chat_history(user_id):
         cur.close()
         conn.close()
 
-@app.route('/diagnosis', methods=['POST']) 
+@app.route('/diagnosis', methods=['POST'])
 def diagnosis_route():
     try:
         data = request.get_json()
         message = data.get("message")
         user_id = data.get("user_id")
 
-        result = get_diagnosis_response(user_id, message)
+        result = get_diagnosis_response(user_id, message, diagnosis_vector_db, llm)
 
         return jsonify({
             "response": result["reply"],
@@ -580,7 +629,7 @@ def cognitive_route():
         message = data.get("message")
         user_id = data.get("user_id")
 
-        response = get_cognitive_response(user_id, message)
+        response = get_cognitive_response(user_id, message, cognitive_vector_db, llm)
 
         return jsonify({"response": response})
     except Exception as e:
@@ -593,7 +642,7 @@ def act_route():
         message = data.get("message")
         user_id = data.get("user_id")
 
-        response = get_act_response(user_id, message)
+        response = get_act_response(user_id, message, act_vector_db, llm)
 
         return jsonify({"response": response})
     except Exception as e:
@@ -606,7 +655,7 @@ def physical_route():
         message = data.get("message")
         user_id = data.get("user_id")
 
-        response = get_physical_response(user_id, message)
+        response = get_physical_response(user_id, message, physical_vector_db, llm)
 
         return jsonify({"response": response})
     except Exception as e:
