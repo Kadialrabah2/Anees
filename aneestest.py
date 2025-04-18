@@ -415,6 +415,7 @@ def home():
 @app.route("/emergency", methods=["GET"])
 def get_emergency_contacts():
     user_id = session.get("user_id")  # get user id from session
+    #user_id = request.args.get("user_id")  # get user_id from query parameters
     if not user_id:
         return jsonify({"error": "User not authenticated"}), 401
 
@@ -435,6 +436,7 @@ def get_emergency_contacts():
 @app.route("/add_emergency_contact", methods=["POST"])
 def add_emergency_contact():
     user_id = session.get("user_id")
+    #user_id = request.args.get("user_id")  # get user_id from query parameters
     data = request.get_json()
     name = data.get("name")
     phone = data.get("phone")
@@ -611,4 +613,4 @@ def physical_route():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=10000)
