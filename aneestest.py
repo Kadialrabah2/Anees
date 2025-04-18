@@ -23,6 +23,12 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 embedding_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+base_data_path = os.path.join(os.getcwd(), "data")
+
+cognitive_path = os.path.join(base_data_path, "cognitive_therapyDATA")
+act_path = os.path.join(base_data_path, "act_therapyDATA")
+physical_path = os.path.join(base_data_path, "physical_therapyDATA")
+diagnosis_path = os.path.join(base_data_path, "diagnosisDATA")
 
 # Cognitive Therapy DB
 cognitive_db_path = "./chroma_db/cognitive"
