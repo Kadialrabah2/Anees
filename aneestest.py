@@ -23,6 +23,7 @@ from acceptance_commitment import get_act_response
 from physical_activity import get_physical_response
 
 app = Flask(__name__)
+app.debug = True
 # Configure session
 app.config["SECRET_KEY"] = "12345"
 app.config["SESSION_TYPE"] = "filesystem"
@@ -554,41 +555,104 @@ def get_chat_history(user_id):
         cur.close()
         conn.close()
 
-@app.route('/diagnosis', methods=['POST'])
+@app.route('/diagnosis', methods=['POST']) 
 def diagnosis_route():
-    data = request.get_json()
-    message = data.get("message")
-    user_id = data.get("user_id")
+    conn = None
+    cur = None
+    try:
+        data = request.get_json()
+        message = data.get("message")
+        user_id = data.get("user_id")
 
-    result = get_diagnosis_response(user_id, message)
-    return jsonify({
-        "response": result["reply"],
-        "mood_analysis": result["mood"]
-    })
+        result = get_diagnosis_response(user_id, message)
+
+        return jsonify({
+            "response": result["reply"],
+            "mood_analysis": result["mood"]
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        try:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
+        except:
+            pass
+
 
 @app.route('/cognitive', methods=['POST'])
 def cognitive_route():
-    data = request.get_json()
-    message = data.get("message")
-    user_id = data.get("user_id")
-    response = get_cognitive_response(user_id, message)
-    return jsonify({"response": response})
+    conn = None
+    cur = None
+    try:
+        data = request.get_json()
+        message = data.get("message")
+        user_id = data.get("user_id")
+
+        response = get_cognitive_response(user_id, message)
+
+        return jsonify({"response": response})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        try:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
+        except:
+            pass
+
 
 @app.route('/act', methods=['POST'])
 def act_route():
-    data = request.get_json()
-    message = data.get("message")
-    user_id = data.get("user_id")
-    response = get_act_response(user_id, message)
-    return jsonify({"response": response})
+    conn = None
+    cur = None
+    try:
+        data = request.get_json()
+        message = data.get("message")
+        user_id = data.get("user_id")
+
+        response = get_act_response(user_id, message)
+
+        return jsonify({"response": response})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        try:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
+        except:
+            pass
+
 
 @app.route('/physical', methods=['POST'])
 def physical_route():
-    data = request.get_json()
-    message = data.get("message")
-    user_id = data.get("user_id")
-    response = get_physical_response(user_id, message)
-    return jsonify({"response": response})
+    conn = None
+    cur = None
+    try:
+        data = request.get_json()
+        message = data.get("message")
+        user_id = data.get("user_id")
+
+        response = get_physical_response(user_id, message)
+
+        return jsonify({"response": response})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        try:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
+        except:
+            pass
+
 
 if __name__ == "__main__":
     app.run(debug=True)
