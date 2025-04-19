@@ -50,7 +50,11 @@
 		</data>
 		<key>flutter_assets/kernel_blob.bin</key>
 		<data>
+<<<<<<< HEAD
 		7IVWcbxNvnIESuWyhqhBIP+qBJY=
+=======
+		59k/dUFGgS8FR+pyANLWs3xDcSU=
+>>>>>>> 3c5b19bb (sign in)
 		</data>
 		<key>flutter_assets/shaders/ink_sparkle.frag</key>
 		<data>
@@ -137,7 +141,11 @@
 		<dict>
 			<key>hash2</key>
 			<data>
+<<<<<<< HEAD
 			nNbpBSqiiqMSqq5VrzM2IumDzY3F39ukj8xlYq62su8=
+=======
+			DJltj9z6GObPjPrs/JwrT5DfYKOxvUDIR4L/qdAqXeA=
+>>>>>>> 3c5b19bb (sign in)
 			</data>
 		</dict>
 		<key>flutter_assets/shaders/ink_sparkle.frag</key>
