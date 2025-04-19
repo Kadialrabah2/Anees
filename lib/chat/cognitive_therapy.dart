@@ -7,7 +7,7 @@ class HealthyLifestyleService {
 
   Future<String> sendMessage(int userId, String message) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/cognitiveChat'),
+      Uri.parse('$baseUrl/cognitive'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "user_id": userId,

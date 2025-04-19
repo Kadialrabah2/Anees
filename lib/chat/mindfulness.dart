@@ -7,7 +7,7 @@ class MindfulnessService {
 
   Future<String> sendMessage(int userId, String message) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/mindfulness'),
+      Uri.parse('$baseUrl/act'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "user_id": userId,

@@ -35,7 +35,7 @@ class _TalkToMePageState extends State<TalkToMePage> {
 
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/talk'),
+        Uri.parse('$baseUrl/diagnosis'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "user_id": int.parse(widget.userName ?? "0"), // converts username to user_id
