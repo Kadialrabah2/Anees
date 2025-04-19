@@ -601,7 +601,7 @@ def diagnosis_route():
         save_message(user_id, message, "user")
 
         prompt = f"You are a helpful and supportive mental health assistant. The user said: '{message}'. Respond with empathy and insight."
-        response = llm.invoke(prompt)
+        response = str(llm.invoke(prompt))
 
         save_message(user_id, response, "assistant")
 
@@ -624,7 +624,7 @@ def cognitive_route():
         save_message(user_id, message, "user")
 
         prompt = f"You are a CBT (Cognitive Behavioral Therapy) chatbot. The user said: '{message}'. Respond with support using CBT techniques."
-        response = llm.invoke(prompt)
+        response = str(llm.invoke(prompt))
 
         save_message(user_id, response, "assistant")
 
@@ -647,7 +647,7 @@ def act_route():
         save_message(user_id, message, "user")
 
         prompt = f"You are a chatbot that uses Acceptance and Commitment Therapy. The user said: '{message}'. Respond in an ACT-informed manner."
-        response = llm.invoke(prompt)
+        response = str(llm.invoke(prompt))
 
         save_message(user_id, response, "assistant")
 
@@ -670,7 +670,7 @@ def physical_route():
         save_message(user_id, message, "user")
 
         prompt = f"You are a physical health motivator chatbot. The user said: '{message}'. Respond with motivation and physical wellness tips."
-        response = llm.invoke(prompt)
+        response = str(llm.invoke(prompt))
 
         save_message(user_id, response, "assistant")
 
