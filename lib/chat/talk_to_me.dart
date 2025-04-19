@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class TalkToMePage extends StatefulWidget {
   final String? userName;
@@ -13,6 +15,8 @@ class _TalkToMePageState extends State<TalkToMePage> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
 
+  final String baseUrl = "https://anees-rus4.onrender.com"; // Your backend URL
+
   @override
   void initState() {
     super.initState();
@@ -20,13 +24,40 @@ class _TalkToMePageState extends State<TalkToMePage> {
     _messages.add({"text": "أهلًا بك $name\nكيف حالك اليوم؟", "isUser": false});
   }
 
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
+  void _sendMessage() async {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
 
     setState(() {
-      _messages.add({"text": _messageController.text.trim(), "isUser": true});
+      _messages.add({"text": text, "isUser": true});
       _messageController.clear();
     });
+
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/talk'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "user_id": int.parse(widget.userName ?? "0"), // converts username to user_id
+          "message": text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _messages.add({"text": data["response"], "isUser": false});
+        });
+      } else {
+        setState(() {
+          _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+      });
+    }
   }
 
   @override
@@ -36,10 +67,7 @@ class _TalkToMePageState extends State<TalkToMePage> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Opacity(
-              opacity: 0.4,
-              child: Image.asset("assets/h.png"),
-            ),
+            child: Opacity(opacity: 0.4, child: Image.asset("assets/h.png")),
           ),
           Column(
             children: [
@@ -67,10 +95,10 @@ class _TalkToMePageState extends State<TalkToMePage> {
                         decoration: BoxDecoration(
                           color: isUser ? Colors.white : const Color(0xFF4F6DA3),
                           borderRadius: BorderRadius.only(
-                            topLeft: const Radius.circular(20),
-                            topRight: const Radius.circular(20),
-                            bottomLeft: isUser ? const Radius.circular(20) : Radius.zero,
-                            bottomRight: isUser ? Radius.zero : const Radius.circular(20),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                            bottomLeft: isUser ? Radius.circular(20) : Radius.zero,
+                            bottomRight: isUser ? Radius.zero : Radius.circular(20),
                           ),
                         ),
                         child: Text(

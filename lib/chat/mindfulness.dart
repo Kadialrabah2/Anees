@@ -1,4 +1,28 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class MindfulnessService {
+  final String baseUrl = "https://anees-rus4.onrender.com";
+
+  Future<String> sendMessage(int userId, String message) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/mindfulness'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "user_id": userId,
+        "message": message,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data["response"];
+    } else {
+      throw Exception("Server error: ${response.statusCode}");
+    }
+  }
+}
 
 class MindfulnessPage extends StatefulWidget {
   final String? userName;
@@ -20,13 +44,28 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
     _messages.add({"text": "أهلًا بك $name\nهل قمت بممارسة الوعي الذاتي اليوم؟", "isUser": false});
   }
 
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
+  void _sendMessage() async {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
 
     setState(() {
-      _messages.add({"text": _messageController.text.trim(), "isUser": true});
+      _messages.add({"text": text, "isUser": true});
       _messageController.clear();
     });
+
+    try {
+      final reply = await MindfulnessService().sendMessage(
+        int.parse(widget.userName ?? "0"), // Convert to user_id
+        text,
+      );
+      setState(() {
+        _messages.add({"text": reply, "isUser": false});
+      });
+    } catch (e) {
+      setState(() {
+        _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+      });
+    }
   }
 
   @override

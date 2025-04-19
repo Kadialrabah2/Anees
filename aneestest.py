@@ -26,7 +26,7 @@ embedding_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-Mi
 
 base_data_path = os.path.join(os.getcwd(), "data")
 cognitive_path = os.path.join(base_data_path, "cognitive_therapyDATA")
-act_path = os.path.join(base_data_path, "acceptance_commitmenttherapyDATA")
+act_path = os.path.join(base_data_path, "acceptance_commitmentDATA")
 physical_path = os.path.join(base_data_path, "physical_activityDATA")
 diagnosis_path = os.path.join(base_data_path, "diagnosisDATA")
 

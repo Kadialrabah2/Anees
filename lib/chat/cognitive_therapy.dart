@@ -1,4 +1,28 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class HealthyLifestyleService {
+  final String baseUrl = "https://anees-rus4.onrender.com";
+
+  Future<String> sendMessage(int userId, String message) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/cognitiveChat'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "user_id": userId,
+        "message": message,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data["response"];
+    } else {
+      throw Exception("Server error: ${response.statusCode}");
+    }
+  }
+}
 
 class HealthyLifestylePage extends StatefulWidget {
   final String? userName;
@@ -17,16 +41,35 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
   void initState() {
     super.initState();
     String name = widget.userName?.isNotEmpty == true ? widget.userName! : "رفيق أنيس";
-    _messages.add({"text": "أهلًا بك $name\nهل هناك أفكار تشعر أنها تؤثر على حالتك النفسية مؤخرًا؟ أنا هنا لمساعدتك في فهمها والتعامل معها خطوة بخطوة", "isUser": false});
+    _messages.add({
+      "text":
+          "أهلًا بك $name\nهل هناك أفكار تشعر أنها تؤثر على حالتك النفسية مؤخرًا؟ أنا هنا لمساعدتك في فهمها والتعامل معها خطوة بخطوة",
+      "isUser": false
+    });
   }
 
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
+  void _sendMessage() async {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
 
     setState(() {
-      _messages.add({"text": _messageController.text.trim(), "isUser": true});
+      _messages.add({"text": text, "isUser": true});
       _messageController.clear();
     });
+
+    try {
+      final reply = await HealthyLifestyleService().sendMessage(
+        int.parse(widget.userName ?? "0"),
+        text,
+      );
+      setState(() {
+        _messages.add({"text": reply, "isUser": false});
+      });
+    } catch (e) {
+      setState(() {
+        _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+      });
+    }
   }
 
   @override
@@ -57,17 +100,22 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
                   itemBuilder: (context, index) {
                     final isUser = _messages[index]["isUser"];
                     return Align(
-                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isUser ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
                         decoration: BoxDecoration(
-                          color: isUser ? Colors.white : const Color(0xFF4F6DA3),
+                          color:
+                              isUser ? Colors.white : const Color(0xFF4F6DA3),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
-                            bottomLeft: isUser ? Radius.circular(20) : Radius.zero,
-                            bottomRight: isUser ? Radius.zero : Radius.circular(20),
+                            bottomLeft:
+                                isUser ? Radius.circular(20) : Radius.zero,
+                            bottomRight:
+                                isUser ? Radius.zero : Radius.circular(20),
                           ),
                         ),
                         child: Text(
@@ -117,7 +165,8 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
                       child: const CircleAvatar(
                         backgroundColor: Colors.white,
                         radius: 25,
-                        child: Icon(Icons.send, color: Color(0xFF4F6DA3), size: 28),
+                        child: Icon(Icons.send,
+                            color: Color(0xFF4F6DA3), size: 28),
                       ),
                     ),
                   ],
