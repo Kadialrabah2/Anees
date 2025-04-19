@@ -670,20 +670,26 @@ def diagnosis_route():
         message = data.get("message")
         user_id = data.get("user_id")
 
-        print("Received:", message, "from user", user_id)  # test
+        print(">> Incoming /diagnosis")
+        print(">> user_id:", user_id)
+        print(">> message:", message)
+
+        # Check if vector_db and llm are available
+        print(">> vector_db:", type(get_diagnosis_db()))
+        print(">> llm:", type(llm))
 
         result = get_diagnosis_response(user_id, message, get_diagnosis_db(), llm)
 
-        print("Result:", result)  # test
+        print(">> response:", result["reply"])
+        print(">> mood_analysis:", result["mood"])
 
         return jsonify({
             "response": result["reply"],
             "mood_analysis": result["mood"]
         })
     except Exception as e:
-        print("Error occurred:", e)  #test
+        print(">> Error in /diagnosis route:", e)
         return jsonify({"error": str(e)}), 500
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)

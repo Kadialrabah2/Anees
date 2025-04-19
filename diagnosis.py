@@ -98,14 +98,32 @@ def calculate_mood_level(text):
     return mood_scores
 
 def get_diagnosis_response(user_id, message, vector_db, llm):
-    qa_chain = setup_qa_chain(user_id, vector_db, llm)
+    print(">> get_diagnosis_response START")
+    print(">> user_id:", user_id)
+    print(">> message:", message)
+    print(">> vector_db type:", type(vector_db))
+    print(">> llm type:", type(llm))
 
-    save_message(user_id, message, "user")
-    response = qa_chain.run(message)
-    if not response:
-        response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details?"
+    try:
+        qa_chain = setup_qa_chain(user_id, vector_db, llm)
 
-    save_message(user_id, response, "assistant")
-    mood = calculate_mood_level(message)
+        print(">> QA Chain setup complete. Saving user message...")
+        save_message(user_id, message, "user")
 
-    return {"reply": response, "mood": mood}
+        print(">> Running QA Chain...")
+        response = qa_chain.run(message)
+        if not response:
+            response = "I'm sorry, I couldn't find a relevant answer. Could you please provide more details?"
+
+        print(">> Saving assistant response...")
+        save_message(user_id, response, "assistant")
+
+        print(">> Calculating mood level...")
+        mood = calculate_mood_level(message)
+
+        print(">> get_diagnosis_response END")
+        return {"reply": response, "mood": mood}
+
+    except Exception as e:
+        print(">> ERROR in get_diagnosis_response:", e)
+        return {"reply": "Something went wrong while processing your request.", "mood": {}}
