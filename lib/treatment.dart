@@ -49,7 +49,7 @@ class TreatmentPage extends StatelessWidget {
                       const SizedBox(height: 20),
                       buildTreatmentButton(
                         context,
-                        "نمط حياة صحي",
+                        "العلاج المعرفي",
                         Icons.favorite,
                         () => Navigator.push(context, MaterialPageRoute(builder: (_) => HealthyLifestylePage())),
                       ),

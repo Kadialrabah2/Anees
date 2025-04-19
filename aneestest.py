@@ -670,14 +670,20 @@ def diagnosis_route():
         message = data.get("message")
         user_id = data.get("user_id")
 
+        print("Received:", message, "from user", user_id)  # test
+
         result = get_diagnosis_response(user_id, message, get_diagnosis_db(), llm)
+
+        print("Result:", result)  # test
 
         return jsonify({
             "response": result["reply"],
             "mood_analysis": result["mood"]
         })
     except Exception as e:
+        print("Error occurred:", e)  #test
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
