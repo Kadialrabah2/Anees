@@ -46,11 +46,7 @@
 		</data>
 		<key>Frameworks/App.framework/App</key>
 		<data>
-<<<<<<< HEAD
-		LYTbu0eJWJxV/hJUpIUcyWYKsCo=
-=======
-		trXIjgLK1dPoXq4MUmaUH+MP5zM=
->>>>>>> 3c5b19bb (sign in)
+		Cem/8R74Lu+P0hP3537x4LgcAtc=
 		</data>
 		<key>Frameworks/App.framework/Info.plist</key>
 		<data>
@@ -58,11 +54,7 @@
 		</data>
 		<key>Frameworks/App.framework/_CodeSignature/CodeResources</key>
 		<data>
-<<<<<<< HEAD
-		Bl4Vnh6frO1XB38veBgjnJ3bhDk=
-=======
-		+4DE3YFyvDpcf+JHfRbkWArROBA=
->>>>>>> 3c5b19bb (sign in)
+		yFwe4jlhRodeQC7/KH3340RgxRI=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.bin</key>
 		<data>
@@ -106,11 +98,7 @@
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/kernel_blob.bin</key>
 		<data>
-<<<<<<< HEAD
-		7IVWcbxNvnIESuWyhqhBIP+qBJY=
-=======
-		59k/dUFGgS8FR+pyANLWs3xDcSU=
->>>>>>> 3c5b19bb (sign in)
+		3afrwZQ/ZCbcTvWRkMDT5TRYMCQ=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/shaders/ink_sparkle.frag</key>
 		<data>
@@ -321,11 +309,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-<<<<<<< HEAD
-			YZ6BS69mq4DLQvWP9ixexUl8jnrc9baSnGAuwqznBEk=
-=======
-			h5W/m4Ld4c9Jz9PsW3Kn/iiQafyJZJlqMELsja5WvAE=
->>>>>>> 3c5b19bb (sign in)
+			9j0ZB8fhgbDL13FDw2+N26EAgJuUPFhmvfkqXGTPUpk=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/Info.plist</key>
@@ -339,11 +323,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-<<<<<<< HEAD
-			bbs0kR8VwpCOil9jspz5YJG0KxlJLF6gqWebKE8eGrs=
-=======
-			Xy5dJVCkhanoKMKjlVppIJPDgxi6cqNQRVaGdIpy4og=
->>>>>>> 3c5b19bb (sign in)
+			Ckh1ipNJNgcKwmP0wJDbljMhS21+NqyhvqacEvRTubE=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.bin</key>
@@ -420,11 +400,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-<<<<<<< HEAD
-			nNbpBSqiiqMSqq5VrzM2IumDzY3F39ukj8xlYq62su8=
-=======
-			DJltj9z6GObPjPrs/JwrT5DfYKOxvUDIR4L/qdAqXeA=
->>>>>>> 3c5b19bb (sign in)
+			cSAAeaXZ5Ad1Va5FSt6ggsA8BZTv9UGoGNCCloLg4og=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/shaders/ink_sparkle.frag</key>

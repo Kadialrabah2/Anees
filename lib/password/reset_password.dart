@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ResetPasswordPage extends StatefulWidget {
-  final String email;
+  final String code;
 
-  const ResetPasswordPage({super.key, required this.email});
+  const ResetPasswordPage({super.key, required this.code});
 
   @override
   _ResetPasswordPageState createState() => _ResetPasswordPageState();
@@ -19,7 +19,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   Future<void> resetPassword() async {
     final String baseUrl = "https://anees-rus4.onrender.com";
-    final Uri url = Uri.parse("$baseUrl/reset_password_without_code");
+    final Uri url = Uri.parse("$baseUrl/reset_password_with_code");
+
 
     String password = passwordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
@@ -39,7 +40,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       url,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
-        "email": widget.email,
+        "code": widget.code,
         "new_password": password,
       }),
     );
@@ -65,13 +66,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
         child: Column(
           children: [
-            Image.asset("assets/انيس.png", height: 120),
+            Image.asset("assets/انيس.png", height: 260),
             const SizedBox(height: 30),
             const Text(
-              "تحديث كلمة المرور",
+                "إعادة تعيين كلمة المرور",
               style: TextStyle(
                 color: Color(0xFF4F6DA3),
                 fontSize: 24,
@@ -87,7 +88,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
             isLoading
                 ? const CircularProgressIndicator(color: Color(0xFF4F6DA3))
-                : buildButton("تحديث كلمة المرور", resetPassword),
+                  : buildButton("إعادة تعيين كلمة المرور", resetPassword),
           ],
         ),
       ),
@@ -120,7 +121,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             textAlign: TextAlign.right,
             obscureText: true,
             decoration: const InputDecoration(
-              hintText: '••••••••',
+              hintText: 'ادخل كلمة المرور هنا',
               border: InputBorder.none,
             ),
           ),
