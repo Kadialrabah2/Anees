@@ -22,88 +22,51 @@ app.config["SECRET_KEY"] = "12345"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-embedding_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
-
-base_data_path = os.path.join(os.getcwd(), "data")
-cognitive_path = os.path.join(base_data_path, "cognitive_therapyDATA")
-act_path = os.path.join(base_data_path, "acceptance_commitmentDATA")
-physical_path = os.path.join(base_data_path, "physical_activityDATA")
-diagnosis_path = os.path.join(base_data_path, "diagnosisDATA")
-
-# Remove vector DB loading from global scope to reduce memory
-cognitive_vector_db = None
-act_vector_db = None
-physical_vector_db = None
-diagnosis_vector_db = None
-
-# Shared LLM
 llm = ChatGroq(
     temperature=0,
     groq_api_key="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",
-    model_name="llama-3.3-70b-versatile"
+    model_name="LLaMA3-8B-8192"
 )
+DB_CONFIG = {
+    "dbname": "neondb",
+    "user": "neondb_owner",
+    "password": "npg_5jbqJcQnrk7K",
+    "host": "ep-small-snowflake-a59tq9qy-pooler.us-east-2.aws.neon.tech",
+    "port": "5432"
+}
 
-# Import chatbot modules
-from diagnosis import get_diagnosis_response
-from cognitive_therapy import get_cognitive_response
-from acceptance_commitment import get_act_response
-from physical_activity import get_physical_response
+def save_message(user_id, message, role):
+    conn, cur = None, None
+    try:
+        conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO conversations (user_id, message, role) VALUES (%s, %s, %s)",
+            (user_id, message, role)
+        )
+        conn.commit()
+    except Exception as e:
+        print("DB Save Error:", e)
+    finally:
+        if cur: cur.close()
+        if conn: conn.close()
 
-# Database connection
-def get_db_connection():
-    return psycopg2.connect(
-        dbname="aneesdatabase",
-        user="aneesdatabase_user",
-        password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
-        host="dpg-cuob70l6l47c73cbtgqg-a"
-    )
-
-# Load Chroma vector DB on-demand to avoid OOM
-def load_vector_db(path):
-    if os.path.exists(path):
-        return Chroma(persist_directory=path, embedding_function=embedding_model)
-    else:
-        if path.endswith("cognitive"):
-            loader = DirectoryLoader(cognitive_path, glob="*.pdf", loader_cls=PyPDFLoader)
-        elif path.endswith("act"):
-            loader = DirectoryLoader(act_path, glob="*.pdf", loader_cls=PyPDFLoader)
-        elif path.endswith("physical"):
-            loader = DirectoryLoader(physical_path, glob="*.pdf", loader_cls=PyPDFLoader)
-        elif path.endswith("diagnosis"):
-            loader = DirectoryLoader(diagnosis_path, glob="*.pdf", loader_cls=PyPDFLoader)
-        else:
-            raise ValueError("Unknown DB path")
-
-        texts = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(loader.load())
-        db = Chroma.from_documents(texts, embedding_model, persist_directory=path)
-        db.persist()
-        return db
-
-# Lazy-load functions
-
-def get_cognitive_db():
-    global cognitive_vector_db
-    if cognitive_vector_db is None:
-        cognitive_vector_db = load_vector_db("./chroma_db/cognitive")
-    return cognitive_vector_db
-
-def get_act_db():
-    global act_vector_db
-    if act_vector_db is None:
-        act_vector_db = load_vector_db("./chroma_db/act")
-    return act_vector_db
-
-def get_physical_db():
-    global physical_vector_db
-    if physical_vector_db is None:
-        physical_vector_db = load_vector_db("./chroma_db/physical")
-    return physical_vector_db
-
-def get_diagnosis_db():
-    global diagnosis_vector_db
-    if diagnosis_vector_db is None:
-        diagnosis_vector_db = load_vector_db("./chroma_db/diagnosis")
-    return diagnosis_vector_db
+def get_conversation_history(user_id, limit=10):
+    conn, cur = None, None
+    try:
+        conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT role, message FROM conversations
+            WHERE user_id = %s ORDER BY timestamp DESC LIMIT %s
+        """, (user_id, limit))
+        return cur.fetchall()
+    except Exception as e:
+        print("DB Read Error:", e)
+        return []
+    finally:
+        if cur: cur.close()
+        if conn: conn.close()
 
 # generate a random 5-digit reset code
 def generate_reset_code():
@@ -624,71 +587,96 @@ def get_chat_history(user_id):
         cur.close()
         conn.close()
 
-@app.route('/cognitive', methods=['POST'])
-def cognitive_route():
-    try:
-        data = request.get_json()
-        message = data.get("message")
-        user_id = data.get("user_id")
-
-        response = get_cognitive_response(user_id, message, get_cognitive_db(), llm)
-
-        return jsonify({"response": response})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/act', methods=['POST'])
-def act_route():
-    try:
-        data = request.get_json()
-        message = data.get("message")
-        user_id = data.get("user_id")
-
-        response = get_act_response(user_id, message, get_act_db(), llm)
-
-        return jsonify({"response": response})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/physical', methods=['POST'])
-def physical_route():
-    try:
-        data = request.get_json()
-        message = data.get("message")
-        user_id = data.get("user_id")
-
-        response = get_physical_response(user_id, message, get_physical_db(), llm)
-
-        return jsonify({"response": response})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/diagnosis', methods=['POST'])
+@app.route("/diagnosis", methods=["POST"])
 def diagnosis_route():
     try:
         data = request.get_json()
-        message = data.get("message")
         user_id = data.get("user_id")
+        message = data.get("message")
+
+        if not user_id or not message:
+            return jsonify({"error": "Missing user_id or message"}), 400
 
         print(">> Incoming /diagnosis")
-        print(">> user_id:", user_id)
-        print(">> message:", message)
+        save_message(user_id, message, "user")
 
-        # Check if vector_db and llm are available
-        print(">> vector_db:", type(get_diagnosis_db()))
-        print(">> llm:", type(llm))
+        prompt = f"You are a helpful and supportive mental health assistant. The user said: '{message}'. Respond with empathy and insight."
+        response = llm.invoke(prompt)
 
-        result = get_diagnosis_response(user_id, message, get_diagnosis_db(), llm)
+        save_message(user_id, response, "assistant")
 
-        print(">> response:", result["reply"])
-        print(">> mood_analysis:", result["mood"])
-
-        return jsonify({
-            "response": result["reply"],
-            "mood_analysis": result["mood"]
-        })
+        return jsonify({"response": response})
     except Exception as e:
-        print(">> Error in /diagnosis route:", e)
+        print(">> Error in /diagnosis:", e)
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/cognitive", methods=["POST"])
+def cognitive_route():
+    try:
+        data = request.get_json()
+        user_id = data.get("user_id")
+        message = data.get("message")
+
+        if not user_id or not message:
+            return jsonify({"error": "Missing user_id or message"}), 400
+
+        print(">> Incoming /cognitive")
+        save_message(user_id, message, "user")
+
+        prompt = f"You are a CBT (Cognitive Behavioral Therapy) chatbot. The user said: '{message}'. Respond with support using CBT techniques."
+        response = llm.invoke(prompt)
+
+        save_message(user_id, response, "assistant")
+
+        return jsonify({"response": response})
+    except Exception as e:
+        print(">> Error in /cognitive:", e)
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/act", methods=["POST"])
+def act_route():
+    try:
+        data = request.get_json()
+        user_id = data.get("user_id")
+        message = data.get("message")
+
+        if not user_id or not message:
+            return jsonify({"error": "Missing user_id or message"}), 400
+
+        print(">> Incoming /act")
+        save_message(user_id, message, "user")
+
+        prompt = f"You are a chatbot that uses Acceptance and Commitment Therapy. The user said: '{message}'. Respond in an ACT-informed manner."
+        response = llm.invoke(prompt)
+
+        save_message(user_id, response, "assistant")
+
+        return jsonify({"response": response})
+    except Exception as e:
+        print(">> Error in /act:", e)
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/physical", methods=["POST"])
+def physical_route():
+    try:
+        data = request.get_json()
+        user_id = data.get("user_id")
+        message = data.get("message")
+
+        if not user_id or not message:
+            return jsonify({"error": "Missing user_id or message"}), 400
+
+        print(">> Incoming /physical")
+        save_message(user_id, message, "user")
+
+        prompt = f"You are a physical health motivator chatbot. The user said: '{message}'. Respond with motivation and physical wellness tips."
+        response = llm.invoke(prompt)
+
+        save_message(user_id, response, "assistant")
+
+        return jsonify({"response": response})
+    except Exception as e:
+        print(">> Error in /physical:", e)
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
