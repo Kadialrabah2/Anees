@@ -23,7 +23,7 @@ class SignInPage extends StatelessWidget {
     }
 
     final Map<String, dynamic> requestData = {
-      "username": usernameOrEmail,
+      "username": username,
       "password": password,
     };
 
