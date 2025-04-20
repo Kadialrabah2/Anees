@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'chat/physical_activity.dart';
 import 'chat/mindfulness.dart';
 import 'chat/cognitive_therapy.dart';
 
 class TreatmentPage extends StatelessWidget {
+  final String? userName;
+
+  const TreatmentPage({Key? key, this.userName}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,21 +40,21 @@ class TreatmentPage extends StatelessWidget {
                         context,
                         "النشاط البدني",
                         Icons.directions_run,
-                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => PhysicalActivityPage())),
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => PhysicalActivityPage(userName: userName))),
                       ),
                       const SizedBox(height: 20),
                       buildTreatmentButton(
                         context,
                         "الوعي الذاتي",
                         Icons.psychology,
-                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => MindfulnessPage())),
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => MindfulnessPage(userName: userName))),
                       ),
                       const SizedBox(height: 20),
                       buildTreatmentButton(
                         context,
                         "العلاج المعرفي",
                         Icons.favorite,
-                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => HealthyLifestylePage())),
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => HealthyLifestylePage(userName: userName))),
                       ),
                     ],
                   ),

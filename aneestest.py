@@ -22,6 +22,14 @@ app.config["SECRET_KEY"] = "12345"
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+def get_db_connection():
+    return psycopg2.connect(
+        dbname="aneesdatabase",
+        user="aneesdatabase_user",
+        password="C4wxOis8WgGT3zPXTgcdh8vpycpmqoCt",
+        host="dpg-cuob70l6l47c73cbtgqg-a"
+    )
+
 llm = ChatGroq(
     temperature=0,
     groq_api_key="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",

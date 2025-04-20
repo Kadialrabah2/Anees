@@ -2,32 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class PhysicalService {
-  final String baseUrl = "https://anees-rus4.onrender.com";
-
-  Future<String> sendMessage(int userId, String message) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/physical'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "user_id": userId,
-        "message": message,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data["response"];
-    } else {
-      throw Exception("Server error: ${response.statusCode}");
-    }
-  }
-}
-
 class PhysicalActivityPage extends StatefulWidget {
   final String? userName;
 
-  PhysicalActivityPage({this.userName});
+  const PhysicalActivityPage({Key? key, this.userName}) : super(key: key);
 
   @override
   _PhysicalActivityPageState createState() => _PhysicalActivityPageState();
@@ -37,44 +15,50 @@ class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
 
+  final String baseUrl = "https://anees-rus4.onrender.com";
+
   @override
   void initState() {
     super.initState();
     String name = widget.userName?.isNotEmpty == true ? widget.userName! : "رفيق أنيس";
-    _messages.add({"text": "أهلًا بك $name\nما هو نشاطك البدني اليوم؟", "isUser": false});
+    _messages.add({"text": "مرحبًا $name\nما هو نشاطك البدني اليوم؟", "isUser": false});
   }
 
-  /*void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
+  void _sendMessage() async {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
 
     setState(() {
-      _messages.add({"text": _messageController.text.trim(), "isUser": true});
+      _messages.add({"text": text, "isUser": true});
       _messageController.clear();
     });
-  }*/
-  void _sendMessage() async {
-  final text = _messageController.text.trim();
-  if (text.isEmpty) return;
 
-  setState(() {
-    _messages.add({"text": text, "isUser": true});
-    _messageController.clear();
-  });
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/physical'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "username": widget.userName ?? "unknown",
+          "message": text,
+        }),
+      );
 
-  try {
-    final reply = await PhysicalService().sendMessage(
-      int.parse(widget.userName ?? "0"), // 👈 converting username to ID
-      text,
-    );
-    setState(() {
-      _messages.add({"text": reply, "isUser": false});
-    });
-  } catch (e) {
-    setState(() {
-      _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
-    });
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _messages.add({"text": data["response"], "isUser": false});
+        });
+      } else {
+        setState(() {
+          _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -177,3 +161,4 @@ class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
     );
   }
 }
+
