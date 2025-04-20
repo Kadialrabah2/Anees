@@ -24,41 +24,42 @@ class _TalkToMePageState extends State<TalkToMePage> {
     _messages.add({"text": "أهلًا بك $name\nكيف حالك اليوم؟", "isUser": false});
   }
 
-  void _sendMessage() async {
-    final text = _messageController.text.trim();
-    if (text.isEmpty) return;
+void _sendMessage() async {
+  final text = _messageController.text.trim();
+  if (text.isEmpty) return;
 
-    setState(() {
-      _messages.add({"text": text, "isUser": true});
-      _messageController.clear();
-    });
+  setState(() {
+    _messages.add({"text": text, "isUser": true});
+    _messageController.clear();
+  });
 
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/diagnosis'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "user_id": int.parse(widget.userName ?? "0"), // converts username to user_id
-          "message": text,
-        }),
-      );
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/diagnosis'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "username": widget.userName ?? "unknown",
+        "message": text,
+      }),
+    );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          _messages.add({"text": data["response"], "isUser": false});
-        });
-      } else {
-        setState(() {
-          _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
-        });
-      }
-    } catch (e) {
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
       setState(() {
-        _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+        _messages.add({"text": data["response"], "isUser": false});
+      });
+    } else {
+      setState(() {
+        _messages.add({"text": "فشل الاتصال بالخادم", "isUser": false});
       });
     }
+  } catch (e) {
+    setState(() {
+      _messages.add({"text": "فشل الاتصال بالخادم", "isUser": false});
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

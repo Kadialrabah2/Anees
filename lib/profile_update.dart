@@ -11,7 +11,6 @@ class ProfileUpdatePage extends StatefulWidget {
 
 class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final TextEditingController usernameController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController botNameController = TextEditingController();
@@ -97,7 +96,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                       child: Column(
                         children: [
                           buildProfileField("إسم المستخدم", usernameController),
-                          buildProfileField("العمر", ageController),
                           buildProfileField("البريد الإلكتروني", emailController),
                           buildProfileField("كلمة المرور", passwordController, isPassword: true),
                           buildProfileField("إسم البوت", botNameController),
@@ -169,7 +167,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide.none,
               ),
-              hintText: null, 
+              hintText: null,
               hintStyle: const TextStyle(color: Colors.grey),
             ),
           ),

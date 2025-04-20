@@ -5,12 +5,12 @@ import 'package:http/http.dart' as http;
 class HealthyLifestyleService {
   final String baseUrl = "https://anees-rus4.onrender.com";
 
-  Future<String> sendMessage(int userId, String message) async {
+  Future<String> sendMessage(String username, String message) async {
     final response = await http.post(
       Uri.parse('$baseUrl/cognitive'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
-        "user_id": userId,
+        "username": username,
         "message": message,
       }),
     );
@@ -59,7 +59,7 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
 
     try {
       final reply = await HealthyLifestyleService().sendMessage(
-        int.parse(widget.userName ?? "0"),
+        widget.userName ?? "unknown",
         text,
       );
       setState(() {
@@ -67,7 +67,7 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
       });
     } catch (e) {
       setState(() {
-        _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+        _messages.add({"text": "فشل الاتصال  بالسيرفر", "isUser": false});
       });
     }
   }

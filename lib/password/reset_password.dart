@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../signin.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   final String code;
@@ -20,7 +21,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Future<void> resetPassword() async {
     final String baseUrl = "https://anees-rus4.onrender.com";
     final Uri url = Uri.parse("$baseUrl/reset_password_with_code");
-
 
     String password = passwordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
@@ -53,7 +53,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("تم تغيير كلمة المرور بنجاح")),
       );
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const SignInPage()),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("فشل تغيير كلمة المرور: ${response.body}")),
@@ -69,10 +72,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
         child: Column(
           children: [
-            Image.asset("assets/انيس.png", height: 260),
+            Image.asset("assets/انيس.png", height: 220),
             const SizedBox(height: 30),
             const Text(
-                "إعادة تعيين كلمة المرور",
+              "إعادة تعيين كلمة المرور",
               style: TextStyle(
                 color: Color(0xFF4F6DA3),
                 fontSize: 24,
@@ -80,15 +83,20 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               ),
             ),
             const SizedBox(height: 20),
-
             buildPasswordField("كلمة المرور الجديدة", passwordController),
             const SizedBox(height: 16),
             buildPasswordField("تأكيد كلمة المرور", confirmPasswordController),
             const SizedBox(height: 24),
-
             isLoading
                 ? const CircularProgressIndicator(color: Color(0xFF4F6DA3))
-                  : buildButton("إعادة تعيين كلمة المرور", resetPassword),
+                : buildButton("إعادة تعيين كلمة المرور", resetPassword),
+            const SizedBox(height: 10),
+            buildButton("العودة لتسجيل الدخول", () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const SignInPage()),
+              );
+            }),
           ],
         ),
       ),
@@ -109,9 +117,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           ),
           textDirection: TextDirection.rtl,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 10),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             color: const Color(0xFFE9F1F4),
             borderRadius: BorderRadius.circular(32),
@@ -138,7 +146,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF4F6DA3),
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         ),
         child: Text(
           text,

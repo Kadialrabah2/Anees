@@ -50,7 +50,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
               child: Column(
                 children: [
-                  Image.asset("assets/انيس.png", height: 220, width: 300),
+                  Image.asset("assets/انيس.png", height: 250, width: 300),
                   const SizedBox(height: 20),
                   const Text(
                     "إدخال رمز التحقق",

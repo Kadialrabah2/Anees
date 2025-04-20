@@ -9,7 +9,6 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpPage> {
   final TextEditingController usernameController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordObscured = true;
@@ -17,37 +16,40 @@ class _SignUpScreenState extends State<SignUpPage> {
   final String baseUrl = "https://anees-rus4.onrender.com";
 
   Future<void> signUp(BuildContext context) async {
-    final Uri url = Uri.parse("$baseUrl/signup");
+  final Uri url = Uri.parse("$baseUrl/signup");
 
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "username": usernameController.text.trim(),
-          "age": ageController.text.trim(),
-          "email": emailController.text.trim(),
-          "password": passwordController.text.trim(),
-        }),
-      );
+  try {
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "username": usernameController.text.trim(),
+        "email": emailController.text.trim(),
+        "password": passwordController.text.trim(),
+      }),
+    );
 
-      final responseData = jsonDecode(response.body);
+    final responseData = jsonDecode(response.body);
 
-      final message = response.statusCode == 200
-          ? " ${responseData['message'] ?? 'تم إنشاء الحساب بنجاح!'}"
-          : " فشل إنشاء الحساب: ${responseData['error'] ?? response.body}";
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    final isSuccess = response.statusCode >= 200 && response.statusCode < 300;
 
-      if (response.statusCode == 200) {
-        Navigator.pushReplacementNamed(context, '/signin');
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(" خطأ أثناء الاتصال بالسيرفر: $e")),
-      );
+    final message = isSuccess
+        ? "${responseData['message'] ?? 'تم إنشاء الحساب بنجاح!'}"
+        : "فشل إنشاء الحساب: ${responseData['error'] ?? response.body}";
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+
+    if (isSuccess) {
+      Navigator.pushReplacementNamed(context, '/signin');
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("خطأ أثناء الاتصال بالسيرفر: $e")),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +64,10 @@ class _SignUpScreenState extends State<SignUpPage> {
               const SizedBox(height: 20),
               buildTextField('اسم المستخدم', 'ادخل اسم المستخدم', false, usernameController),
               const SizedBox(height: 10),
-              buildTextField('العمر', 'ادخل العمر', false, ageController, isNumber: true),
-              const SizedBox(height: 10),
               buildTextField('البريد الإلكتروني', 'ادخل البريد الإلكتروني', false, emailController),
               const SizedBox(height: 10),
               buildPasswordField(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               buildButton('إنشاء حساب', () => signUp(context)),
               const SizedBox(height: 10),
               buildButton('تسجيل الدخول', () {
@@ -172,29 +172,27 @@ class _SignUpScreenState extends State<SignUpPage> {
     );
   }
 
-  
-
-Widget buildButton(String text, VoidCallback onPressed) {
-  return SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4F6DA3),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+  Widget buildButton(String text, VoidCallback onPressed) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF4F6DA3),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  );
-}
+    );
+  }
 }

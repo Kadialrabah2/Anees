@@ -25,40 +25,39 @@ class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
   }
 
   void _sendMessage() async {
-    final text = _messageController.text.trim();
-    if (text.isEmpty) return;
+  final text = _messageController.text.trim();
+  if (text.isEmpty) return;
 
-    setState(() {
-      _messages.add({"text": text, "isUser": true});
-      _messageController.clear();
-    });
+  setState(() {
+    _messages.add({"text": text, "isUser": true});
+    _messageController.clear();
+  });
 
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/physical'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "username": widget.userName ?? "unknown",
-          "message": text,
-        }),
-      );
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/physical'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "username": widget.userName ?? "unknown",
+        "message": text,
+      }),
+    );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          _messages.add({"text": data["response"], "isUser": false});
-        });
-      } else {
-        setState(() {
-          _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
-        });
-      }
-    } catch (e) {
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
       setState(() {
-        _messages.add({"text": "❌ فشل الاتصال بالخادم", "isUser": false});
+        _messages.add({"text": data["response"], "isUser": false});
       });
+    } else {
+      throw Exception("HTTP ${response.statusCode}");
     }
+  } catch (e) {
+    setState(() {
+      _messages.add({"text": "فشل الاتصال بالسيرفر", "isUser": false});
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
