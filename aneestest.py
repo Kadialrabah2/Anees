@@ -646,7 +646,7 @@ def diagnosis_route():
             "You are a compassionate and supportive mental health assistant. Respond with empathy, clarity, and insight to help the user reflect and cope."
         )
 
-        response = str(llm.invoke(prompt))
+        response = llm.invoke(prompt).content
         save_message(username, response, "assistant")
 
         return jsonify({
@@ -677,7 +677,7 @@ def cognitive_route():
             "You are a Cognitive Behavioral Therapy (CBT) chatbot. Your goal is to help users identify and challenge negative thoughts using CBT strategies in a supportive tone."
         )
 
-        response = str(llm.invoke(prompt))
+        response = llm.invoke(prompt).content
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
@@ -705,7 +705,7 @@ def act_route():
             "You are an Acceptance and Commitment Therapy (ACT) chatbot. Help the user accept their thoughts and feelings without judgment, and encourage actions aligned with their values."
         )
 
-        response = str(llm.invoke(prompt))
+        response = llm.invoke(prompt).content
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
@@ -732,7 +732,7 @@ def physical_route():
             "You are a physical wellness chatbot that motivates users to stay active and healthy. Offer simple and encouraging physical activity tips based on the user’s input."
         )
 
-        response = str(llm.invoke(prompt))
+        response = llm.invoke(prompt).content
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
