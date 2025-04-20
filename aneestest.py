@@ -608,6 +608,23 @@ def build_context_prompt(username, message, role_description):
 user: {message}
 assistant:"""
 
+def calculate_mood_level(text):
+    keywords = {
+        "stress": ["stress", "tension", "nervous", "anxiety", "الإجهاد", "التوتر", "العصبية", "القلق"],
+        "anxiety": ["anxious", "worry", "fear", "قلق", "خوف"],
+        "panic": ["panic", "attack", "overwhelmed", "ذعر", "هجوم", "مُثقل"],
+        "loneliness": ["lonely", "isolated", "alone", "وحيد", "منعزل", "وحده"],
+        "burnout": ["burnout", "exhausted", "tired", "الإرهاق", "التعب"],
+        "depression": ["depressed", "down", "sad", "hopeless", "مكتئب", "حزين", "يائس"]
+    }
+
+    mood_scores = {}
+    for mood, words in keywords.items():
+        score = sum(word in text.lower() for word in words) * 25
+        mood_scores[f"{mood}_level"] = min(score, 100)
+
+    return mood_scores
+
 @app.route("/diagnosis", methods=["POST"])
 def diagnosis_route():
     try:
@@ -621,6 +638,8 @@ def diagnosis_route():
         print(">> Incoming /diagnosis")
         save_message(username, message, "user")
 
+        mood = calculate_mood_level(message)
+
         prompt = build_context_prompt(
             username,
             message,
@@ -630,7 +649,10 @@ def diagnosis_route():
         response = str(llm.invoke(prompt))
         save_message(username, response, "assistant")
 
-        return jsonify({"response": response})
+        return jsonify({
+            "response": response,
+            "mood_scores": mood
+        })
     except Exception as e:
         print(">> Error in /diagnosis:", e)
         return jsonify({"error": str(e)}), 500
