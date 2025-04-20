@@ -649,6 +649,9 @@ def diagnosis_route():
         llm_response = llm.invoke(prompt)
         response_text = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
         response = response_text.replace("\n", " ").strip()
+        if isinstance(response, dict):
+            response = response.get("content", "")
+        response = response.replace("\n", " ")
 
         save_message(username, response, "assistant")
 
@@ -683,7 +686,9 @@ def cognitive_route():
         llm_response = llm.invoke(prompt)
         response_text = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
         response = response_text.replace("\n", " ").strip()
-
+        if isinstance(response, dict):
+            response = response.get("content", "")
+        response = response.replace("\n", " ")
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
@@ -714,7 +719,9 @@ def act_route():
         llm_response = llm.invoke(prompt)
         response_text = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
         response = response_text.replace("\n", " ").strip()
-
+        if isinstance(response, dict):
+            response = response.get("content", "")
+        response = response.replace("\n", " ")
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
@@ -744,7 +751,9 @@ def physical_route():
         llm_response = llm.invoke(prompt)
         response_text = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
         response = response_text.replace("\n", " ").strip()
-
+        if isinstance(response, dict):
+            response = response.get("content", "")
+        response = response.replace("\n", " ")
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
