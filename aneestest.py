@@ -647,7 +647,8 @@ def diagnosis_route():
         )
 
         llm_response = llm.invoke(prompt)
-        response = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
+        response_text = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
+        response = response_text.replace("\n", " ").strip()
 
         save_message(username, response, "assistant")
 
@@ -680,7 +681,8 @@ def cognitive_route():
         )
 
         llm_response = llm.invoke(prompt)
-        response = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
+        response_text = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
+        response = response_text.replace("\n", " ").strip()
 
         save_message(username, response, "assistant")
 
@@ -710,7 +712,8 @@ def act_route():
         )
 
         llm_response = llm.invoke(prompt)
-        response = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
+        response_text = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
+        response = response_text.replace("\n", " ").strip()
 
         save_message(username, response, "assistant")
 
@@ -739,7 +742,8 @@ def physical_route():
         )
 
         llm_response = llm.invoke(prompt)
-        response = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
+        response_text = llm_response.content if hasattr(llm_response, "content") else str(llm_response)
+        response = response_text.replace("\n", " ").strip()
 
         save_message(username, response, "assistant")
 
