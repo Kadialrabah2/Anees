@@ -43,14 +43,14 @@ DB_CONFIG = {
     "port": "5432"
 }
 
-def save_message(user_id, message, role):
+def save_message(username, message, role):
     conn, cur = None, None
     try:
         conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO conversations (user_id, message, role) VALUES (%s, %s, %s)",
-            (user_id, message, role)
+            "INSERT INTO conversations (username, message, role) VALUES (%s, %s, %s)",
+            (username, message, role)
         )
         conn.commit()
     except Exception as e:
@@ -59,15 +59,15 @@ def save_message(user_id, message, role):
         if cur: cur.close()
         if conn: conn.close()
 
-def get_conversation_history(user_id, limit=10):
+def get_conversation_history(username, limit=10):
     conn, cur = None, None
     try:
         conn = psycopg2.connect(**DB_CONFIG, sslmode='require')
         cur = conn.cursor()
         cur.execute("""
             SELECT role, message FROM conversations
-            WHERE user_id = %s ORDER BY timestamp DESC LIMIT %s
-        """, (user_id, limit))
+            WHERE username = %s ORDER BY timestamp DESC LIMIT %s
+        """, (username, limit))
         return cur.fetchall()
     except Exception as e:
         print("DB Read Error:", e)
@@ -75,6 +75,7 @@ def get_conversation_history(user_id, limit=10):
     finally:
         if cur: cur.close()
         if conn: conn.close()
+
 
 # generate a random 5-digit reset code
 def generate_reset_code():
@@ -596,69 +597,94 @@ def get_chat_history(user_id):
         cur.close()
         conn.close()
 
+def build_context_prompt(username, message, role_description):
+    history = get_conversation_history(username, limit=10)
+    context = ""
+    for role, msg in reversed(history):
+        context += f"{role}: {msg}\n"
+    return f"""{role_description}
+
+{context}
+user: {message}
+assistant:"""
+
 @app.route("/diagnosis", methods=["POST"])
 def diagnosis_route():
     try:
         data = request.get_json()
-        user_id = data.get("user_id")
+        username = data.get("username")
         message = data.get("message")
 
-        if not user_id or not message:
-            return jsonify({"error": "Missing user_id or message"}), 400
+        if not username or not message:
+            return jsonify({"error": "Missing username or message"}), 400
 
         print(">> Incoming /diagnosis")
-        save_message(user_id, message, "user")
+        save_message(username, message, "user")
 
-        prompt = f"You are a helpful and supportive mental health assistant. The user said: '{message}'. Respond with empathy and insight."
+        prompt = build_context_prompt(
+            username,
+            message,
+            "You are a compassionate and supportive mental health assistant. Respond with empathy, clarity, and insight to help the user reflect and cope."
+        )
+
         response = str(llm.invoke(prompt))
-
-        save_message(user_id, response, "assistant")
+        save_message(username, response, "assistant")
 
         return jsonify({"response": response})
     except Exception as e:
         print(">> Error in /diagnosis:", e)
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/cognitive", methods=["POST"])
 def cognitive_route():
     try:
         data = request.get_json()
-        user_id = data.get("user_id")
+        username = data.get("username")
         message = data.get("message")
 
-        if not user_id or not message:
-            return jsonify({"error": "Missing user_id or message"}), 400
+        if not username or not message:
+            return jsonify({"error": "Missing username or message"}), 400
 
         print(">> Incoming /cognitive")
-        save_message(user_id, message, "user")
+        save_message(username, message, "user")
 
-        prompt = f"You are a CBT (Cognitive Behavioral Therapy) chatbot. The user said: '{message}'. Respond with support using CBT techniques."
+        prompt = build_context_prompt(
+            username,
+            message,
+            "You are a Cognitive Behavioral Therapy (CBT) chatbot. Your goal is to help users identify and challenge negative thoughts using CBT strategies in a supportive tone."
+        )
+
         response = str(llm.invoke(prompt))
-
-        save_message(user_id, response, "assistant")
+        save_message(username, response, "assistant")
 
         return jsonify({"response": response})
     except Exception as e:
         print(">> Error in /cognitive:", e)
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/act", methods=["POST"])
 def act_route():
     try:
         data = request.get_json()
-        user_id = data.get("user_id")
+        username = data.get("username")
         message = data.get("message")
 
-        if not user_id or not message:
-            return jsonify({"error": "Missing user_id or message"}), 400
+        if not username or not message:
+            return jsonify({"error": "Missing username or message"}), 400
 
         print(">> Incoming /act")
-        save_message(user_id, message, "user")
+        save_message(username, message, "user")
 
-        prompt = f"You are a chatbot that uses Acceptance and Commitment Therapy. The user said: '{message}'. Respond in an ACT-informed manner."
+        prompt = build_context_prompt(
+            username,
+            message,
+            "You are an Acceptance and Commitment Therapy (ACT) chatbot. Help the user accept their thoughts and feelings without judgment, and encourage actions aligned with their values."
+        )
+
         response = str(llm.invoke(prompt))
-
-        save_message(user_id, response, "assistant")
+        save_message(username, response, "assistant")
 
         return jsonify({"response": response})
     except Exception as e:
@@ -669,19 +695,23 @@ def act_route():
 def physical_route():
     try:
         data = request.get_json()
-        user_id = data.get("user_id")
+        username = data.get("username")
         message = data.get("message")
 
-        if not user_id or not message:
-            return jsonify({"error": "Missing user_id or message"}), 400
+        if not username or not message:
+            return jsonify({"error": "Missing username or message"}), 400
 
         print(">> Incoming /physical")
-        save_message(user_id, message, "user")
+        save_message(username, message, "user")
 
-        prompt = f"You are a physical health motivator chatbot. The user said: '{message}'. Respond with motivation and physical wellness tips."
+        prompt = build_context_prompt(
+            username,
+            message,
+            "You are a physical wellness chatbot that motivates users to stay active and healthy. Offer simple and encouraging physical activity tips based on the user’s input."
+        )
+
         response = str(llm.invoke(prompt))
-
-        save_message(user_id, response, "assistant")
+        save_message(username, response, "assistant")
 
         return jsonify({"response": response})
     except Exception as e:
