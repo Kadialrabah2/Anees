@@ -201,9 +201,10 @@ def request_reset_password():
 
 
 # Reset Password Route
-@app.route("/reset_password/<code>", methods=["POST"])
-def reset_password(code):
+@app.route("/reset_password_with_code", methods=["POST"])
+def reset_password_with_code():
     data = request.json
+    code = data.get("code")
     new_password = data.get("new_password")
 
     if not new_password:

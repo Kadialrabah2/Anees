@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'reset_password.dart';
 
 class VerifyCodePage extends StatefulWidget {
@@ -14,60 +13,22 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
   final TextEditingController codeController = TextEditingController();
   bool isLoading = false;
 
-  Future<void> verifyCode(BuildContext context) async {
-    final String baseUrl = "https://anees-rus4.onrender.com";
+  void proceedToResetPage(BuildContext context) {
     final String code = codeController.text.trim();
 
     if (code.length != 5 || !RegExp(r'^[0-9]+$').hasMatch(code)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("يجب ادخال رمز التحقق اولا")),
+        const SnackBar(content: Text("يجب إدخال رمز تحقق صحيح مكون من 5 أرقام")),
       );
       return;
     }
 
-    final String url = "$baseUrl/reset_password/$code";
-
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-      );
-
-      setState(() {
-        isLoading = false;
-      });
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("كود التحقق صحيح")),
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResetPasswordPage(email: widget.email),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("كود التحقق غير صحيح: ${response.body}")),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("خطأ في الاتصال بالسيرفر: $e")),
-      );
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ResetPasswordPage(code: code),
+      ),
+    );
   }
 
   @override
@@ -124,7 +85,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                   const SizedBox(height: 20),
                   isLoading
                       ? const CircularProgressIndicator(color: Color(0xFF4F6DA3))
-                      : buildButton("متابعة", () => verifyCode(context)),
+                      : buildButton("متابعة", () => proceedToResetPage(context)),
                 ],
               ),
             ),

@@ -35,7 +35,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
         });
       }
     } catch (e) {
-      print(" خطأ في جلب البيانات: $e");
+      print("خطأ في جلب البيانات: $e");
     }
   }
 
@@ -44,7 +44,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
     if (await canLaunchUrl(phoneUri)) {
       await launchUrl(phoneUri);
     } else {
-      print(" لا يمكن الاتصال بالرقم $number");
+      print("لا يمكن الاتصال بالرقم $number");
     }
   }
 
@@ -53,7 +53,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      print(" لا يمكن فتح الرابط");
+      print("لا يمكن فتح الرابط");
     }
   }
 

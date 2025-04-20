@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'verify_code.dart'; 
+import 'package:http/http.dart' as http;
 
 class RequestResetPasswordPage extends StatefulWidget {
   const RequestResetPasswordPage({super.key});
@@ -12,23 +13,49 @@ class RequestResetPasswordPage extends StatefulWidget {
 class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
   final TextEditingController emailController = TextEditingController();
 
-  void goToVerifyPage() {
-    String email = emailController.text.trim();
+  void goToVerifyPage() async {
+  String email = emailController.text.trim();
 
-    if (email.isEmpty || !email.contains('@')) {
+  if (email.isEmpty || !email.contains('@')) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("الرجاء إدخال بريد إلكتروني صالح")),
+    );
+    return;
+  }
+
+  final String baseUrl = "https://anees-rus4.onrender.com";
+  final Uri url = Uri.parse("$baseUrl/request_reset_password");
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: '{"email": "$email"}',
+    );
+
+    if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("الرجاء إدخال بريد إلكتروني صالح")),
+        const SnackBar(content: Text("تم إرسال رمز التحقق إلى بريدك الإلكتروني")),
       );
-      return;
-    }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => VerifyCodePage(email: email),
-      ),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerifyCodePage(email: email),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("حدث خطأ: ${response.body}")),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("خطأ في الاتصال بالسيرفر: $e")),
     );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
