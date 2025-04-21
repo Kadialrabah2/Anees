@@ -43,38 +43,7 @@ DB_CONFIG = {
     "port": "5432"
 }
 
-def create_tables():
-    conn = None
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        
-        # إنشاء جدول بيانات المزاج
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS mood_data (
-                id SERIAL PRIMARY KEY,
-                user_id INTEGER REFERENCES users(id),
-                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                stress_level INTEGER,
-                anxiety_level INTEGER,
-                panic_level INTEGER,
-                loneliness_level INTEGER,
-                burnout_level INTEGER,
-                depression_level INTEGER
-            )
-        """)
-        
-        conn.commit()
-        print("تم إنشاء الجداول بنجاح")
-    except Exception as e:
-        print("خطأ في إنشاء الجداول:", e)
-    finally:
-        if conn:
-            conn.close()
 
-# استدعاء الدالة عند تشغيل التطبيق
-with app.app_context():
-    create_tables()
 
 def save_message(username, message, role):
     conn, cur = None, None
@@ -677,32 +646,24 @@ def diagnosis_route():
         conn = get_db_connection()
         cur = conn.cursor()
         
-        # الحصول على user_id من اسم المستخدم
-        cur.execute("SELECT id FROM users WHERE username = %s", (username,))
-        user = cur.fetchone()
+        cur.execute("""
+            INSERT INTO progress_tracker (
+                username, date, stress_level, anxiety_level, 
+                panic_level, loneliness_level, 
+                burnout_level, depression_level
+            ) VALUES (%s, CURRENT_TIMESTAMP, %s, %s, %s, %s, %s, %s)
+        """, (
+            username,
+            mood['stress_level'],
+            mood['anxiety_level'],
+            mood['panic_level'],
+            mood['loneliness_level'],
+            mood['burnout_level'],
+            mood['depression_level']
+        ))
         
-        if user:
-            user_id = user[0]
-            
-            # إدخال بيانات المزاج فقط
-            cur.execute("""
-                INSERT INTO mood_data (
-                    user_id, stress_level, anxiety_level, 
-                    panic_level, loneliness_level, 
-                    burnout_level, depression_level
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (
-                user_id,
-                mood['stress_level'],
-                mood['anxiety_level'],
-                mood['panic_level'],
-                mood['loneliness_level'],
-                mood['burnout_level'],
-                mood['depression_level']
-            ))
-            
-            conn.commit()
-
+        conn.commit()
+    
         prompt = build_context_prompt(
             username,
             message,
@@ -824,44 +785,50 @@ def physical_route():
         print(">> Error in /physical:", e)
         return jsonify({"error": str(e)}), 500
     
-@app.route("/progress_tracker_data", methods=["GET"])
-def get_progress_tracker_data():
-    user_id = session.get("user_id")
-    if not user_id:
-        return jsonify({"error": "User not authenticated"}), 401
-
+@app.route("/user_aggregated_mood_data/<username>", methods=["GET"])
+def get_user_aggregated_mood_data(username):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         
-        # جلب أحدث بيانات المزاج
+        # استعلام لجمع متوسط بيانات المزاج لمستخدم معين
         cur.execute("""
-            SELECT date, stress_level, anxiety_level, panic_level, 
-                   loneliness_level, burnout_level, depression_level
-            FROM mood_data
-            WHERE user_id = %s
-            ORDER BY date DESC
-            LIMIT 1
-        """, (user_id,))
-        mood = cur.fetchone()
-
-        cur.close()
-        conn.close()
-
-        if mood:
-            return jsonify({
-                "date": mood[0].strftime("%Y-%m-%d %H:%M:%S"),
-                "stress_level": mood[1],
-                "anxiety_level": mood[2],
-                "panic_level": mood[3],
-                "loneliness_level": mood[4],
-                "burnout_level": mood[5],
-                "depression_level": mood[6]
-            }), 200
-        else:
-            return jsonify({"message": "No mood data found"}), 404
+            SELECT 
+                AVG(stress_level) as avg_stress,
+                AVG(anxiety_level) as avg_anxiety,
+                AVG(panic_level) as avg_panic,
+                AVG(loneliness_level) as avg_loneliness,
+                AVG(burnout_level) as avg_burnout,
+                AVG(depression_level) as avg_depression
+            FROM progress_tracker
+            WHERE username = %s
+        """, (username,))
+        
+        averages = cur.fetchone()
+        
+        if not any(averages):
+            return jsonify({"message": "No data found for this user"}), 404
+            
+        response = {
+            "username": username,
+            "average_mood_levels": {
+                "stress": round(float(averages[0]), 2),
+                "anxiety": round(float(averages[1]), 2),
+                "panic": round(float(averages[2]), 2),
+                "loneliness": round(float(averages[3]), 2),
+                "burnout": round(float(averages[4]), 2),
+                "depression": round(float(averages[5]), 2)
+            }
+        }
+        
+        return jsonify(response), 200
+        
     except Exception as e:
-        return jsonify({"error": str(e)}), 500    
+        print(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if 'cur' in locals(): cur.close()
+        if 'conn' in locals(): conn.close()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
