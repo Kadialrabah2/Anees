@@ -5,7 +5,7 @@ import 'signin.dart';
 import 'home.dart'; 
 import 'describe_feeling.dart';
 import 'chat/talk_to_me.dart';
-//import 'progress_tracker.dart'; 
+import 'progress_tracker.dart'; 
 
 
 void main() {
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/describe': (context) => DescribeFeelingPage(),
         '/chat': (context) => TalkToMePage(),
-     //   '/progress': (context) => ProgressTrackerPage(), 
+        '/progress': (context) => ProgressTrackerPage(), 
       },
     );
   }

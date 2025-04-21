@@ -29,7 +29,6 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
               opacity: 0.3,
               child: Image.asset(
                 "assets/h.png",
-                fit: BoxFit.cover,
               ),
             ),
           ),
