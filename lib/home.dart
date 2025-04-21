@@ -4,6 +4,8 @@ import 'chat/talk_to_me.dart';
 import 'chat/chat_password.dart';
 import 'profile_update.dart';
 import 'emergency.dart';
+import 'progress_tracker.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -32,13 +34,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
       body: IndexedStack(
-        index: _selectedIndex,
+      index: _selectedIndex,
         children: [
           buildMainHome(context),
-          Container(), 
-          Container(), 
-        ],
-      ),
+          ProgressTrackerPage(), 
+            Container(), 
+  ],
+),
+
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: const Color(0xFF4F6DA3),
