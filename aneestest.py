@@ -43,6 +43,39 @@ DB_CONFIG = {
     "port": "5432"
 }
 
+def create_tables():
+    conn = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # إنشاء جدول بيانات المزاج
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS mood_data (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER REFERENCES users(id),
+                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                stress_level INTEGER,
+                anxiety_level INTEGER,
+                panic_level INTEGER,
+                loneliness_level INTEGER,
+                burnout_level INTEGER,
+                depression_level INTEGER
+            )
+        """)
+        
+        conn.commit()
+        print("تم إنشاء الجداول بنجاح")
+    except Exception as e:
+        print("خطأ في إنشاء الجداول:", e)
+    finally:
+        if conn:
+            conn.close()
+
+# استدعاء الدالة عند تشغيل التطبيق
+with app.app_context():
+    create_tables()
+
 def save_message(username, message, role):
     conn, cur = None, None
     try:
@@ -640,6 +673,36 @@ def diagnosis_route():
 
         mood = calculate_mood_level(message)
 
+         # حفظ بيانات المزاج في قاعدة البيانات
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # الحصول على user_id من اسم المستخدم
+        cur.execute("SELECT id FROM users WHERE username = %s", (username,))
+        user = cur.fetchone()
+        
+        if user:
+            user_id = user[0]
+            
+            # إدخال بيانات المزاج فقط
+            cur.execute("""
+                INSERT INTO mood_data (
+                    user_id, stress_level, anxiety_level, 
+                    panic_level, loneliness_level, 
+                    burnout_level, depression_level
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                user_id,
+                mood['stress_level'],
+                mood['anxiety_level'],
+                mood['panic_level'],
+                mood['loneliness_level'],
+                mood['burnout_level'],
+                mood['depression_level']
+            ))
+            
+            conn.commit()
+
         prompt = build_context_prompt(
             username,
             message,
@@ -760,6 +823,45 @@ def physical_route():
     except Exception as e:
         print(">> Error in /physical:", e)
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/progress_tracker_data", methods=["GET"])
+def get_progress_tracker_data():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "User not authenticated"}), 401
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # جلب أحدث بيانات المزاج
+        cur.execute("""
+            SELECT date, stress_level, anxiety_level, panic_level, 
+                   loneliness_level, burnout_level, depression_level
+            FROM mood_data
+            WHERE user_id = %s
+            ORDER BY date DESC
+            LIMIT 1
+        """, (user_id,))
+        mood = cur.fetchone()
+
+        cur.close()
+        conn.close()
+
+        if mood:
+            return jsonify({
+                "date": mood[0].strftime("%Y-%m-%d %H:%M:%S"),
+                "stress_level": mood[1],
+                "anxiety_level": mood[2],
+                "panic_level": mood[3],
+                "loneliness_level": mood[4],
+                "burnout_level": mood[5],
+                "depression_level": mood[6]
+            }), 200
+        else:
+            return jsonify({"message": "No mood data found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500    
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
