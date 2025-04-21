@@ -1,0 +1,1152 @@
+Index: ../.dart_tool/package_config_subset
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>async\r\n2.18\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/lib/\r\nboolean_selector\r\n2.17\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1/lib/\r\ncharacters\r\n2.12\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0/lib/\r\nclock\r\n2.12\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1/lib/\r\ncollection\r\n3.4\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.0/lib/\r\nfake_async\r\n2.12\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1/lib/\r\nflutter_lints\r\n3.1\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2/lib/\r\nhttp\r\n2.19\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6/lib/\r\nhttp_parser\r\n2.12\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2/lib/\r\nleak_tracker\r\n3.2\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.7/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.7/lib/\r\nleak_tracker_flutter_testing\r\n3.2\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.8/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.8/lib/\r\nleak_tracker_testing\r\n3.2\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1/lib/\r\nlints\r\n3.0\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0/lib/\r\nmatcher\r\n3.0\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16+1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16+1/lib/\r\nmaterial_color_utilities\r\n2.17\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1/lib/\r\nmeta\r\n2.12\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.15.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.15.0/lib/\r\npath\r\n3.0\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.0/lib/\r\npercent_indicator\r\n2.12\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5/lib/\r\nplugin_platform_interface\r\n3.0\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8/lib/\r\nsource_span\r\n2.18\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0/lib/\r\nstack_trace\r\n3.4\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.0/lib/\r\nstream_channel\r\n2.19\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.2/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.2/lib/\r\nstring_scanner\r\n3.1\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.3.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.3.0/lib/\r\nterm_glyph\r\n2.12\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1/lib/\r\ntest_api\r\n3.4\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.3/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.3/lib/\r\ntyped_data\r\n2.17\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2/lib/\r\nurl_launcher\r\n3.3\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1/lib/\r\nurl_launcher_android\r\n3.0\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2/lib/\r\nurl_launcher_ios\r\n3.3\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.2/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.2/lib/\r\nurl_launcher_linux\r\n3.3\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1/lib/\r\nurl_launcher_macos\r\n3.3\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2/lib/\r\nurl_launcher_platform_interface\r\n3.1\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2/lib/\r\nurl_launcher_web\r\n3.3\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.3.3/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.3.3/lib/\r\nurl_launcher_windows\r\n3.3\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.3/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.3/lib/\r\nvector_math\r\n2.14\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4/lib/\r\nvm_service\r\n3.3\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.0/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.0/lib/\r\nweb\r\n3.3\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.5.1/\r\nfile:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.5.1/lib/\r\nanees\r\n3.0\r\nfile:///C:/Users/Layan/OneDrive/Desktop/GP2/Anees2/Anees/\r\nfile:///C:/Users/Layan/OneDrive/Desktop/GP2/Anees2/Anees/lib/\r\nsky_engine\r\n3.2\r\nfile:///C:/dev/src/flutter/bin/cache/pkg/sky_engine/\r\nfile:///C:/dev/src/flutter/bin/cache/pkg/sky_engine/lib/\r\nflutter\r\n3.3\r\nfile:///C:/dev/src/flutter/packages/flutter/\r\nfile:///C:/dev/src/flutter/packages/flutter/lib/\r\nflutter_test\r\n3.3\r\nfile:///C:/dev/src/flutter/packages/flutter_test/\r\nfile:///C:/dev/src/flutter/packages/flutter_test/lib/\r\nflutter_web_plugins\r\n3.2\r\nfile:///C:/dev/src/flutter/packages/flutter_web_plugins/\r\nfile:///C:/dev/src/flutter/packages/flutter_web_plugins/lib/\r\n2\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../.dart_tool/package_config_subset b/../.dart_tool/package_config_subset
+--- a/../.dart_tool/package_config_subset	(revision da8871ff7ec78d78afb97a8a3fa1106790852808)
++++ b/../.dart_tool/package_config_subset	(date 1745104714335)
+@@ -1,169 +1,169 @@
+ async
+-2.18
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.12.0/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.12.0/lib/
+ boolean_selector
+-2.17
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1/lib/
++3.1
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.2/lib/
+ characters
+-2.12
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.4.0/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.4.0/lib/
+ clock
+-2.12
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.2/lib/
+ collection
+ 3.4
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.0/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.1/lib/
+ fake_async
+-2.12
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1/lib/
++3.3
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.2/lib/
+ flutter_lints
+ 3.1
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2/lib/
+ http
+ 2.19
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6/lib/
+ http_parser
+-2.12
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.1.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.1.2/lib/
+ leak_tracker
+ 3.2
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.7/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.7/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.8/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.8/lib/
+ leak_tracker_flutter_testing
+ 3.2
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.8/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.8/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.9/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.9/lib/
+ leak_tracker_testing
+ 3.2
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1/lib/
+ lints
+ 3.0
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0/lib/
+ matcher
+-3.0
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16+1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16+1/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.17/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.17/lib/
+ material_color_utilities
+ 2.17
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1/lib/
+ meta
+ 2.12
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.15.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.15.0/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.16.0/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.16.0/lib/
+ path
+-3.0
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.0/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.1/lib/
+ percent_indicator
+ 2.12
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5/lib/
+ plugin_platform_interface
+ 3.0
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8/lib/
+ source_span
+-2.18
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0/lib/
++3.1
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.1/lib/
+ stack_trace
+ 3.4
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.0/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.1/lib/
+ stream_channel
+-2.19
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.2/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.2/lib/
++3.3
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.4/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.4/lib/
+ string_scanner
+ 3.1
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.3.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.3.0/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.4.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.4.1/lib/
+ term_glyph
+-2.12
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1/lib/
++3.1
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.2/lib/
+ test_api
+-3.4
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.3/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.3/lib/
++3.5
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.4/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.4/lib/
+ typed_data
+-2.17
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2/lib/
++3.5
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.4.0/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.4.0/lib/
+ url_launcher
+ 3.3
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1/lib/
+ url_launcher_android
+ 3.0
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2/lib/
+ url_launcher_ios
+-3.3
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.2/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.2/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.3/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.3/lib/
+ url_launcher_linux
+ 3.3
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1/lib/
+ url_launcher_macos
+ 3.3
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2/lib/
+ url_launcher_platform_interface
+ 3.1
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2/lib/
+ url_launcher_web
+-3.3
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.3.3/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.3.3/lib/
++3.6
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.4.0/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.4.0/lib/
+ url_launcher_windows
+-3.3
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.3/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.3/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.4/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.4/lib/
+ vector_math
+ 2.14
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4/lib/
+ vm_service
+ 3.3
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.0/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.0/lib/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.1/lib/
+ web
+-3.3
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.5.1/
+-file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.5.1/lib/
++3.4
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.1.1/
++file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.1.1/lib/
+ anees
+ 3.0
+-file:///C:/Users/Layan/OneDrive/Desktop/GP2/Anees2/Anees/
+-file:///C:/Users/Layan/OneDrive/Desktop/GP2/Anees2/Anees/lib/
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/
+ sky_engine
+-3.2
+-file:///C:/dev/src/flutter/bin/cache/pkg/sky_engine/
+-file:///C:/dev/src/flutter/bin/cache/pkg/sky_engine/lib/
++3.7
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/bin/cache/pkg/sky_engine/
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/bin/cache/pkg/sky_engine/lib/
+ flutter
+-3.3
+-file:///C:/dev/src/flutter/packages/flutter/
+-file:///C:/dev/src/flutter/packages/flutter/lib/
++3.7
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter/
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter/lib/
+ flutter_test
+-3.3
+-file:///C:/dev/src/flutter/packages/flutter_test/
+-file:///C:/dev/src/flutter/packages/flutter_test/lib/
++3.7
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter_test/
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter_test/lib/
+ flutter_web_plugins
+-3.2
+-file:///C:/dev/src/flutter/packages/flutter_web_plugins/
+-file:///C:/dev/src/flutter/packages/flutter_web_plugins/lib/
++3.7
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter_web_plugins/
++file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter_web_plugins/lib/
+ 2
+Index: ../.dart_tool/package_config.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"configVersion\": 2,\r\n  \"packages\": [\r\n    {\r\n      \"name\": \"async\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.18\"\r\n    },\r\n    {\r\n      \"name\": \"boolean_selector\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.17\"\r\n    },\r\n    {\r\n      \"name\": \"characters\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.12\"\r\n    },\r\n    {\r\n      \"name\": \"clock\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.12\"\r\n    },\r\n    {\r\n      \"name\": \"collection\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.4\"\r\n    },\r\n    {\r\n      \"name\": \"fake_async\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.12\"\r\n    },\r\n    {\r\n      \"name\": \"flutter\",\r\n      \"rootUri\": \"file:///C:/dev/src/flutter/packages/flutter\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"flutter_lints\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.1\"\r\n    },\r\n    {\r\n      \"name\": \"flutter_test\",\r\n      \"rootUri\": \"file:///C:/dev/src/flutter/packages/flutter_test\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"flutter_web_plugins\",\r\n      \"rootUri\": \"file:///C:/dev/src/flutter/packages/flutter_web_plugins\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.2\"\r\n    },\r\n    {\r\n      \"name\": \"http\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.19\"\r\n    },\r\n    {\r\n      \"name\": \"http_parser\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.12\"\r\n    },\r\n    {\r\n      \"name\": \"leak_tracker\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.7\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.2\"\r\n    },\r\n    {\r\n      \"name\": \"leak_tracker_flutter_testing\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.8\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.2\"\r\n    },\r\n    {\r\n      \"name\": \"leak_tracker_testing\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.2\"\r\n    },\r\n    {\r\n      \"name\": \"lints\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.0\"\r\n    },\r\n    {\r\n      \"name\": \"matcher\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16+1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.0\"\r\n    },\r\n    {\r\n      \"name\": \"material_color_utilities\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.17\"\r\n    },\r\n    {\r\n      \"name\": \"meta\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.15.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.12\"\r\n    },\r\n    {\r\n      \"name\": \"path\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.0\"\r\n    },\r\n    {\r\n      \"name\": \"percent_indicator\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.12\"\r\n    },\r\n    {\r\n      \"name\": \"plugin_platform_interface\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.0\"\r\n    },\r\n    {\r\n      \"name\": \"sky_engine\",\r\n      \"rootUri\": \"file:///C:/dev/src/flutter/bin/cache/pkg/sky_engine\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.2\"\r\n    },\r\n    {\r\n      \"name\": \"source_span\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.18\"\r\n    },\r\n    {\r\n      \"name\": \"stack_trace\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.4\"\r\n    },\r\n    {\r\n      \"name\": \"stream_channel\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.2\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.19\"\r\n    },\r\n    {\r\n      \"name\": \"string_scanner\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.3.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.1\"\r\n    },\r\n    {\r\n      \"name\": \"term_glyph\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.12\"\r\n    },\r\n    {\r\n      \"name\": \"test_api\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.3\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.4\"\r\n    },\r\n    {\r\n      \"name\": \"typed_data\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.17\"\r\n    },\r\n    {\r\n      \"name\": \"url_launcher\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"url_launcher_android\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.0\"\r\n    },\r\n    {\r\n      \"name\": \"url_launcher_ios\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.2\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"url_launcher_linux\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"url_launcher_macos\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"url_launcher_platform_interface\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.1\"\r\n    },\r\n    {\r\n      \"name\": \"url_launcher_web\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.3.3\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"url_launcher_windows\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.3\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"vector_math\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"2.14\"\r\n    },\r\n    {\r\n      \"name\": \"vm_service\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.0\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"web\",\r\n      \"rootUri\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.5.1\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.3\"\r\n    },\r\n    {\r\n      \"name\": \"anees\",\r\n      \"rootUri\": \"../\",\r\n      \"packageUri\": \"lib/\",\r\n      \"languageVersion\": \"3.0\"\r\n    }\r\n  ],\r\n  \"generated\": \"2025-04-18T10:51:26.813024Z\",\r\n  \"generator\": \"pub\",\r\n  \"generatorVersion\": \"3.6.1\",\r\n  \"flutterRoot\": \"file:///C:/dev/src/flutter\",\r\n  \"flutterVersion\": \"3.27.2\",\r\n  \"pubCache\": \"file:///C:/Users/Layan/AppData/Local/Pub/Cache\"\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../.dart_tool/package_config.json b/../.dart_tool/package_config.json
+--- a/../.dart_tool/package_config.json	(revision da8871ff7ec78d78afb97a8a3fa1106790852808)
++++ b/../.dart_tool/package_config.json	(date 1745104714258)
+@@ -3,249 +3,249 @@
+   "packages": [
+     {
+       "name": "async",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.12.0",
+       "packageUri": "lib/",
+-      "languageVersion": "2.18"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "boolean_selector",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.2",
+       "packageUri": "lib/",
+-      "languageVersion": "2.17"
++      "languageVersion": "3.1"
+     },
+     {
+       "name": "characters",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.4.0",
+       "packageUri": "lib/",
+-      "languageVersion": "2.12"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "clock",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.2",
+       "packageUri": "lib/",
+-      "languageVersion": "2.12"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "collection",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.19.1",
+       "packageUri": "lib/",
+       "languageVersion": "3.4"
+     },
+     {
+       "name": "fake_async",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.2",
+       "packageUri": "lib/",
+-      "languageVersion": "2.12"
++      "languageVersion": "3.3"
+     },
+     {
+       "name": "flutter",
+-      "rootUri": "file:///C:/dev/src/flutter/packages/flutter",
++      "rootUri": "file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter",
+       "packageUri": "lib/",
+-      "languageVersion": "3.3"
++      "languageVersion": "3.7"
+     },
+     {
+       "name": "flutter_lints",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2",
+       "packageUri": "lib/",
+       "languageVersion": "3.1"
+     },
+     {
+       "name": "flutter_test",
+-      "rootUri": "file:///C:/dev/src/flutter/packages/flutter_test",
++      "rootUri": "file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter_test",
+       "packageUri": "lib/",
+-      "languageVersion": "3.3"
++      "languageVersion": "3.7"
+     },
+     {
+       "name": "flutter_web_plugins",
+-      "rootUri": "file:///C:/dev/src/flutter/packages/flutter_web_plugins",
++      "rootUri": "file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/packages/flutter_web_plugins",
+       "packageUri": "lib/",
+-      "languageVersion": "3.2"
++      "languageVersion": "3.7"
+     },
+     {
+       "name": "http",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6",
+       "packageUri": "lib/",
+       "languageVersion": "2.19"
+     },
+     {
+       "name": "http_parser",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.1.2",
+       "packageUri": "lib/",
+-      "languageVersion": "2.12"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "leak_tracker",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.7",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.8",
+       "packageUri": "lib/",
+       "languageVersion": "3.2"
+     },
+     {
+       "name": "leak_tracker_flutter_testing",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.8",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.9",
+       "packageUri": "lib/",
+       "languageVersion": "3.2"
+     },
+     {
+       "name": "leak_tracker_testing",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker_testing-3.0.1",
+       "packageUri": "lib/",
+       "languageVersion": "3.2"
+     },
+     {
+       "name": "lints",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0",
+       "packageUri": "lib/",
+       "languageVersion": "3.0"
+     },
+     {
+       "name": "matcher",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16+1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.17",
+       "packageUri": "lib/",
+-      "languageVersion": "3.0"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "material_color_utilities",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.11.1",
+       "packageUri": "lib/",
+       "languageVersion": "2.17"
+     },
+     {
+       "name": "meta",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.15.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.16.0",
+       "packageUri": "lib/",
+       "languageVersion": "2.12"
+     },
+     {
+       "name": "path",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.1",
+       "packageUri": "lib/",
+-      "languageVersion": "3.0"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "percent_indicator",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/percent_indicator-4.2.5",
+       "packageUri": "lib/",
+       "languageVersion": "2.12"
+     },
+     {
+       "name": "plugin_platform_interface",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
+       "packageUri": "lib/",
+       "languageVersion": "3.0"
+     },
+     {
+       "name": "sky_engine",
+-      "rootUri": "file:///C:/dev/src/flutter/bin/cache/pkg/sky_engine",
++      "rootUri": "file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter/bin/cache/pkg/sky_engine",
+       "packageUri": "lib/",
+-      "languageVersion": "3.2"
++      "languageVersion": "3.7"
+     },
+     {
+       "name": "source_span",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.1",
+       "packageUri": "lib/",
+-      "languageVersion": "2.18"
++      "languageVersion": "3.1"
+     },
+     {
+       "name": "stack_trace",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.12.1",
+       "packageUri": "lib/",
+       "languageVersion": "3.4"
+     },
+     {
+       "name": "stream_channel",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.2",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.4",
+       "packageUri": "lib/",
+-      "languageVersion": "2.19"
++      "languageVersion": "3.3"
+     },
+     {
+       "name": "string_scanner",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.3.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.4.1",
+       "packageUri": "lib/",
+       "languageVersion": "3.1"
+     },
+     {
+       "name": "term_glyph",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.2",
+       "packageUri": "lib/",
+-      "languageVersion": "2.12"
++      "languageVersion": "3.1"
+     },
+     {
+       "name": "test_api",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.3",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.4",
+       "packageUri": "lib/",
+-      "languageVersion": "3.4"
++      "languageVersion": "3.5"
+     },
+     {
+       "name": "typed_data",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.4.0",
+       "packageUri": "lib/",
+-      "languageVersion": "2.17"
++      "languageVersion": "3.5"
+     },
+     {
+       "name": "url_launcher",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.1",
+       "packageUri": "lib/",
+       "languageVersion": "3.3"
+     },
+     {
+       "name": "url_launcher_android",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.2",
+       "packageUri": "lib/",
+       "languageVersion": "3.0"
+     },
+     {
+       "name": "url_launcher_ios",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.2",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.3",
+       "packageUri": "lib/",
+-      "languageVersion": "3.3"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "url_launcher_linux",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.2.1",
+       "packageUri": "lib/",
+       "languageVersion": "3.3"
+     },
+     {
+       "name": "url_launcher_macos",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.2",
+       "packageUri": "lib/",
+       "languageVersion": "3.3"
+     },
+     {
+       "name": "url_launcher_platform_interface",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2",
+       "packageUri": "lib/",
+       "languageVersion": "3.1"
+     },
+     {
+       "name": "url_launcher_web",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.3.3",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.4.0",
+       "packageUri": "lib/",
+-      "languageVersion": "3.3"
++      "languageVersion": "3.6"
+     },
+     {
+       "name": "url_launcher_windows",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.3",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.4",
+       "packageUri": "lib/",
+-      "languageVersion": "3.3"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "vector_math",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4",
+       "packageUri": "lib/",
+       "languageVersion": "2.14"
+     },
+     {
+       "name": "vm_service",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.0",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-14.3.1",
+       "packageUri": "lib/",
+       "languageVersion": "3.3"
+     },
+     {
+       "name": "web",
+-      "rootUri": "file:///C:/Users/Layan/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.5.1",
++      "rootUri": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache/hosted/pub.dev/web-1.1.1",
+       "packageUri": "lib/",
+-      "languageVersion": "3.3"
++      "languageVersion": "3.4"
+     },
+     {
+       "name": "anees",
+@@ -254,10 +254,10 @@
+       "languageVersion": "3.0"
+     }
+   ],
+-  "generated": "2025-04-18T10:51:26.813024Z",
++  "generated": "2025-04-19T23:18:34.251935Z",
+   "generator": "pub",
+-  "generatorVersion": "3.6.1",
+-  "flutterRoot": "file:///C:/dev/src/flutter",
+-  "flutterVersion": "3.27.2",
+-  "pubCache": "file:///C:/Users/Layan/AppData/Local/Pub/Cache"
++  "generatorVersion": "3.7.2",
++  "flutterRoot": "file:///C:/Users/ssalw/OneDrive/%D8%B3%D8%B7%D8%AD%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8/Anees/lib/flutter",
++  "flutterVersion": "3.29.3",
++  "pubCache": "file:///C:/Users/ssalw/AppData/Local/Pub/Cache"
+ }
+Index: ../frontend/pubspec.lock
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Generated by pub\r\n# See https://dart.dev/tools/pub/glossary#lockfile\r\npackages:\r\n  async:\r\n    dependency: transitive\r\n    description:\r\n      name: async\r\n      sha256: \"947bfcf187f74dbc5e146c9eb9c0f10c9f8b30743e341481c1e2ed3ecc18c20c\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.11.0\"\r\n  boolean_selector:\r\n    dependency: transitive\r\n    description:\r\n      name: boolean_selector\r\n      sha256: \"6cfb5af12253eaf2b368f07bacc5a80d1301a071c73360d746b7f2e32d762c66\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.1.1\"\r\n  characters:\r\n    dependency: transitive\r\n    description:\r\n      name: characters\r\n      sha256: \"04a925763edad70e8443c99234dc3328f442e811f1d8fd1a72f1c8ad0f69a605\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.3.0\"\r\n  clock:\r\n    dependency: transitive\r\n    description:\r\n      name: clock\r\n      sha256: cb6d7f03e1de671e34607e909a7213e31d7752be4fb66a86d29fe1eb14bfb5cf\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.1.1\"\r\n  collection:\r\n    dependency: transitive\r\n    description:\r\n      name: collection\r\n      sha256: a1ace0a119f20aabc852d165077c036cd864315bd99b7eaa10a60100341941bf\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.19.0\"\r\n  cupertino_icons:\r\n    dependency: \"direct main\"\r\n    description:\r\n      name: cupertino_icons\r\n      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.0.8\"\r\n  fake_async:\r\n    dependency: transitive\r\n    description:\r\n      name: fake_async\r\n      sha256: \"511392330127add0b769b75a987850d136345d9227c6b94c96a04cf4a391bf78\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.3.1\"\r\n  flutter:\r\n    dependency: \"direct main\"\r\n    description: flutter\r\n    source: sdk\r\n    version: \"0.0.0\"\r\n  flutter_lints:\r\n    dependency: \"direct dev\"\r\n    description:\r\n      name: flutter_lints\r\n      sha256: \"5398f14efa795ffb7a33e9b6a08798b26a180edac4ad7db3f231e40f82ce11e1\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"5.0.0\"\r\n  flutter_test:\r\n    dependency: \"direct dev\"\r\n    description: flutter\r\n    source: sdk\r\n    version: \"0.0.0\"\r\n  leak_tracker:\r\n    dependency: transitive\r\n    description:\r\n      name: leak_tracker\r\n      sha256: \"7bb2830ebd849694d1ec25bf1f44582d6ac531a57a365a803a6034ff751d2d06\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"10.0.7\"\r\n  leak_tracker_flutter_testing:\r\n    dependency: transitive\r\n    description:\r\n      name: leak_tracker_flutter_testing\r\n      sha256: \"9491a714cca3667b60b5c420da8217e6de0d1ba7a5ec322fab01758f6998f379\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.0.8\"\r\n  leak_tracker_testing:\r\n    dependency: transitive\r\n    description:\r\n      name: leak_tracker_testing\r\n      sha256: \"6ba465d5d76e67ddf503e1161d1f4a6bc42306f9d66ca1e8f079a47290fb06d3\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.0.1\"\r\n  lints:\r\n    dependency: transitive\r\n    description:\r\n      name: lints\r\n      sha256: c35bb79562d980e9a453fc715854e1ed39e24e7d0297a880ef54e17f9874a9d7\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"5.1.1\"\r\n  matcher:\r\n    dependency: transitive\r\n    description:\r\n      name: matcher\r\n      sha256: d2323aa2060500f906aa31a895b4030b6da3ebdcc5619d14ce1aada65cd161cb\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"0.12.16+1\"\r\n  material_color_utilities:\r\n    dependency: transitive\r\n    description:\r\n      name: material_color_utilities\r\n      sha256: f7142bb1154231d7ea5f96bc7bde4bda2a0945d2806bb11670e30b850d56bdec\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"0.11.1\"\r\n  meta:\r\n    dependency: transitive\r\n    description:\r\n      name: meta\r\n      sha256: bdb68674043280c3428e9ec998512fb681678676b3c54e773629ffe74419f8c7\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.15.0\"\r\n  path:\r\n    dependency: transitive\r\n    description:\r\n      name: path\r\n      sha256: \"087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.9.0\"\r\n  sky_engine:\r\n    dependency: transitive\r\n    description: flutter\r\n    source: sdk\r\n    version: \"0.0.0\"\r\n  source_span:\r\n    dependency: transitive\r\n    description:\r\n      name: source_span\r\n      sha256: \"53e943d4206a5e30df338fd4c6e7a077e02254531b138a15aec3bd143c1a8b3c\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.10.0\"\r\n  stack_trace:\r\n    dependency: transitive\r\n    description:\r\n      name: stack_trace\r\n      sha256: \"9f47fd3630d76be3ab26f0ee06d213679aa425996925ff3feffdec504931c377\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.12.0\"\r\n  stream_channel:\r\n    dependency: transitive\r\n    description:\r\n      name: stream_channel\r\n      sha256: ba2aa5d8cc609d96bbb2899c28934f9e1af5cddbd60a827822ea467161eb54e7\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.1.2\"\r\n  string_scanner:\r\n    dependency: transitive\r\n    description:\r\n      name: string_scanner\r\n      sha256: \"688af5ed3402a4bde5b3a6c15fd768dbf2621a614950b17f04626c431ab3c4c3\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.3.0\"\r\n  term_glyph:\r\n    dependency: transitive\r\n    description:\r\n      name: term_glyph\r\n      sha256: a29248a84fbb7c79282b40b8c72a1209db169a2e0542bce341da992fe1bc7e84\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.2.1\"\r\n  test_api:\r\n    dependency: transitive\r\n    description:\r\n      name: test_api\r\n      sha256: \"664d3a9a64782fcdeb83ce9c6b39e78fd2971d4e37827b9b06c3aa1edc5e760c\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"0.7.3\"\r\n  vector_math:\r\n    dependency: transitive\r\n    description:\r\n      name: vector_math\r\n      sha256: \"80b3257d1492ce4d091729e3a67a60407d227c27241d6927be0130c98e741803\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.1.4\"\r\n  vm_service:\r\n    dependency: transitive\r\n    description:\r\n      name: vm_service\r\n      sha256: f6be3ed8bd01289b34d679c2b62226f63c0e69f9fd2e50a6b3c1c729a961041b\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"14.3.0\"\r\nsdks:\r\n  dart: \">=3.6.1 <4.0.0\"\r\n  flutter: \">=3.18.0-18.0.pre.54\"\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../frontend/pubspec.lock b/../frontend/pubspec.lock
+--- a/../frontend/pubspec.lock	(revision da8871ff7ec78d78afb97a8a3fa1106790852808)
++++ b/../frontend/pubspec.lock	(date 1745104720005)
+@@ -5,42 +5,42 @@
+     dependency: transitive
+     description:
+       name: async
+-      sha256: "947bfcf187f74dbc5e146c9eb9c0f10c9f8b30743e341481c1e2ed3ecc18c20c"
++      sha256: d2872f9c19731c2e5f10444b14686eb7cc85c76274bd6c16e1816bff9a3bab63
+       url: "https://pub.dev"
+     source: hosted
+-    version: "2.11.0"
++    version: "2.12.0"
+   boolean_selector:
+     dependency: transitive
+     description:
+       name: boolean_selector
+-      sha256: "6cfb5af12253eaf2b368f07bacc5a80d1301a071c73360d746b7f2e32d762c66"
++      sha256: "8aab1771e1243a5063b8b0ff68042d67334e3feab9e95b9490f9a6ebf73b42ea"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "2.1.1"
++    version: "2.1.2"
+   characters:
+     dependency: transitive
+     description:
+       name: characters
+-      sha256: "04a925763edad70e8443c99234dc3328f442e811f1d8fd1a72f1c8ad0f69a605"
++      sha256: f71061c654a3380576a52b451dd5532377954cf9dbd272a78fc8479606670803
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.3.0"
++    version: "1.4.0"
+   clock:
+     dependency: transitive
+     description:
+       name: clock
+-      sha256: cb6d7f03e1de671e34607e909a7213e31d7752be4fb66a86d29fe1eb14bfb5cf
++      sha256: fddb70d9b5277016c77a80201021d40a2247104d9f4aa7bab7157b7e3f05b84b
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.1.1"
++    version: "1.1.2"
+   collection:
+     dependency: transitive
+     description:
+       name: collection
+-      sha256: a1ace0a119f20aabc852d165077c036cd864315bd99b7eaa10a60100341941bf
++      sha256: "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.19.0"
++    version: "1.19.1"
+   cupertino_icons:
+     dependency: "direct main"
+     description:
+@@ -53,10 +53,10 @@
+     dependency: transitive
+     description:
+       name: fake_async
+-      sha256: "511392330127add0b769b75a987850d136345d9227c6b94c96a04cf4a391bf78"
++      sha256: "6a95e56b2449df2273fd8c45a662d6947ce1ebb7aafe80e550a3f68297f3cacc"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.3.1"
++    version: "1.3.2"
+   flutter:
+     dependency: "direct main"
+     description: flutter
+@@ -79,18 +79,18 @@
+     dependency: transitive
+     description:
+       name: leak_tracker
+-      sha256: "7bb2830ebd849694d1ec25bf1f44582d6ac531a57a365a803a6034ff751d2d06"
++      sha256: c35baad643ba394b40aac41080300150a4f08fd0fd6a10378f8f7c6bc161acec
+       url: "https://pub.dev"
+     source: hosted
+-    version: "10.0.7"
++    version: "10.0.8"
+   leak_tracker_flutter_testing:
+     dependency: transitive
+     description:
+       name: leak_tracker_flutter_testing
+-      sha256: "9491a714cca3667b60b5c420da8217e6de0d1ba7a5ec322fab01758f6998f379"
++      sha256: f8b613e7e6a13ec79cfdc0e97638fddb3ab848452eff057653abd3edba760573
+       url: "https://pub.dev"
+     source: hosted
+-    version: "3.0.8"
++    version: "3.0.9"
+   leak_tracker_testing:
+     dependency: transitive
+     description:
+@@ -111,10 +111,10 @@
+     dependency: transitive
+     description:
+       name: matcher
+-      sha256: d2323aa2060500f906aa31a895b4030b6da3ebdcc5619d14ce1aada65cd161cb
++      sha256: dc58c723c3c24bf8d3e2d3ad3f2f9d7bd9cf43ec6feaa64181775e60190153f2
+       url: "https://pub.dev"
+     source: hosted
+-    version: "0.12.16+1"
++    version: "0.12.17"
+   material_color_utilities:
+     dependency: transitive
+     description:
+@@ -127,18 +127,18 @@
+     dependency: transitive
+     description:
+       name: meta
+-      sha256: bdb68674043280c3428e9ec998512fb681678676b3c54e773629ffe74419f8c7
++      sha256: e3641ec5d63ebf0d9b41bd43201a66e3fc79a65db5f61fc181f04cd27aab950c
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.15.0"
++    version: "1.16.0"
+   path:
+     dependency: transitive
+     description:
+       name: path
+-      sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
++      sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.9.0"
++    version: "1.9.1"
+   sky_engine:
+     dependency: transitive
+     description: flutter
+@@ -148,50 +148,50 @@
+     dependency: transitive
+     description:
+       name: source_span
+-      sha256: "53e943d4206a5e30df338fd4c6e7a077e02254531b138a15aec3bd143c1a8b3c"
++      sha256: "254ee5351d6cb365c859e20ee823c3bb479bf4a293c22d17a9f1bf144ce86f7c"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.10.0"
++    version: "1.10.1"
+   stack_trace:
+     dependency: transitive
+     description:
+       name: stack_trace
+-      sha256: "9f47fd3630d76be3ab26f0ee06d213679aa425996925ff3feffdec504931c377"
++      sha256: "8b27215b45d22309b5cddda1aa2b19bdfec9df0e765f2de506401c071d38d1b1"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.12.0"
++    version: "1.12.1"
+   stream_channel:
+     dependency: transitive
+     description:
+       name: stream_channel
+-      sha256: ba2aa5d8cc609d96bbb2899c28934f9e1af5cddbd60a827822ea467161eb54e7
++      sha256: "969e04c80b8bcdf826f8f16579c7b14d780458bd97f56d107d3950fdbeef059d"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "2.1.2"
++    version: "2.1.4"
+   string_scanner:
+     dependency: transitive
+     description:
+       name: string_scanner
+-      sha256: "688af5ed3402a4bde5b3a6c15fd768dbf2621a614950b17f04626c431ab3c4c3"
++      sha256: "921cd31725b72fe181906c6a94d987c78e3b98c2e205b397ea399d4054872b43"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.3.0"
++    version: "1.4.1"
+   term_glyph:
+     dependency: transitive
+     description:
+       name: term_glyph
+-      sha256: a29248a84fbb7c79282b40b8c72a1209db169a2e0542bce341da992fe1bc7e84
++      sha256: "7f554798625ea768a7518313e58f83891c7f5024f88e46e7182a4558850a4b8e"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.2.1"
++    version: "1.2.2"
+   test_api:
+     dependency: transitive
+     description:
+       name: test_api
+-      sha256: "664d3a9a64782fcdeb83ce9c6b39e78fd2971d4e37827b9b06c3aa1edc5e760c"
++      sha256: fb31f383e2ee25fbbfe06b40fe21e1e458d14080e3c67e7ba0acfde4df4e0bbd
+       url: "https://pub.dev"
+     source: hosted
+-    version: "0.7.3"
++    version: "0.7.4"
+   vector_math:
+     dependency: transitive
+     description:
+@@ -204,10 +204,10 @@
+     dependency: transitive
+     description:
+       name: vm_service
+-      sha256: f6be3ed8bd01289b34d679c2b62226f63c0e69f9fd2e50a6b3c1c729a961041b
++      sha256: "0968250880a6c5fe7edc067ed0a13d4bae1577fe2771dcf3010d52c4a9d3ca14"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "14.3.0"
++    version: "14.3.1"
+ sdks:
+-  dart: ">=3.6.1 <4.0.0"
++  dart: ">=3.7.0-0 <4.0.0"
+   flutter: ">=3.18.0-18.0.pre.54"
+Index: ../pubspec.lock
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Generated by pub\r\n# See https://dart.dev/tools/pub/glossary#lockfile\r\npackages:\r\n  async:\r\n    dependency: transitive\r\n    description:\r\n      name: async\r\n      sha256: \"947bfcf187f74dbc5e146c9eb9c0f10c9f8b30743e341481c1e2ed3ecc18c20c\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.11.0\"\r\n  boolean_selector:\r\n    dependency: transitive\r\n    description:\r\n      name: boolean_selector\r\n      sha256: \"6cfb5af12253eaf2b368f07bacc5a80d1301a071c73360d746b7f2e32d762c66\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.1.1\"\r\n  characters:\r\n    dependency: transitive\r\n    description:\r\n      name: characters\r\n      sha256: \"04a925763edad70e8443c99234dc3328f442e811f1d8fd1a72f1c8ad0f69a605\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.3.0\"\r\n  clock:\r\n    dependency: transitive\r\n    description:\r\n      name: clock\r\n      sha256: cb6d7f03e1de671e34607e909a7213e31d7752be4fb66a86d29fe1eb14bfb5cf\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.1.1\"\r\n  collection:\r\n    dependency: transitive\r\n    description:\r\n      name: collection\r\n      sha256: a1ace0a119f20aabc852d165077c036cd864315bd99b7eaa10a60100341941bf\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.19.0\"\r\n  fake_async:\r\n    dependency: transitive\r\n    description:\r\n      name: fake_async\r\n      sha256: \"511392330127add0b769b75a987850d136345d9227c6b94c96a04cf4a391bf78\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.3.1\"\r\n  flutter:\r\n    dependency: \"direct main\"\r\n    description: flutter\r\n    source: sdk\r\n    version: \"0.0.0\"\r\n  flutter_lints:\r\n    dependency: \"direct dev\"\r\n    description:\r\n      name: flutter_lints\r\n      sha256: \"9e8c3858111da373efc5aa341de011d9bd23e2c5c5e0c62bccf32438e192d7b1\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.0.2\"\r\n  flutter_test:\r\n    dependency: \"direct dev\"\r\n    description: flutter\r\n    source: sdk\r\n    version: \"0.0.0\"\r\n  flutter_web_plugins:\r\n    dependency: transitive\r\n    description: flutter\r\n    source: sdk\r\n    version: \"0.0.0\"\r\n  http:\r\n    dependency: \"direct main\"\r\n    description:\r\n      name: http\r\n      sha256: \"5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"0.13.6\"\r\n  http_parser:\r\n    dependency: transitive\r\n    description:\r\n      name: http_parser\r\n      sha256: \"2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"4.0.2\"\r\n  leak_tracker:\r\n    dependency: transitive\r\n    description:\r\n      name: leak_tracker\r\n      sha256: \"7bb2830ebd849694d1ec25bf1f44582d6ac531a57a365a803a6034ff751d2d06\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"10.0.7\"\r\n  leak_tracker_flutter_testing:\r\n    dependency: transitive\r\n    description:\r\n      name: leak_tracker_flutter_testing\r\n      sha256: \"9491a714cca3667b60b5c420da8217e6de0d1ba7a5ec322fab01758f6998f379\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.0.8\"\r\n  leak_tracker_testing:\r\n    dependency: transitive\r\n    description:\r\n      name: leak_tracker_testing\r\n      sha256: \"6ba465d5d76e67ddf503e1161d1f4a6bc42306f9d66ca1e8f079a47290fb06d3\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.0.1\"\r\n  lints:\r\n    dependency: transitive\r\n    description:\r\n      name: lints\r\n      sha256: cbf8d4b858bb0134ef3ef87841abdf8d63bfc255c266b7bf6b39daa1085c4290\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.0.0\"\r\n  matcher:\r\n    dependency: transitive\r\n    description:\r\n      name: matcher\r\n      sha256: d2323aa2060500f906aa31a895b4030b6da3ebdcc5619d14ce1aada65cd161cb\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"0.12.16+1\"\r\n  material_color_utilities:\r\n    dependency: transitive\r\n    description:\r\n      name: material_color_utilities\r\n      sha256: f7142bb1154231d7ea5f96bc7bde4bda2a0945d2806bb11670e30b850d56bdec\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"0.11.1\"\r\n  meta:\r\n    dependency: transitive\r\n    description:\r\n      name: meta\r\n      sha256: bdb68674043280c3428e9ec998512fb681678676b3c54e773629ffe74419f8c7\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.15.0\"\r\n  path:\r\n    dependency: transitive\r\n    description:\r\n      name: path\r\n      sha256: \"087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.9.0\"\r\n  percent_indicator:\r\n    dependency: \"direct main\"\r\n    description:\r\n      name: percent_indicator\r\n      sha256: \"157d29133bbc6ecb11f923d36e7960a96a3f28837549a20b65e5135729f0f9fd\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"4.2.5\"\r\n  plugin_platform_interface:\r\n    dependency: transitive\r\n    description:\r\n      name: plugin_platform_interface\r\n      sha256: \"4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.1.8\"\r\n  sky_engine:\r\n    dependency: transitive\r\n    description: flutter\r\n    source: sdk\r\n    version: \"0.0.0\"\r\n  source_span:\r\n    dependency: transitive\r\n    description:\r\n      name: source_span\r\n      sha256: \"53e943d4206a5e30df338fd4c6e7a077e02254531b138a15aec3bd143c1a8b3c\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.10.0\"\r\n  stack_trace:\r\n    dependency: transitive\r\n    description:\r\n      name: stack_trace\r\n      sha256: \"9f47fd3630d76be3ab26f0ee06d213679aa425996925ff3feffdec504931c377\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.12.0\"\r\n  stream_channel:\r\n    dependency: transitive\r\n    description:\r\n      name: stream_channel\r\n      sha256: ba2aa5d8cc609d96bbb2899c28934f9e1af5cddbd60a827822ea467161eb54e7\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.1.2\"\r\n  string_scanner:\r\n    dependency: transitive\r\n    description:\r\n      name: string_scanner\r\n      sha256: \"688af5ed3402a4bde5b3a6c15fd768dbf2621a614950b17f04626c431ab3c4c3\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.3.0\"\r\n  term_glyph:\r\n    dependency: transitive\r\n    description:\r\n      name: term_glyph\r\n      sha256: a29248a84fbb7c79282b40b8c72a1209db169a2e0542bce341da992fe1bc7e84\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.2.1\"\r\n  test_api:\r\n    dependency: transitive\r\n    description:\r\n      name: test_api\r\n      sha256: \"664d3a9a64782fcdeb83ce9c6b39e78fd2971d4e37827b9b06c3aa1edc5e760c\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"0.7.3\"\r\n  typed_data:\r\n    dependency: transitive\r\n    description:\r\n      name: typed_data\r\n      sha256: facc8d6582f16042dd49f2463ff1bd6e2c9ef9f3d5da3d9b087e244a7b564b3c\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"1.3.2\"\r\n  url_launcher:\r\n    dependency: \"direct main\"\r\n    description:\r\n      name: url_launcher\r\n      sha256: \"9d06212b1362abc2f0f0d78e6f09f726608c74e3b9462e8368bb03314aa8d603\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"6.3.1\"\r\n  url_launcher_android:\r\n    dependency: \"direct overridden\"\r\n    description:\r\n      name: url_launcher_android\r\n      sha256: \"507dc655b1d9cb5ebc756032eb785f114e415f91557b73bf60b7e201dfedeb2f\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"6.2.2\"\r\n  url_launcher_ios:\r\n    dependency: transitive\r\n    description:\r\n      name: url_launcher_ios\r\n      sha256: \"16a513b6c12bb419304e72ea0ae2ab4fed569920d1c7cb850263fe3acc824626\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"6.3.2\"\r\n  url_launcher_linux:\r\n    dependency: transitive\r\n    description:\r\n      name: url_launcher_linux\r\n      sha256: \"4e9ba368772369e3e08f231d2301b4ef72b9ff87c31192ef471b380ef29a4935\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.2.1\"\r\n  url_launcher_macos:\r\n    dependency: transitive\r\n    description:\r\n      name: url_launcher_macos\r\n      sha256: \"17ba2000b847f334f16626a574c702b196723af2a289e7a93ffcb79acff855c2\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.2.2\"\r\n  url_launcher_platform_interface:\r\n    dependency: transitive\r\n    description:\r\n      name: url_launcher_platform_interface\r\n      sha256: \"552f8a1e663569be95a8190206a38187b531910283c3e982193e4f2733f01029\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.3.2\"\r\n  url_launcher_web:\r\n    dependency: transitive\r\n    description:\r\n      name: url_launcher_web\r\n      sha256: \"772638d3b34c779ede05ba3d38af34657a05ac55b06279ea6edd409e323dca8e\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.3.3\"\r\n  url_launcher_windows:\r\n    dependency: transitive\r\n    description:\r\n      name: url_launcher_windows\r\n      sha256: \"44cf3aabcedde30f2dba119a9dea3b0f2672fbe6fa96e85536251d678216b3c4\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"3.1.3\"\r\n  vector_math:\r\n    dependency: transitive\r\n    description:\r\n      name: vector_math\r\n      sha256: \"80b3257d1492ce4d091729e3a67a60407d227c27241d6927be0130c98e741803\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"2.1.4\"\r\n  vm_service:\r\n    dependency: transitive\r\n    description:\r\n      name: vm_service\r\n      sha256: f6be3ed8bd01289b34d679c2b62226f63c0e69f9fd2e50a6b3c1c729a961041b\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"14.3.0\"\r\n  web:\r\n    dependency: transitive\r\n    description:\r\n      name: web\r\n      sha256: \"97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27\"\r\n      url: \"https://pub.dev\"\r\n    source: hosted\r\n    version: \"0.5.1\"\r\nsdks:\r\n  dart: \">=3.4.0 <4.0.0\"\r\n  flutter: \">=3.19.0\"\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../pubspec.lock b/../pubspec.lock
+--- a/../pubspec.lock	(revision da8871ff7ec78d78afb97a8a3fa1106790852808)
++++ b/../pubspec.lock	(date 1745104714236)
+@@ -5,50 +5,50 @@
+     dependency: transitive
+     description:
+       name: async
+-      sha256: "947bfcf187f74dbc5e146c9eb9c0f10c9f8b30743e341481c1e2ed3ecc18c20c"
++      sha256: d2872f9c19731c2e5f10444b14686eb7cc85c76274bd6c16e1816bff9a3bab63
+       url: "https://pub.dev"
+     source: hosted
+-    version: "2.11.0"
++    version: "2.12.0"
+   boolean_selector:
+     dependency: transitive
+     description:
+       name: boolean_selector
+-      sha256: "6cfb5af12253eaf2b368f07bacc5a80d1301a071c73360d746b7f2e32d762c66"
++      sha256: "8aab1771e1243a5063b8b0ff68042d67334e3feab9e95b9490f9a6ebf73b42ea"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "2.1.1"
++    version: "2.1.2"
+   characters:
+     dependency: transitive
+     description:
+       name: characters
+-      sha256: "04a925763edad70e8443c99234dc3328f442e811f1d8fd1a72f1c8ad0f69a605"
++      sha256: f71061c654a3380576a52b451dd5532377954cf9dbd272a78fc8479606670803
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.3.0"
++    version: "1.4.0"
+   clock:
+     dependency: transitive
+     description:
+       name: clock
+-      sha256: cb6d7f03e1de671e34607e909a7213e31d7752be4fb66a86d29fe1eb14bfb5cf
++      sha256: fddb70d9b5277016c77a80201021d40a2247104d9f4aa7bab7157b7e3f05b84b
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.1.1"
++    version: "1.1.2"
+   collection:
+     dependency: transitive
+     description:
+       name: collection
+-      sha256: a1ace0a119f20aabc852d165077c036cd864315bd99b7eaa10a60100341941bf
++      sha256: "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.19.0"
++    version: "1.19.1"
+   fake_async:
+     dependency: transitive
+     description:
+       name: fake_async
+-      sha256: "511392330127add0b769b75a987850d136345d9227c6b94c96a04cf4a391bf78"
++      sha256: "6a95e56b2449df2273fd8c45a662d6947ce1ebb7aafe80e550a3f68297f3cacc"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.3.1"
++    version: "1.3.2"
+   flutter:
+     dependency: "direct main"
+     description: flutter
+@@ -84,26 +84,26 @@
+     dependency: transitive
+     description:
+       name: http_parser
+-      sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
++      sha256: "178d74305e7866013777bab2c3d8726205dc5a4dd935297175b19a23a2e66571"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "4.0.2"
++    version: "4.1.2"
+   leak_tracker:
+     dependency: transitive
+     description:
+       name: leak_tracker
+-      sha256: "7bb2830ebd849694d1ec25bf1f44582d6ac531a57a365a803a6034ff751d2d06"
++      sha256: c35baad643ba394b40aac41080300150a4f08fd0fd6a10378f8f7c6bc161acec
+       url: "https://pub.dev"
+     source: hosted
+-    version: "10.0.7"
++    version: "10.0.8"
+   leak_tracker_flutter_testing:
+     dependency: transitive
+     description:
+       name: leak_tracker_flutter_testing
+-      sha256: "9491a714cca3667b60b5c420da8217e6de0d1ba7a5ec322fab01758f6998f379"
++      sha256: f8b613e7e6a13ec79cfdc0e97638fddb3ab848452eff057653abd3edba760573
+       url: "https://pub.dev"
+     source: hosted
+-    version: "3.0.8"
++    version: "3.0.9"
+   leak_tracker_testing:
+     dependency: transitive
+     description:
+@@ -124,10 +124,10 @@
+     dependency: transitive
+     description:
+       name: matcher
+-      sha256: d2323aa2060500f906aa31a895b4030b6da3ebdcc5619d14ce1aada65cd161cb
++      sha256: dc58c723c3c24bf8d3e2d3ad3f2f9d7bd9cf43ec6feaa64181775e60190153f2
+       url: "https://pub.dev"
+     source: hosted
+-    version: "0.12.16+1"
++    version: "0.12.17"
+   material_color_utilities:
+     dependency: transitive
+     description:
+@@ -140,18 +140,18 @@
+     dependency: transitive
+     description:
+       name: meta
+-      sha256: bdb68674043280c3428e9ec998512fb681678676b3c54e773629ffe74419f8c7
++      sha256: e3641ec5d63ebf0d9b41bd43201a66e3fc79a65db5f61fc181f04cd27aab950c
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.15.0"
++    version: "1.16.0"
+   path:
+     dependency: transitive
+     description:
+       name: path
+-      sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
++      sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.9.0"
++    version: "1.9.1"
+   percent_indicator:
+     dependency: "direct main"
+     description:
+@@ -177,58 +177,58 @@
+     dependency: transitive
+     description:
+       name: source_span
+-      sha256: "53e943d4206a5e30df338fd4c6e7a077e02254531b138a15aec3bd143c1a8b3c"
++      sha256: "254ee5351d6cb365c859e20ee823c3bb479bf4a293c22d17a9f1bf144ce86f7c"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.10.0"
++    version: "1.10.1"
+   stack_trace:
+     dependency: transitive
+     description:
+       name: stack_trace
+-      sha256: "9f47fd3630d76be3ab26f0ee06d213679aa425996925ff3feffdec504931c377"
++      sha256: "8b27215b45d22309b5cddda1aa2b19bdfec9df0e765f2de506401c071d38d1b1"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.12.0"
++    version: "1.12.1"
+   stream_channel:
+     dependency: transitive
+     description:
+       name: stream_channel
+-      sha256: ba2aa5d8cc609d96bbb2899c28934f9e1af5cddbd60a827822ea467161eb54e7
++      sha256: "969e04c80b8bcdf826f8f16579c7b14d780458bd97f56d107d3950fdbeef059d"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "2.1.2"
++    version: "2.1.4"
+   string_scanner:
+     dependency: transitive
+     description:
+       name: string_scanner
+-      sha256: "688af5ed3402a4bde5b3a6c15fd768dbf2621a614950b17f04626c431ab3c4c3"
++      sha256: "921cd31725b72fe181906c6a94d987c78e3b98c2e205b397ea399d4054872b43"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.3.0"
++    version: "1.4.1"
+   term_glyph:
+     dependency: transitive
+     description:
+       name: term_glyph
+-      sha256: a29248a84fbb7c79282b40b8c72a1209db169a2e0542bce341da992fe1bc7e84
++      sha256: "7f554798625ea768a7518313e58f83891c7f5024f88e46e7182a4558850a4b8e"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.2.1"
++    version: "1.2.2"
+   test_api:
+     dependency: transitive
+     description:
+       name: test_api
+-      sha256: "664d3a9a64782fcdeb83ce9c6b39e78fd2971d4e37827b9b06c3aa1edc5e760c"
++      sha256: fb31f383e2ee25fbbfe06b40fe21e1e458d14080e3c67e7ba0acfde4df4e0bbd
+       url: "https://pub.dev"
+     source: hosted
+-    version: "0.7.3"
++    version: "0.7.4"
+   typed_data:
+     dependency: transitive
+     description:
+       name: typed_data
+-      sha256: facc8d6582f16042dd49f2463ff1bd6e2c9ef9f3d5da3d9b087e244a7b564b3c
++      sha256: f9049c039ebfeb4cf7a7104a675823cd72dba8297f264b6637062516699fa006
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.3.2"
++    version: "1.4.0"
+   url_launcher:
+     dependency: "direct main"
+     description:
+@@ -249,10 +249,10 @@
+     dependency: transitive
+     description:
+       name: url_launcher_ios
+-      sha256: "16a513b6c12bb419304e72ea0ae2ab4fed569920d1c7cb850263fe3acc824626"
++      sha256: "7f2022359d4c099eea7df3fdf739f7d3d3b9faf3166fb1dd390775176e0b76cb"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "6.3.2"
++    version: "6.3.3"
+   url_launcher_linux:
+     dependency: transitive
+     description:
+@@ -281,18 +281,18 @@
+     dependency: transitive
+     description:
+       name: url_launcher_web
+-      sha256: "772638d3b34c779ede05ba3d38af34657a05ac55b06279ea6edd409e323dca8e"
++      sha256: "3ba963161bd0fe395917ba881d320b9c4f6dd3c4a233da62ab18a5025c85f1e9"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "2.3.3"
++    version: "2.4.0"
+   url_launcher_windows:
+     dependency: transitive
+     description:
+       name: url_launcher_windows
+-      sha256: "44cf3aabcedde30f2dba119a9dea3b0f2672fbe6fa96e85536251d678216b3c4"
++      sha256: "3284b6d2ac454cf34f114e1d3319866fdd1e19cdc329999057e44ffe936cfa77"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "3.1.3"
++    version: "3.1.4"
+   vector_math:
+     dependency: transitive
+     description:
+@@ -305,18 +305,18 @@
+     dependency: transitive
+     description:
+       name: vm_service
+-      sha256: f6be3ed8bd01289b34d679c2b62226f63c0e69f9fd2e50a6b3c1c729a961041b
++      sha256: "0968250880a6c5fe7edc067ed0a13d4bae1577fe2771dcf3010d52c4a9d3ca14"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "14.3.0"
++    version: "14.3.1"
+   web:
+     dependency: transitive
+     description:
+       name: web
+-      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
++      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "0.5.1"
++    version: "1.1.1"
+ sdks:
+-  dart: ">=3.4.0 <4.0.0"
+-  flutter: ">=3.19.0"
++  dart: ">=3.7.0-0 <4.0.0"
++  flutter: ">=3.27.0"
+Index: ../.flutter-plugins
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># This is a generated file; do not edit or check into version control.\r\nurl_launcher=C:\\\\Users\\\\Layan\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\hosted\\\\pub.dev\\\\url_launcher-6.3.1\\\\\r\nurl_launcher_android=C:\\\\Users\\\\Layan\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\hosted\\\\pub.dev\\\\url_launcher_android-6.2.2\\\\\r\nurl_launcher_ios=C:\\\\Users\\\\Layan\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\hosted\\\\pub.dev\\\\url_launcher_ios-6.3.2\\\\\r\nurl_launcher_linux=C:\\\\Users\\\\Layan\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\hosted\\\\pub.dev\\\\url_launcher_linux-3.2.1\\\\\r\nurl_launcher_macos=C:\\\\Users\\\\Layan\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\hosted\\\\pub.dev\\\\url_launcher_macos-3.2.2\\\\\r\nurl_launcher_web=C:\\\\Users\\\\Layan\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\hosted\\\\pub.dev\\\\url_launcher_web-2.3.3\\\\\r\nurl_launcher_windows=C:\\\\Users\\\\Layan\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\hosted\\\\pub.dev\\\\url_launcher_windows-3.1.3\\\\\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../.flutter-plugins b/../.flutter-plugins
+--- a/../.flutter-plugins	(revision da8871ff7ec78d78afb97a8a3fa1106790852808)
++++ b/../.flutter-plugins	(date 1745111702668)
+@@ -1,8 +1,8 @@
+ # This is a generated file; do not edit or check into version control.
+-url_launcher=C:\\Users\\Layan\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher-6.3.1\\
+-url_launcher_android=C:\\Users\\Layan\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_android-6.2.2\\
+-url_launcher_ios=C:\\Users\\Layan\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_ios-6.3.2\\
+-url_launcher_linux=C:\\Users\\Layan\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_linux-3.2.1\\
+-url_launcher_macos=C:\\Users\\Layan\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_macos-3.2.2\\
+-url_launcher_web=C:\\Users\\Layan\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_web-2.3.3\\
+-url_launcher_windows=C:\\Users\\Layan\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_windows-3.1.3\\
++url_launcher=C:\\Users\\ssalw\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher-6.3.1\\
++url_launcher_android=C:\\Users\\ssalw\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_android-6.2.2\\
++url_launcher_ios=C:\\Users\\ssalw\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_ios-6.3.3\\
++url_launcher_linux=C:\\Users\\ssalw\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_linux-3.2.1\\
++url_launcher_macos=C:\\Users\\ssalw\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_macos-3.2.2\\
++url_launcher_web=C:\\Users\\ssalw\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_web-2.4.0\\
++url_launcher_windows=C:\\Users\\ssalw\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_windows-3.1.4\\
+Index: ../.dart_tool/version
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>3.27.2
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../.dart_tool/version b/../.dart_tool/version
+--- a/../.dart_tool/version	(revision da8871ff7ec78d78afb97a8a3fa1106790852808)
++++ b/../.dart_tool/version	(date 1745104714329)
+@@ -1,1 +1,1 @@
+-3.27.2
+\ No newline at end of file
++3.29.3
+\ No newline at end of file
