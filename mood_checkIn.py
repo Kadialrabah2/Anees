@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from datetime import date
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from flask import Flask, request, jsonify, session
 
 app = FastAPI()
 
@@ -14,21 +15,21 @@ def get_db_connection():
         host="dpg-cuob70l6l47c73cbtgqg-a"
     )
 
-# نموذج البيانات المعدل
-class MoodEntry(BaseModel):
-    username: str  # تغيير من user_id إلى username
-    mood_value: int  # من 1 إلى 5
+
 
 # حفظ المزاج اليومي
 @app.post("/save-daily-mood/")
-def save_daily_mood(entry: MoodEntry):
+def save_daily_mood():
+    data = request.get_json()
+    username = data.get("username")
+    mood_value = data.get("mood_value")
     today = date.today()
 
     conn = get_db_connection()
     cur = conn.cursor()
 
     # التحقق من وجود المستخدم
-    cur.execute("SELECT username FROM users WHERE username = %s", (entry.username,))
+    cur.execute("SELECT username FROM users WHERE username = %s", (username,))
     user = cur.fetchone()
     if not user:
         conn.close()
@@ -38,13 +39,13 @@ def save_daily_mood(entry: MoodEntry):
     cur.execute("""
         DELETE FROM daily_mood 
         WHERE username = %s AND mood_date = %s
-    """, (entry.username, today))
+    """, (username, today))
 
     # إدخال بيانات المزاج الجديدة
     cur.execute("""
         INSERT INTO daily_mood (username, mood_date, mood_value)
         VALUES (%s, %s, %s)
-    """, (entry.username, today, entry.mood_value))
+    """, (username, today, mood_value))
 
     conn.commit()
     conn.close()
