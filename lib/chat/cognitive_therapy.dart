@@ -59,12 +59,17 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
 
     try {
       final reply = await HealthyLifestyleService().sendMessage(
-        widget.userName ?? "unknown",
-        text,
+      widget.userName ?? "unknown",
+      text,
       );
+
+// تنظيف الرد من الكلام البرمجي الزايد
+      final cleanedReply = reply.split("response_metadata").first.split("additional_kwargs").first;
+
       setState(() {
-        _messages.add({"text": reply, "isUser": false});
-      });
+        _messages.add({"text": cleanedReply.trim(), "isUser": false});
+    });
+
     } catch (e) {
       setState(() {
         _messages.add({"text": "فشل الاتصال  بالسيرفر", "isUser": false});

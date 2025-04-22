@@ -45,9 +45,12 @@ class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      final rawReply = data["response"];
+      final cleanedReply = rawReply.split("response_metadata").first.split("additional_kwargs").first;
       setState(() {
-        _messages.add({"text": data["response"], "isUser": false});
+         _messages.add({"text": cleanedReply.trim(), "isUser": false});
       });
+
     } else {
       throw Exception("HTTP ${response.statusCode}");
     }
@@ -160,4 +163,3 @@ class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
     );
   }
 }
-

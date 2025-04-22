@@ -57,10 +57,19 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
       final reply = await MindfulnessService().sendMessage(
         widget.userName ?? "unknown",
         text,
-      );
-      setState(() {
-        _messages.add({"text": reply, "isUser": false});
+        );
+
+// تنظيف الرد من الكلام الغريب
+    final cleanedReply = reply
+      .split("response_metadata")[0]
+      .replaceAll(RegExp(r"(additional_kwargs.*|model_name.*|finish_reason.*|\{.*?})", caseSensitive: false), "")
+      .replaceAll(RegExp(r"\\n|\\t|\\r"), "\n")
+      .trim();
+
+    setState(() {
+      _messages.add({"text": cleanedReply, "isUser": false});
       });
+
     } catch (e) {
       setState(() {
         _messages.add({"text": "فشل الاتصال  بالسيرفر", "isUser": false});
@@ -115,6 +124,7 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
                             color: isUser ? Colors.black : Colors.white,
                             fontSize: 16,
                           ),
+                          // it was here
                         ),
                       ),
                     );

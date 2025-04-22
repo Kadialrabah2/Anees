@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ChatPasswordPage extends StatefulWidget {
   final Widget nextPage;
@@ -11,34 +13,56 @@ class ChatPasswordPage extends StatefulWidget {
 
 class _ChatPasswordPageState extends State<ChatPasswordPage> {
   final TextEditingController passwordController = TextEditingController();
-  final String correctPassword = "123456";
   bool isLoading = false;
 
-  void _checkPassword() {
+  final String baseUrl = "https://anees-rus4.onrender.com"; 
+
+  Future<void> _checkPassword() async {
     final enteredPassword = passwordController.text.trim();
 
-    if (enteredPassword.isEmpty) {
+    if (enteredPassword.isEmpty || enteredPassword.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("أدخل كلمة المرور")),
+        const SnackBar(content: Text("أدخل كلمة مرور مكونة من 6 أرقام")),
       );
       return;
     }
 
     setState(() => isLoading = true);
 
-    Future.delayed(const Duration(milliseconds: 800), () {
+    final url = Uri.parse("$baseUrl/chat_password");
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"chat_password": enteredPassword}),
+      );
+
       setState(() => isLoading = false);
-      if (enteredPassword == correctPassword) {
+
+      if (response.statusCode == 200) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => widget.nextPage),
         );
-      } else {
+      } else if (response.statusCode == 403) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("كلمة المرور غير صحيحة")),
         );
+      } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("يرجى تسجيل الدخول أولًا")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("حدث خطأ، حاول مجددًا")),
+        );
       }
-    });
+    } catch (e) {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("فشل الاتصال: $e")),
+      );
+    }
   }
 
   @override
@@ -46,10 +70,10 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 140, 24, 40), 
+        padding: const EdgeInsets.fromLTRB(24, 140, 24, 40),
         child: Column(
           children: [
-            Image.asset("assets/انيس.png", height:240), 
+            Image.asset("assets/انيس.png", height: 240),
             const SizedBox(height: 40),
             const Text(
               "كلمة مرور الدخول إلى الشات",
@@ -60,7 +84,7 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 14), 
+            const SizedBox(height: 14),
             const Text(
               "يرجى إدخال كلمة المرور",
               style: TextStyle(
@@ -91,7 +115,6 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
             color: Color(0xFF4F6DA3),
             fontWeight: FontWeight.bold,
             fontSize: 17,
-            fontFamily: 'Tienne',
           ),
         ),
         const SizedBox(height: 8),
