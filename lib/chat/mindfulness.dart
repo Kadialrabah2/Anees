@@ -61,9 +61,9 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
 
 // تنظيف الرد من الكلام الغريب
     final cleanedReply = reply
-      .split("response_metadata")[0]
-      .replaceAll(RegExp(r"(additional_kwargs.*|model_name.*|finish_reason.*|\{.*?})", caseSensitive: false), "")
-      .replaceAll(RegExp(r"\\n|\\t|\\r"), "\n")
+      .replaceAll("\\n", "\n")
+      .replaceAll("\\t", "\t")
+      .replaceAll("\\r", "")
       .trim();
 
     setState(() {

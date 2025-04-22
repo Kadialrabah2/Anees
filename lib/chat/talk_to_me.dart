@@ -45,9 +45,13 @@ void _sendMessage() async {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final cleanedReply = data["response"]
-      .split("response_metadata").first
-      .split("additional_kwargs").first;
+      final rawReply = data["response"];
+      final cleanedReply = rawReply
+        .replaceAll("\\n", "\n")
+        .replaceAll("\\t", "\t")
+        .replaceAll("\\r", "")
+        .trim();
+
 
       setState(() {
          _messages.add({"text": cleanedReply.trim(), "isUser": false});

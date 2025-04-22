@@ -64,7 +64,12 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
       );
 
 // تنظيف الرد من الكلام البرمجي الزايد
-      final cleanedReply = reply.split("response_metadata").first.split("additional_kwargs").first;
+      final cleanedReply = reply
+        .replaceAll("\\n", "\n")
+        .replaceAll("\\t", "\t")
+        .replaceAll("\\r", "")
+        .trim();
+
 
       setState(() {
         _messages.add({"text": cleanedReply.trim(), "isUser": false});
