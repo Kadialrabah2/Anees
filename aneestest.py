@@ -320,18 +320,19 @@ def signin():
         return jsonify({"error": "Invalid credentials"}), 401
 
 #profile page  
-@app.route("/profile", methods=["GET"])
+@app.route("/profile", methods=["POST"])
 def get_profile():
-    user_id = session.get("user_id")
-    if not user_id:
-        return jsonify({"error": "User not authenticated"}), 401
+    data = request.get_json()
+    username = data.get("username")
+
+    if not username:
+        return jsonify({"error": "Username is required"}), 400
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT username, email, bot_name, chat_password FROM users WHERE id = %s", (user_id,))
+        cur.execute("SELECT username, email, bot_name, chat_password FROM users WHERE username = %s", (username,))
         user = cur.fetchone()
-
         cur.close()
         conn.close()
 
@@ -344,17 +345,19 @@ def get_profile():
             }), 200
         else:
             return jsonify({"error": "User not found"}), 404
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 #update profile
 @app.route("/update_profile", methods=["POST"])
 def update_profile():
-    user_id = session.get("user_id")
-    if not user_id:
-        return jsonify({"error": "User not authenticated"}), 401
+    data = request.get_json()
+    username = data.get("username")  # نجيب اليوزرنيم من الريكوست
 
-    data = request.json
-    username = data.get("username")
+    if not username:
+        return jsonify({"error": "Username is required"}), 400
+
     email = data.get("email")
     password = data.get("password")  # plaintext
     bot_name = data.get("bot_name")
@@ -364,13 +367,18 @@ def update_profile():
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Only update fields that are provided
+        # نحضر اليوزر ونتأكد انه موجود
+        cur.execute("SELECT id FROM users WHERE username = %s", (username,))
+        result = cur.fetchone()
+        if not result:
+            return jsonify({"error": "User not found"}), 404
+
+        user_id = result[0]  # نحصل الـ id من قاعدة البيانات
+
+        # نجهز التحديثات
         updates = []
         values = []
 
-        if username:
-            updates.append("username = %s")
-            values.append(username)
         if email:
             updates.append("email = %s")
             values.append(email)
@@ -400,6 +408,7 @@ def update_profile():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
     
 #chat password page
 @app.route("/chat_password", methods=["POST"])
