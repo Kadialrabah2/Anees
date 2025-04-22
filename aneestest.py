@@ -869,8 +869,8 @@ def save_daily_mood():
     return {"message": "تم حفظ المزاج اليومي بنجاح ✅", "date": str(today)}
 
 # استرجاع بيانات المزاج الأسبوعية
-@app.route("/get-weekly-mood/{username}", methods=["GET"])
-def get_weekly_mood(username: str):
+@app.route("/get-weekly-mood/<username>", methods=["GET"])
+def get_weekly_mood(username):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
