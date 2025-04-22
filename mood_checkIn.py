@@ -18,7 +18,7 @@ def get_db_connection():
 
 
 # حفظ المزاج اليومي
-@app.post("/save-daily-mood/")
+@app.route("/save-daily-mood/", methods=["POST"])
 def save_daily_mood():
     data = request.get_json()
     username = data.get("username")
@@ -53,7 +53,7 @@ def save_daily_mood():
     return {"message": "تم حفظ المزاج اليومي بنجاح ✅", "date": str(today)}
 
 # استرجاع بيانات المزاج الأسبوعية
-@app.get("/get-weekly-mood/{username}")
+@app.route("/get-weekly-mood/{username}", methods=["GET"])
 def get_weekly_mood(username: str):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
