@@ -329,7 +329,7 @@ def get_profile():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT username, age, email, bot_name, chat_password FROM users WHERE id = %s", (user_id,))
+        cur.execute("SELECT username, email, bot_name, chat_password FROM users WHERE id = %s", (user_id,))
         user = cur.fetchone()
 
         cur.close()
@@ -338,10 +338,9 @@ def get_profile():
         if user:
             return jsonify({
                 "username": user[0],
-                "age": user[1],
-                "email": user[2],
-                "bot_name": user[3],
-                "chat_password": user[4]
+                "email": user[1],
+                "bot_name": user[2],
+                "chat_password": user[3]
             }), 200
         else:
             return jsonify({"error": "User not found"}), 404
