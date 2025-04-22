@@ -356,7 +356,6 @@ def update_profile():
 
     data = request.json
     username = data.get("username")
-    age = data.get("age")
     email = data.get("email")
     password = data.get("password")  # plaintext
     bot_name = data.get("bot_name")
@@ -373,9 +372,6 @@ def update_profile():
         if username:
             updates.append("username = %s")
             values.append(username)
-        if age:
-            updates.append("age = %s")
-            values.append(age)
         if email:
             updates.append("email = %s")
             values.append(email)
