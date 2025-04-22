@@ -409,9 +409,9 @@ def update_profile():
 #chat password page
 @app.route("/chat_password", methods=["POST"])
 def verify_chat_password():
-    user_id = session.get("user_id")  # Use session to get current user
+    username = session.get("username")
 
-    if not user_id:
+    if not username:
         return jsonify({"error": "User not authenticated"}), 401
 
     data = request.get_json()
@@ -424,7 +424,7 @@ def verify_chat_password():
         conn = get_db_connection()
         cur = conn.cursor()
 
-        cur.execute("SELECT chat_password FROM users WHERE id = %s", (user_id,))
+        cur.execute("SELECT chat_password FROM users WHERE id = %s", (username,))
         result = cur.fetchone()
 
         cur.close()
