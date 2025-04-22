@@ -409,24 +409,18 @@ def update_profile():
 #chat password page
 @app.route("/chat_password", methods=["POST"])
 def verify_chat_password():
-    username = session.get("username")
-
-    if not username:
-        return jsonify({"error": "User not authenticated"}), 401
-
     data = request.get_json()
-    entered_password = data.get("chat_password")
+    username = data.get("username") 
+    entered_password = data.get("password")
 
-    if not entered_password or len(entered_password) != 6:
-        return jsonify({"error": "Invalid password format"}), 400
+    if not username or not entered_password or len(entered_password) != 6:
+        return jsonify({"error": "Missing or invalid input"}), 400
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-
-        cur.execute("SELECT chat_password FROM users WHERE id = %s", (username,))
+        cur.execute("SELECT chat_password FROM users WHERE username = %s", (username,))
         result = cur.fetchone()
-
         cur.close()
         conn.close()
 
@@ -437,6 +431,7 @@ def verify_chat_password():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 # Home Page Route
 @app.route("/home", methods=["GET"])
 def home():
