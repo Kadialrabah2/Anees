@@ -14,6 +14,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
 from flask import render_template
 from datetime import date
+from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException
 from psycopg2.extras import RealDictCursor
 import os
@@ -821,7 +822,7 @@ def save_daily_mood():
     data = request.get_json()
     username = data.get("username")
     mood_value = data.get("mood_value")
-    today = date.today()
+    today = (datetime.utcnow() + timedelta(hours=3)).date()
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -850,44 +851,6 @@ def save_daily_mood():
 
     return {"message": "تم حفظ المزاج اليومي بنجاح ✅", "date": str(today)}
 
-from datetime import datetime, timedelta
-
-# حفظ المزاج اليومي
-@app.route("/save-daily-mood/", methods=["POST"])
-def save_daily_mood():
-    data = request.get_json()
-    username = data.get("username")
-    mood_value = data.get("mood_value")
-
-    # نستخدم التوقيت المحلي ( توقيت السعودية UTC+3)
-    today = (datetime.utcnow() + timedelta(hours=3)).date()
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    # التحقق من وجود المستخدم
-    cur.execute("SELECT username FROM users WHERE username = %s", (username,))
-    user = cur.fetchone()
-    if not user:
-        conn.close()
-        raise HTTPException(status_code=404, detail="المستخدم غير موجود")
-
-    # حذف أي بيانات مزاج موجودة لنفس اليوم
-    cur.execute("""
-        DELETE FROM daily_mood 
-        WHERE username = %s AND mood_date = %s
-    """, (username, today))
-
-    # إدخال بيانات المزاج الجديدة
-    cur.execute("""
-        INSERT INTO daily_mood (username, mood_date, mood_value)
-        VALUES (%s, %s, %s)
-    """, (username, today, mood_value))
-
-    conn.commit()
-    conn.close()
-
-    return {"message": "تم حفظ المزاج اليومي بنجاح", "date": str(today)}
 
 
 if __name__ == "__main__":
