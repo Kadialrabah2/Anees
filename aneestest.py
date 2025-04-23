@@ -292,7 +292,7 @@ def signup():
 @app.route("/signin", methods=["POST"])
 def signin():
     data = request.json
-    username_or_email = data.get("username")  # This could be email or username
+    username_or_email = data.get("username")  # Can be either username or email
     password = data.get("password")
 
     if not username_or_email or not password:
@@ -301,24 +301,32 @@ def signin():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # Check if it's an email or username and adjust the query accordingly
-    if "@" in username_or_email:  # Assuming email contains "@"
-        cur.execute("SELECT id, password FROM users WHERE email = %s", (username_or_email,))
+    # Check if it's an email (contains "@") or just a username
+    if "@" in username_or_email:
+        cur.execute("SELECT id, username, password FROM users WHERE email = %s", (username_or_email,))
     else:
-        cur.execute("SELECT id, password FROM users WHERE username = %s", (username_or_email,))
-   
+        cur.execute("SELECT id, username, password FROM users WHERE username = %s", (username_or_email,))
     user = cur.fetchone()
     cur.close()
     conn.close()
 
-    if user and check_password_hash(user[1], password):
-        # session["user_id"] = user[0]  # Store user ID in session
+    # If user is found and password is correct
+    if user and check_password_hash(user[2], password):
         user_id = user[0]
+        username = user[1]  # Always fetch the real username
+
+        # Store in session for server-side usage
         session["user_id"] = user_id
-        print(f"User {user_id} signed in.")
-        return jsonify({"message": "Login successful"}), 200
+        session["username"] = username
+
+        # Return username to the frontend (Flutter)
+        return jsonify({
+            "message": "Login successful",
+            "username": username
+        }), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
+
 
 #profile page  
 @app.route("/profile", methods=["POST"])

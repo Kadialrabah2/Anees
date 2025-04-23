@@ -41,9 +41,9 @@ class _SignInPageState extends State<SignInPage> {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200 && data is Map<String, dynamic>) {
+      if (response.statusCode == 200 && data is Map<String, dynamic> && data.containsKey('username')) {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('username', username);
+        await prefs.setString('username', data['username']);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("تسجيل الدخول ناجح: ${data['message']}")),

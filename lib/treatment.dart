@@ -85,18 +85,6 @@ class TreatmentPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF4F6DA3),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "الرئيسية"),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "التقارير"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "حسابي"),
-        ],
-      ),
     );
   }
 
