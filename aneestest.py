@@ -839,17 +839,20 @@ def save_daily_mood():
     conn = get_db_connection()
     cur = conn.cursor()
 
+    # التحقق من وجود المستخدم
     cur.execute("SELECT username FROM users WHERE username = %s", (username,))
     user = cur.fetchone()
     if not user:
         conn.close()
         abort(404, description="المستخدم غير موجود")
 
+    # حذف أي بيانات مزاج لنفس اليوم
     cur.execute("""
         DELETE FROM daily_mood 
         WHERE username = %s AND mood_date = %s
     """, (username, today))
 
+    # إدخال بيانات المزاج الجديدة
     cur.execute("""
         INSERT INTO daily_mood (username, mood_date, mood_value)
         VALUES (%s, %s, %s)
@@ -858,8 +861,7 @@ def save_daily_mood():
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "تم حفظ المزاج اليومي بنجاح", "date": str(today)})
-
+    return jsonify({"message": "تم حفظ المزاج اليومي بنجاح ✅", "date": str(today)})
 @app.route("/get-weekly-mood/<username>", methods=["GET"])
 def get_weekly_mood(username):
     try:

@@ -46,56 +46,58 @@ class _EmergencyPageState extends State<EmergencyPage> {
     await prefs.setString('emergencyLinks', jsonEncode(emergencyLinks));
   }
 
-Future<void> fetchEmergencyData() async {
-  try {
-    final response = await http.get(Uri.parse("$baseUrl/emergency"));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final serverContacts = List<Map<String, String>>.from(data["contacts"]);
+  Future<void> fetchEmergencyData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final username = prefs.getString("username");
+    if (username == null) return;
 
-      setState(() {
-        emergencyContacts = serverContacts;
-        emergencyLinks = [
-          {
-            "name": "مركز الصحة النفسية الوطني",
-            "url": data["mental_health_center"]
-          }
-        ];
-      });
+    try {
+      final response = await http.get(Uri.parse("$baseUrl/emergency?username=$username"));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final serverContacts = List<Map<String, String>>.from(data["contacts"]);
 
-      await saveToStorage();
+        setState(() {
+          emergencyContacts = serverContacts;
+          emergencyLinks = [
+            {
+              "name": "المركز الوطني للصحة النفسية",
+              "url": data["mental_health_center"]
+            }
+          ];
+        });
+
+        await saveToStorage();
+      }
+    } catch (e) {
+      print("خطأ في جلب البيانات: $e");
     }
-  } catch (e) {
-    print("خطأ في جلب البيانات: $e");
   }
-}
 
-Future<void> sendToServer(String name, String phone) async {
-  final prefs = await SharedPreferences.getInstance();
-  final username = prefs.getString('username');
+  Future<void> sendToServer(String name, String phone) async {
+    final prefs = await SharedPreferences.getInstance();
+    final username = prefs.getString('username');
+    if (username == null) return;
 
-  if (username == null) return;
-
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/add_emergency_contact'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        "username": username,
-        "name": name,
-        "phone": phone,
-      }),
-    );
-    if (response.statusCode == 201) {
-      print("تم الحفظ في الباك اند");
-    } else {
-      print("فشل الحفظ في الباك اند: ${response.body}");
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/add_emergency_contact'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "username": username,
+          "name": name,
+          "phone": phone,
+        }),
+      );
+      if (response.statusCode == 201) {
+        print("تم الحفظ في قاعدة البيانات");
+      } else {
+        print("فشل الحفظ في قاعدة البيانات: ${response.body}");
+      }
+    } catch (e) {
+      print("خطأ أثناء الإرسال: $e");
     }
-  } catch (e) {
-    print("خطأ أثناء الإرسال: $e");
   }
-}
-
 
   void _callNumber(String number) async {
     final Uri phoneUri = Uri(scheme: 'tel', path: number);
@@ -120,15 +122,8 @@ Future<void> sendToServer(String name, String phone) async {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: "الاسم"),
-              ),
-              TextField(
-                controller: phoneController,
-                decoration: const InputDecoration(labelText: "رقم الهاتف"),
-                keyboardType: TextInputType.phone,
-              ),
+              TextField(controller: nameController, decoration: const InputDecoration(labelText: "اسم جهة الاتصال")),
+              TextField(controller: phoneController, decoration: const InputDecoration(labelText: "رقم الهاتف"), keyboardType: TextInputType.phone),
             ],
           ),
           actions: [
@@ -151,7 +146,7 @@ Future<void> sendToServer(String name, String phone) async {
                 phoneController.clear();
                 Navigator.pop(context);
               },
-              child: const Text("إضافة"),
+              child: const Text("حفظ"),
             ),
           ],
         );
@@ -159,59 +154,35 @@ Future<void> sendToServer(String name, String phone) async {
     );
   }
 
-  void showLinkDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("إضافة رابط جديد"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: linkNameController,
-                decoration: const InputDecoration(labelText: "اسم الموقع"),
-              ),
-              TextField(
-                controller: linkUrlController,
-                decoration: const InputDecoration(labelText: "الرابط"),
-                keyboardType: TextInputType.url,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                final name = linkNameController.text.trim();
-                final url = linkUrlController.text.trim();
-
-                print("محاولة إضافة الرابط: $name - $url");
-
-                if (name.isNotEmpty && url.isNotEmpty) {
-                  final Map<String, String> link = {"name": name, "url": url};
-
-                  final exists = emergencyLinks.any((l) => l["url"] == url);
-                  print("هل الرابط موجود مسبقًا؟ $exists");
-
-                  if (!exists) {
-                    setState(() {
-                      emergencyLinks.add(link);
-                      print("تمت الإضافة داخل setState");
-                    });
-                    saveToStorage();
-                    print("تم الحفظ في التخزين المحلي");
-                  }
-                }
-
-                linkNameController.clear();
-                linkUrlController.clear();
-                Navigator.pop(context);
-              },
-              child: const Text("إضافة"),
+  Widget buildContactCard(String name, String phone) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(icon: const Icon(Icons.phone, color: Color(0xFF4F6DA3), size: 30), onPressed: () => _callNumber(phone)),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(phone, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+              ],
             ),
-          ],
-        );
-      },
+          ),
+          const Icon(Icons.person, color: Color(0xFF4F6DA3), size: 30),
+        ],
+      ),
+    );
+  }
+
+  Widget buildAddButton(String text, VoidCallback onPressed) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: const Icon(Icons.add_circle_outline, color: Color(0xFF4F6DA3)),
+      label: Text(text, style: const TextStyle(fontSize: 18, color: Color(0xFF4F6DA3))),
     );
   }
 
@@ -222,7 +193,7 @@ Future<void> sendToServer(String name, String phone) async {
       appBar: AppBar(
         backgroundColor: const Color(0xFF4F6DA3),
         elevation: 0,
-        title: const Text("الطوارئ", style: TextStyle(color: Colors.white, fontSize: 22)),
+        title: const Text("جهات الطوارئ", style: TextStyle(color: Colors.white, fontSize: 22)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -240,7 +211,7 @@ Future<void> sendToServer(String name, String phone) async {
           Column(
             children: [
               const SizedBox(height: 20),
-              const Text("جهة اتصال طارئة", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
+              const Text("جهات الاتصال الطارئة", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -252,13 +223,21 @@ Future<void> sendToServer(String name, String phone) async {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text("مراكز الصحة النفسية للمساعدة", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
+              const Text("روابط الدعم النفسي", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     for (var link in emergencyLinks)
-                      buildLinkCard(link["name"]!, link["url"]!),
+                      GestureDetector(
+                        onTap: () => _openWebsite(link["url"]!),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                          child: Text(link["name"]!, style: const TextStyle(fontSize: 18, color: Colors.blue)),
+                        ),
+                      ),
                     buildAddButton("إضافة رابط آخر", showLinkDialog),
                   ],
                 ),
@@ -271,56 +250,46 @@ Future<void> sendToServer(String name, String phone) async {
     );
   }
 
-  Widget buildContactCard(String name, String phone) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.phone, color: Color(0xFF4F6DA3), size: 30),
-            onPressed: () => _callNumber(phone),
+  void showLinkDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("إضافة رابط جديد"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: linkNameController, decoration: const InputDecoration(labelText: "اسم الموقع أو الجهة")),
+              TextField(controller: linkUrlController, decoration: const InputDecoration(labelText: "الرابط الإلكتروني"), keyboardType: TextInputType.url),
+            ],
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                Text(phone, style: const TextStyle(fontSize: 16, color: Colors.grey)),
-              ],
+          actions: [
+            TextButton(
+              onPressed: () {
+                final name = linkNameController.text.trim();
+                final url = linkUrlController.text.trim();
+
+                if (name.isNotEmpty && url.isNotEmpty) {
+                  final Map<String, String> link = {"name": name, "url": url};
+
+                  final exists = emergencyLinks.any((l) => l["url"] == url);
+                  if (!exists) {
+                    setState(() {
+                      emergencyLinks.add(link);
+                    });
+                    saveToStorage();
+                  }
+                }
+
+                linkNameController.clear();
+                linkUrlController.clear();
+                Navigator.pop(context);
+              },
+              child: const Text("حفظ"),
             ),
-          ),
-          const Icon(Icons.person, color: Color(0xFF4F6DA3), size: 30),
-        ],
-      ),
-    );
-  }
-
-  Widget buildLinkCard(String name, String url) {
-    return GestureDetector(
-      onTap: () => _openWebsite(url),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Text(name, style: const TextStyle(fontSize: 18, color: Colors.blue)),
-      ),
-    );
-  }
-
-  Widget buildAddButton(String text, VoidCallback onPressed) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: const Icon(Icons.add_circle_outline, color: Color(0xFF4F6DA3)),
-      label: Text(text, style: const TextStyle(fontSize: 18, color: Color(0xFF4F6DA3))),
+          ],
+        );
+      },
     );
   }
 }

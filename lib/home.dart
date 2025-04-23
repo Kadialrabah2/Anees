@@ -30,6 +30,11 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(builder: (context) => ProfileUpdatePage()),
       );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProgressTrackerPage()),
+      );
     } else {
       setState(() {
         _selectedIndex = index;
@@ -45,7 +50,7 @@ class _HomePageState extends State<HomePage> {
         index: _selectedIndex,
         children: [
           buildMainHome(context),
-          const ProgressTrackerPage(),
+          Container(), 
           Container(),
         ],
       ),

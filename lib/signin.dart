@@ -13,19 +13,19 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final TextEditingController usernameOrEmail = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final String baseUrl = "https://anees-rus4.onrender.com";
   bool isPasswordVisible = false;
 
   Future<void> signInRequest(BuildContext context) async {
     final Uri url = Uri.parse("$baseUrl/signin");
-    final username = usernameOrEmail.text.trim();
+    final username = usernameController.text.trim();
     final password = passwordController.text.trim();
 
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("الرجاء إدخال البريد الإلكتروني أو اسم المستخدم وكلمة المرور")),
+        const SnackBar(content: Text("الرجاء إدخال اسم المستخدم وكلمة المرور")),
       );
       return;
     }
@@ -43,7 +43,7 @@ class _SignInPageState extends State<SignInPage> {
 
       if (response.statusCode == 200) {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.clear(); 
+        await prefs.clear();
         await prefs.setString('username', username);
         await prefs.setString('password', password);
 
@@ -78,7 +78,7 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               Image.asset("assets/انيس.png", height: 220, width: 300),
               const SizedBox(height: 20),
-              buildTextField('البريد الإلكتروني أو اسم المستخدم', "ادخل البريد الإلكتروني أو اسم المستخدم", false, usernameOrEmail),
+              buildTextField('اسم المستخدم', "ادخل اسم المستخدم", false, usernameController),
               const SizedBox(height: 10),
               buildTextField('كلمة المرور', 'ادخل كلمة المرور', true, passwordController),
               const SizedBox(height: 10),

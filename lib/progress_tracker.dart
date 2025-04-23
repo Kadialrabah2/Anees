@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'home.dart';
 
 class ProgressTrackerPage extends StatefulWidget {
   const ProgressTrackerPage({Key? key}) : super(key: key);
@@ -85,7 +85,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
 
       return moods.map((e) {
         return {
-          'date': HttpDate.parse(e['date']),
+          'date': DateTime.parse(e['date']),
           'mood_value': e['mood_value'],
         };
       }).toList();
@@ -216,34 +216,6 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
     );
   }
 
-  Widget _buildRecommendationItem(String text) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Color(0xFF4F6DA3),
-          fontSize: 16,
-          fontWeight: FontWeight.w900,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_combinedFuture == null) {
@@ -273,32 +245,43 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
             textDirection: TextDirection.rtl,
             child: Scaffold(
               backgroundColor: const Color(0xFFC2D5F2),
-              body: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ListView(
-                    children: [
-                      const SizedBox(height: 20),
-                      ...moodData.entries.map((e) => _buildIndicator(e.key, e.value)).toList(),
-                      const SizedBox(height: 12),
-                      _buildMoodSummary(weeklyMood),
-                      const SizedBox(height: 30),
-                      const Text(
-                        'توصيات',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFF4F6DA3),
-                        ),
-                        textAlign: TextAlign.right,
-                      ),
-                      const SizedBox(height: 8),
-                      _buildRecommendationItem("المشاركة في الأنشطة الإجتماعية"),
-                      _buildRecommendationItem("ممارسة الرياضة بانتظام"),
-                      const SizedBox(height: 30),
-                    ],
+              body: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: 0.7,
+                      child: Image.asset("assets/h.png"),
+                    ),
                   ),
-                ),
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ListView(
+                        children: [
+                          const SizedBox(height: 70),
+                          ...moodData.entries.map((e) => _buildIndicator(e.key, e.value)).toList(),
+                          const SizedBox(height: 12),
+                          _buildMoodSummary(weeklyMood),
+                          const SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 50,
+                    left: 15,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF4F6DA3), size: 30),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HomePage()),
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           );
