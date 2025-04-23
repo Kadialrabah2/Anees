@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmergencyPage extends StatefulWidget {
@@ -21,7 +22,29 @@ class _EmergencyPageState extends State<EmergencyPage> {
   @override
   void initState() {
     super.initState();
+    loadFromStorage();
     fetchEmergencyData();
+  }
+
+  Future<void> loadFromStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final contactsJson = prefs.getString('emergencyContacts');
+    final linksJson = prefs.getString('emergencyLinks');
+
+    setState(() {
+      if (contactsJson != null) {
+        emergencyContacts = List<Map<String, String>>.from(jsonDecode(contactsJson));
+      }
+      if (linksJson != null) {
+        emergencyLinks = List<Map<String, String>>.from(jsonDecode(linksJson));
+      }
+    });
+  }
+
+  Future<void> saveToStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('emergencyContacts', jsonEncode(emergencyContacts));
+    await prefs.setString('emergencyLinks', jsonEncode(emergencyLinks));
   }
 
   Future<void> fetchEmergencyData() async {
@@ -30,9 +53,10 @@ class _EmergencyPageState extends State<EmergencyPage> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
-          emergencyContacts = List<Map<String, String>>.from(data["contacts"]);
-          emergencyLinks = List<Map<String, String>>.from(data["links"]);
+          emergencyContacts.addAll(List<Map<String, String>>.from(data["contacts"]));
+          emergencyLinks.addAll(List<Map<String, String>>.from(data["links"]));
         });
+        await saveToStorage();
       }
     } catch (e) {
       print("خطأ في جلب البيانات: $e");
@@ -43,8 +67,6 @@ class _EmergencyPageState extends State<EmergencyPage> {
     final Uri phoneUri = Uri(scheme: 'tel', path: number);
     if (await canLaunchUrl(phoneUri)) {
       await launchUrl(phoneUri);
-    } else {
-      print("لا يمكن الاتصال بالرقم $number");
     }
   }
 
@@ -52,8 +74,6 @@ class _EmergencyPageState extends State<EmergencyPage> {
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
-    } else {
-      print("لا يمكن فتح الرابط");
     }
   }
 
@@ -83,6 +103,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 setState(() {
                   emergencyContacts.add({"name": nameController.text, "phone": phoneController.text});
                 });
+                saveToStorage();
                 nameController.clear();
                 phoneController.clear();
                 Navigator.pop(context);
@@ -121,6 +142,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 setState(() {
                   emergencyLinks.add({"name": linkNameController.text, "url": linkUrlController.text});
                 });
+                saveToStorage();
                 linkNameController.clear();
                 linkUrlController.clear();
                 Navigator.pop(context);
@@ -137,22 +159,16 @@ class _EmergencyPageState extends State<EmergencyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
-
-    
       appBar: AppBar(
         backgroundColor: const Color(0xFF4F6DA3),
         elevation: 0,
-        title: const Text(
-          "الطوارئ",
-          style: TextStyle(color: Colors.white, fontSize: 22),
-        ),
+        title: const Text("الطوارئ", style: TextStyle(color: Colors.white, fontSize: 22)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-
       body: Stack(
         children: [
           Positioned.fill(
@@ -164,56 +180,34 @@ class _EmergencyPageState extends State<EmergencyPage> {
           Column(
             children: [
               const SizedBox(height: 20),
-
-              const Text(
-                "جهة اتصال طارئة",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3)),
-              ),
-
+              const Text("جهة اتصال طارئة", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     for (var contact in emergencyContacts)
                       buildContactCard(contact["name"]!, contact["phone"]!),
-
-                    GestureDetector(
-                      onTap: showContactDialog,
-                      child: buildAddButton("إضافة جهة اتصال أخرى", showContactDialog),
-                    ),
+                    buildAddButton("إضافة جهة اتصال أخرى", showContactDialog),
                   ],
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              const Text(
-                "مراكز الصحة النفسية للمساعدة",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3)),
-              ),
-
+              const Text("مراكز الصحة النفسية للمساعدة", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     for (var link in emergencyLinks)
                       buildLinkCard(link["name"]!, link["url"]!),
-
-                    GestureDetector(
-                      onTap: showLinkDialog,
-                      child: buildAddButton("إضافة رابط آخر", showLinkDialog),
-                    ),
+                    buildAddButton("إضافة رابط آخر", showLinkDialog),
                   ],
                 ),
               ),
-
               const SizedBox(height: 30),
             ],
           ),
         ],
       ),
-
-
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: const Color(0xFF4F6DA3),
@@ -283,5 +277,3 @@ class _EmergencyPageState extends State<EmergencyPage> {
     );
   }
 }
-
-

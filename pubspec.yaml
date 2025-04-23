@@ -69,6 +69,7 @@ flutter:
       -  assets/f.png
       -  assets/h.png
       -  assets/hs.png
+
 dependency_overrides:
   url_launcher_android: 6.2.2
   # An image asset can refer to one or more resolution-specific "variants", see
