@@ -29,23 +29,14 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   @override
   void initState() {
     super.initState();
-    loadLocalProfile().then((foundLocalData) {
-      if (!foundLocalData) {
-        fetchUserProfile(widget.userName ?? "أنيس");
-      }
-    });
+    loadLocalProfile(); // تحميل البيانات المخزنة مؤقتاً
+    fetchUserProfile(widget.userName ?? "أنيس"); // ثم جلب البيانات المحدثة من السيرفر
   }
 
-  Future<bool> loadLocalProfile() async {
+  Future<void> loadLocalProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final username = prefs.getString('username');
-    if (username == null) return false;
-
-    usernameController.clear();
-    emailController.clear();
-    passwordController.clear();
-    botNameController.clear();
-    chatpasswordController.clear();
+    if (username == null) return;
 
     setState(() {
       usernameController.text = username;
@@ -55,7 +46,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       botNameController.text = prefs.getString('bot_name') ?? "";
       chatpasswordController.text = prefs.getString('chat_password') ?? "";
     });
-    return true;
   }
 
   Future<void> saveLocalProfile() async {
@@ -80,9 +70,11 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         usernameController.text = data['username'] ?? "";
         displayName = data['username'] ?? "أنيس";
         emailController.text = data['email'] ?? "";
+        passwordController.text = data['password'] ?? "";
         botNameController.text = data['bot_name'] ?? "";
         chatpasswordController.text = data['chat_password'] ?? "";
       });
+      await saveLocalProfile(); // حفظ البيانات الجديدة محلياً
     }
   }
 

@@ -3,28 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MindfulnessService {
-  final String baseUrl = "https://anees-rus4.onrender.com";
-
-  Future<String> sendMessage(String username, String message) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/act'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "username": username,
-        "message": message,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data["response"];
-    } else {
-      throw Exception("Server error: ${response.statusCode}");
-    }
-  }
-}
-
 class MindfulnessPage extends StatefulWidget {
   const MindfulnessPage({Key? key}) : super(key: key);
 
@@ -35,6 +13,7 @@ class MindfulnessPage extends StatefulWidget {
 class _MindfulnessPageState extends State<MindfulnessPage> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
+  final String baseUrl = "https://anees-rus4.onrender.com";
   String _userName = "رفيق أنيس";
 
   @override
@@ -44,13 +23,13 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
   }
 
   Future<void> _loadUserName() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? storedName = prefs.getString('userName');
+    final prefs = await SharedPreferences.getInstance();
+    final savedName = prefs.getString('username') ?? "رفيق أنيس";
     setState(() {
-      _userName = storedName?.isNotEmpty == true ? storedName! : "رفيق أنيس";
+      _userName = savedName;
       _messages.add({
-        "text": "أهلًا بك $_userName\nهل قمت بممارسة الوعي الذاتي اليوم؟",
-        "isUser": false
+        "text": "مرحبًا $_userName\nهل قمت بممارسة الوعي الذاتي اليوم؟",
+        "isUser": false,
       });
     });
   }
@@ -65,20 +44,30 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
     });
 
     try {
-      final reply = await MindfulnessService().sendMessage(
-        _userName,
-        text,
+      final response = await http.post(
+        Uri.parse('$baseUrl/act'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "username": _userName,
+          "message": text,
+        }),
       );
 
-      final cleanedReply = reply
-          .replaceAll("\\n", "\n")
-          .replaceAll("\\t", "\t")
-          .replaceAll("\\r", "")
-          .trim();
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final rawReply = data["response"];
+        final cleanedReply = rawReply
+            .replaceAll("\\n", "\n")
+            .replaceAll("\\t", "\t")
+            .replaceAll("\\r", "")
+            .trim();
 
-      setState(() {
-        _messages.add({"text": cleanedReply, "isUser": false});
-      });
+        setState(() {
+          _messages.add({"text": cleanedReply, "isUser": false});
+        });
+      } else {
+        throw Exception("HTTP ${response.statusCode}");
+      }
     } catch (e) {
       setState(() {
         _messages.add({"text": "فشل الاتصال بالسيرفر", "isUser": false});
@@ -114,22 +103,17 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
                   itemBuilder: (context, index) {
                     final isUser = _messages[index]["isUser"];
                     return Align(
-                      alignment:
-                          isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                         decoration: BoxDecoration(
-                          color:
-                              isUser ? Colors.white : const Color(0xFF4F6DA3),
+                          color: isUser ? Colors.white : const Color(0xFF4F6DA3),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
-                            bottomLeft:
-                                isUser ? Radius.circular(20) : Radius.zero,
-                            bottomRight:
-                                isUser ? Radius.zero : Radius.circular(20),
+                            bottomLeft: isUser ? Radius.circular(20) : Radius.zero,
+                            bottomRight: isUser ? Radius.zero : Radius.circular(20),
                           ),
                         ),
                         child: Text(
@@ -179,8 +163,7 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
                       child: const CircleAvatar(
                         backgroundColor: Colors.white,
                         radius: 25,
-                        child: Icon(Icons.send,
-                            color: Color(0xFF4F6DA3), size: 28),
+                        child: Icon(Icons.send, color: Color(0xFF4F6DA3), size: 28),
                       ),
                     ),
                   ],

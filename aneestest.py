@@ -791,7 +791,6 @@ def get_user_aggregated_mood_data(username):
         conn = get_db_connection()
         cur = conn.cursor()
         
-        # استعلام لجمع متوسط بيانات المزاج لمستخدم معين
         cur.execute("""
             SELECT 
                 AVG(stress_level) as avg_stress,
@@ -830,7 +829,6 @@ def get_user_aggregated_mood_data(username):
         if 'cur' in locals(): cur.close()
         if 'conn' in locals(): conn.close()
 
-# حفظ المزاج اليومي
 @app.route("/save-daily-mood/", methods=["POST"])
 def save_daily_mood():
     data = request.get_json()
@@ -841,20 +839,17 @@ def save_daily_mood():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # التحقق من وجود المستخدم
     cur.execute("SELECT username FROM users WHERE username = %s", (username,))
     user = cur.fetchone()
     if not user:
         conn.close()
-        raise HTTPException(status_code=404, detail="المستخدم غير موجود")
+        abort(404, description="المستخدم غير موجود")
 
-    # حذف أي بيانات مزاج موجودة لنفس اليوم
     cur.execute("""
         DELETE FROM daily_mood 
         WHERE username = %s AND mood_date = %s
     """, (username, today))
 
-    # إدخال بيانات المزاج الجديدة
     cur.execute("""
         INSERT INTO daily_mood (username, mood_date, mood_value)
         VALUES (%s, %s, %s)
@@ -863,9 +858,35 @@ def save_daily_mood():
     conn.commit()
     conn.close()
 
-    return {"message": "تم حفظ المزاج اليومي بنجاح ", "date": str(today)}
+    return jsonify({"message": "تم حفظ المزاج اليومي بنجاح", "date": str(today)})
 
+@app.route("/get-weekly-mood/<username>", methods=["GET"])
+def get_weekly_mood(username):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
 
+        cur.execute("""
+            SELECT mood_date, mood_value 
+            FROM daily_mood 
+            WHERE username = %s
+            ORDER BY mood_date DESC 
+            LIMIT 7
+        """, (username,))
+
+        rows = cur.fetchall()
+        if not rows:
+            return jsonify({"weekly_moods": []}), 200
+
+        data = [{"date": row[0].strftime("%Y-%m-%d"), "mood_value": row[1]} for row in rows]
+
+        return jsonify({"weekly_moods": data}), 200
+    except Exception as e:
+        print(f"Error fetching weekly mood: {e}")
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if 'cur' in locals(): cur.close()
+        if 'conn' in locals(): conn.close()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)

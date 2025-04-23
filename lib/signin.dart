@@ -41,18 +41,20 @@ class _SignInPageState extends State<SignInPage> {
 
       final data = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('username', username);
-  await prefs.setString('password', password);
+      if (response.statusCode == 200) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.clear(); 
+        await prefs.setString('username', username);
+        await prefs.setString('password', password);
 
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text("تسجيل الدخول ناجح")),
-  );
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => DescribeFeelingPage()),
-  );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("تسجيل الدخول ناجح")),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DescribeFeelingPage()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("فشل تسجيل الدخول: ${data['error'] ?? response.body}")),

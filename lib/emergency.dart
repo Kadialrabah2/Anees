@@ -22,8 +22,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
   @override
   void initState() {
     super.initState();
-    loadFromStorage();
-    fetchEmergencyData();
+    loadFromStorage().then((_) => fetchEmergencyData());
   }
 
   Future<void> loadFromStorage() async {
@@ -31,14 +30,14 @@ class _EmergencyPageState extends State<EmergencyPage> {
     final contactsJson = prefs.getString('emergencyContacts');
     final linksJson = prefs.getString('emergencyLinks');
 
-    setState(() {
-      if (contactsJson != null) {
-        emergencyContacts = List<Map<String, String>>.from(jsonDecode(contactsJson));
-      }
-      if (linksJson != null) {
-        emergencyLinks = List<Map<String, String>>.from(jsonDecode(linksJson));
-      }
-    });
+    if (contactsJson != null) {
+      emergencyContacts = List<Map<String, String>>.from(jsonDecode(contactsJson));
+    }
+    if (linksJson != null) {
+      emergencyLinks = List<Map<String, String>>.from(jsonDecode(linksJson));
+    }
+
+    setState(() {});
   }
 
   Future<void> saveToStorage() async {
@@ -47,21 +46,56 @@ class _EmergencyPageState extends State<EmergencyPage> {
     await prefs.setString('emergencyLinks', jsonEncode(emergencyLinks));
   }
 
-  Future<void> fetchEmergencyData() async {
-    try {
-      final response = await http.get(Uri.parse("$baseUrl/emergency"));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          emergencyContacts.addAll(List<Map<String, String>>.from(data["contacts"]));
-          emergencyLinks.addAll(List<Map<String, String>>.from(data["links"]));
-        });
-        await saveToStorage();
-      }
-    } catch (e) {
-      print("خطأ في جلب البيانات: $e");
+Future<void> fetchEmergencyData() async {
+  try {
+    final response = await http.get(Uri.parse("$baseUrl/emergency"));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final serverContacts = List<Map<String, String>>.from(data["contacts"]);
+
+      setState(() {
+        emergencyContacts = serverContacts;
+        emergencyLinks = [
+          {
+            "name": "مركز الصحة النفسية الوطني",
+            "url": data["mental_health_center"]
+          }
+        ];
+      });
+
+      await saveToStorage();
     }
+  } catch (e) {
+    print("خطأ في جلب البيانات: $e");
   }
+}
+
+Future<void> sendToServer(String name, String phone) async {
+  final prefs = await SharedPreferences.getInstance();
+  final username = prefs.getString('username');
+
+  if (username == null) return;
+
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/add_emergency_contact'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "username": username,
+        "name": name,
+        "phone": phone,
+      }),
+    );
+    if (response.statusCode == 201) {
+      print("تم الحفظ في الباك اند");
+    } else {
+      print("فشل الحفظ في الباك اند: ${response.body}");
+    }
+  } catch (e) {
+    print("خطأ أثناء الإرسال: $e");
+  }
+}
+
 
   void _callNumber(String number) async {
     final Uri phoneUri = Uri(scheme: 'tel', path: number);
@@ -100,10 +134,19 @@ class _EmergencyPageState extends State<EmergencyPage> {
           actions: [
             TextButton(
               onPressed: () {
-                setState(() {
-                  emergencyContacts.add({"name": nameController.text, "phone": phoneController.text});
-                });
-                saveToStorage();
+                final name = nameController.text.trim();
+                final phone = phoneController.text.trim();
+                final contact = {"name": name, "phone": phone};
+
+                if (name.isNotEmpty && phone.isNotEmpty &&
+                    !emergencyContacts.any((c) => c["name"] == name && c["phone"] == phone)) {
+                  setState(() {
+                    emergencyContacts.add(contact);
+                  });
+                  saveToStorage();
+                  sendToServer(name, phone);
+                }
+
                 nameController.clear();
                 phoneController.clear();
                 Navigator.pop(context);
@@ -139,10 +182,27 @@ class _EmergencyPageState extends State<EmergencyPage> {
           actions: [
             TextButton(
               onPressed: () {
-                setState(() {
-                  emergencyLinks.add({"name": linkNameController.text, "url": linkUrlController.text});
-                });
-                saveToStorage();
+                final name = linkNameController.text.trim();
+                final url = linkUrlController.text.trim();
+
+                print("محاولة إضافة الرابط: $name - $url");
+
+                if (name.isNotEmpty && url.isNotEmpty) {
+                  final Map<String, String> link = {"name": name, "url": url};
+
+                  final exists = emergencyLinks.any((l) => l["url"] == url);
+                  print("هل الرابط موجود مسبقًا؟ $exists");
+
+                  if (!exists) {
+                    setState(() {
+                      emergencyLinks.add(link);
+                      print("تمت الإضافة داخل setState");
+                    });
+                    saveToStorage();
+                    print("تم الحفظ في التخزين المحلي");
+                  }
+                }
+
                 linkNameController.clear();
                 linkUrlController.clear();
                 Navigator.pop(context);
