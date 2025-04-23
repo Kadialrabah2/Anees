@@ -459,15 +459,14 @@ def home():
 # Emergency Contacts Route
 @app.route("/emergency", methods=["GET"])
 def get_emergency_contacts():
-    user_id = session.get("user_id")  # get user id from session
-    #user_id = request.args.get("user_id")  # get user_id from query parameters
-    if not user_id:
+    username = session.get("username")  # Get username from session
+    if not username:
         return jsonify({"error": "User not authenticated"}), 401
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT name, phone FROM emergency_contacts WHERE user_id = %s", (user_id,))
+        cur.execute("SELECT id FROM users WHERE username = %s", (username,))
         contacts = cur.fetchall()
         cur.close()
         conn.close()
@@ -480,18 +479,25 @@ def get_emergency_contacts():
 # Add Emergency Contact Route
 @app.route("/add_emergency_contact", methods=["POST"])
 def add_emergency_contact():
-    user_id = session.get("user_id")
-    #user_id = request.args.get("user_id")  # get user_id from query parameters
+    username = session.get("username")  # Get username from session
     data = request.get_json()
     name = data.get("name")
     phone = data.get("phone")
 
-    if not user_id or not name or not phone:
-        return jsonify({"error": "Name and phone are required"}), 400
+    if not username or not name or not phone:
+        return jsonify({"error": "Username, name, and phone are required"}), 400
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
+        # Step 1: Get user_id from username
+        cur.execute("SELECT id FROM users WHERE username = %s", (username,))
+        result = cur.fetchone()
+        if not result:
+            return jsonify({"error": "User not found"}), 404
+        user_id = result[0]
+
+        # Step 2: Insert emergency contact
         cur.execute("INSERT INTO emergency_contacts (user_id, name, phone) VALUES (%s, %s, %s)",
                     (user_id, name, phone))
         conn.commit()
