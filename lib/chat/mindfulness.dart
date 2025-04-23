@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MindfulnessService {
   final String baseUrl = "https://anees-rus4.onrender.com";
@@ -25,9 +26,7 @@ class MindfulnessService {
 }
 
 class MindfulnessPage extends StatefulWidget {
-  final String? userName;
-
-  MindfulnessPage({this.userName});
+  const MindfulnessPage({Key? key}) : super(key: key);
 
   @override
   _MindfulnessPageState createState() => _MindfulnessPageState();
@@ -36,12 +35,24 @@ class MindfulnessPage extends StatefulWidget {
 class _MindfulnessPageState extends State<MindfulnessPage> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
+  String _userName = "رفيق أنيس";
 
   @override
   void initState() {
     super.initState();
-    String name = widget.userName?.isNotEmpty == true ? widget.userName! : "رفيق أنيس";
-    _messages.add({"text": "أهلًا بك $name\nهل قمت بممارسة الوعي الذاتي اليوم؟", "isUser": false});
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedName = prefs.getString('userName');
+    setState(() {
+      _userName = storedName?.isNotEmpty == true ? storedName! : "رفيق أنيس";
+      _messages.add({
+        "text": "أهلًا بك $_userName\nهل قمت بممارسة الوعي الذاتي اليوم؟",
+        "isUser": false
+      });
+    });
   }
 
   void _sendMessage() async {
@@ -55,24 +66,22 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
 
     try {
       final reply = await MindfulnessService().sendMessage(
-        widget.userName ?? "unknown",
+        _userName,
         text,
-        );
+      );
 
-// تنظيف الرد من الكلام الغريب
-    final cleanedReply = reply
-      .replaceAll("\\n", "\n")
-      .replaceAll("\\t", "\t")
-      .replaceAll("\\r", "")
-      .trim();
+      final cleanedReply = reply
+          .replaceAll("\\n", "\n")
+          .replaceAll("\\t", "\t")
+          .replaceAll("\\r", "")
+          .trim();
 
-    setState(() {
-      _messages.add({"text": cleanedReply, "isUser": false});
+      setState(() {
+        _messages.add({"text": cleanedReply, "isUser": false});
       });
-
     } catch (e) {
       setState(() {
-        _messages.add({"text": "فشل الاتصال  بالسيرفر", "isUser": false});
+        _messages.add({"text": "فشل الاتصال بالسيرفر", "isUser": false});
       });
     }
   }
@@ -105,17 +114,22 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
                   itemBuilder: (context, index) {
                     final isUser = _messages[index]["isUser"];
                     return Align(
-                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isUser ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
                         decoration: BoxDecoration(
-                          color: isUser ? Colors.white : const Color(0xFF4F6DA3),
+                          color:
+                              isUser ? Colors.white : const Color(0xFF4F6DA3),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
-                            bottomLeft: isUser ? Radius.circular(20) : Radius.zero,
-                            bottomRight: isUser ? Radius.zero : Radius.circular(20),
+                            bottomLeft:
+                                isUser ? Radius.circular(20) : Radius.zero,
+                            bottomRight:
+                                isUser ? Radius.zero : Radius.circular(20),
                           ),
                         ),
                         child: Text(
@@ -124,7 +138,6 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
                             color: isUser ? Colors.black : Colors.white,
                             fontSize: 16,
                           ),
-                          // it was here
                         ),
                       ),
                     );
@@ -166,7 +179,8 @@ class _MindfulnessPageState extends State<MindfulnessPage> {
                       child: const CircleAvatar(
                         backgroundColor: Colors.white,
                         radius: 25,
-                        child: Icon(Icons.send, color: Color(0xFF4F6DA3), size: 28),
+                        child: Icon(Icons.send,
+                            color: Color(0xFF4F6DA3), size: 28),
                       ),
                     ),
                   ],

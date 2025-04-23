@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 
 class DescribeFeelingPage extends StatefulWidget {
@@ -8,7 +11,8 @@ class DescribeFeelingPage extends StatefulWidget {
 
 class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
   final TextEditingController _feelingController = TextEditingController();
-  int _selectedMoodIndex = 4; 
+  int _selectedMoodIndex = 4;
+  late String _username = "";
 
   final List<IconData> moodIcons = [
     Icons.sentiment_very_dissatisfied,
@@ -19,6 +23,53 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  Future<void> _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _username = prefs.getString('username') ?? '';
+    });
+  }
+
+  Future<void> _submitMood() async {
+    if (_username.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("اسم المستخدم غير متوفر")),
+      );
+      return;
+    }
+
+    print('Submitting mood for: $_username');
+
+    final response = await http.post(
+      Uri.parse('https://anees-rus4.onrender.com/save-daily-mood/'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': _username,
+        'mood_value': _selectedMoodIndex + 1,
+      }),
+    );
+
+    print('Status Code: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("فشل في إرسال المزاج: ${response.body}")),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
@@ -27,9 +78,7 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
           Positioned.fill(
             child: Opacity(
               opacity: 0.3,
-              child: Image.asset(
-                "assets/h.png",
-              ),
+              child: Image.asset("assets/h.png"),
             ),
           ),
           Column(
@@ -69,13 +118,7 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
               ),
               const SizedBox(height: 15),
               ElevatedButton(
-                onPressed: () {
-                  print("تم الإرسال: ${_feelingController.text}");
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                },
+                onPressed: _submitMood,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4F6DA3),
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
@@ -111,9 +154,7 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
                       },
                       child: CircleAvatar(
                         radius: 30,
-                        backgroundColor: _selectedMoodIndex == index
-                            ? Colors.white
-                            : Colors.transparent,
+                        backgroundColor: _selectedMoodIndex == index ? Colors.white : Colors.transparent,
                         child: Icon(
                           moodIcons[index],
                           size: 40,
@@ -126,18 +167,6 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
               ),
             ],
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF4F6DA3),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "الرئيسية"),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "التقارير"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "حسابي"),
         ],
       ),
     );

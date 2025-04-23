@@ -6,15 +6,23 @@ import 'profile_update.dart';
 import 'emergency.dart';
 import 'progress_tracker.dart';
 
-
 class HomePage extends StatefulWidget {
+  final int initialIndex;
+  const HomePage({Key? key, this.initialIndex = 0}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
   String errorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   void _onItemTapped(int index) {
     if (index == 2) {
@@ -34,14 +42,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
       body: IndexedStack(
-      index: _selectedIndex,
+        index: _selectedIndex,
         children: [
           buildMainHome(context),
-          ProgressTrackerPage(), 
-            Container(), 
-  ],
-),
-
+          const ProgressTrackerPage(),
+          Container(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: const Color(0xFF4F6DA3),

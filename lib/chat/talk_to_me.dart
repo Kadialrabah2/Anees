@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TalkToMePage extends StatefulWidget {
-  final String? userName;
-
-  TalkToMePage({this.userName});
+  const TalkToMePage({Key? key}) : super(key: key);
 
   @override
   _TalkToMePageState createState() => _TalkToMePageState();
@@ -14,61 +13,71 @@ class TalkToMePage extends StatefulWidget {
 class _TalkToMePageState extends State<TalkToMePage> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
-
-  final String baseUrl = "https://anees-rus4.onrender.com"; 
+  final String baseUrl = "https://anees-rus4.onrender.com";
+  String _userName = "رفيق أنيس";
 
   @override
   void initState() {
     super.initState();
-    String name = widget.userName?.isNotEmpty == true ? widget.userName! : "رفيق أنيس";
-    _messages.add({"text": "أهلًا بك $name\nكيف حالك اليوم؟", "isUser": false});
+    _messages.add({
+      "text": "أهلًا بك ...\nكيف حالك اليوم؟",
+      "isUser": false,
+    });
+    _loadUserName();
   }
 
-void _sendMessage() async {
-  final text = _messageController.text.trim();
-  if (text.isEmpty) return;
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedName = prefs.getString('username') ?? "رفيق أنيس";
+    setState(() {
+      _userName = savedName;
+      _messages[0] = {
+        "text": "أهلًا بك $_userName\nكيف حالك اليوم؟",
+        "isUser": false,
+      };
+    });
+  }
 
-  setState(() {
-    _messages.add({"text": text, "isUser": true});
-    _messageController.clear();
-  });
+  void _sendMessage() async {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
 
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/diagnosis'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "username": widget.userName ?? "unknown",
-        "message": text,
-      }),
-    );
+    setState(() {
+      _messages.add({"text": text, "isUser": true});
+      _messageController.clear();
+    });
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final rawReply = data["response"];
-      final cleanedReply = rawReply
-        .replaceAll("\\n", "\n")
-        .replaceAll("\\t", "\t")
-        .replaceAll("\\r", "")
-        .trim();
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/diagnosis'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "username": _userName,
+          "message": text,
+        }),
+      );
 
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final rawReply = data["response"];
+        final cleanedReply = rawReply
+            .replaceAll("\\n", "\n")
+            .replaceAll("\\t", "\t")
+            .replaceAll("\\r", "")
+            .trim();
 
-      setState(() {
-         _messages.add({"text": cleanedReply.trim(), "isUser": false});
-      });
-
-    } else {
+        setState(() {
+          _messages.add({"text": cleanedReply, "isUser": false});
+        });
+      } else {
+        _messages.add({"text": "فشل الاتصال بالخادم", "isUser": false});
+      }
+    } catch (e) {
       setState(() {
         _messages.add({"text": "فشل الاتصال بالخادم", "isUser": false});
       });
     }
-  } catch (e) {
-    setState(() {
-      _messages.add({"text": "فشل الاتصال بالخادم", "isUser": false});
-    });
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +105,7 @@ void _sendMessage() async {
                   padding: const EdgeInsets.all(15),
                   itemCount: _messages.length,
                   itemBuilder: (context, index) {
-                    bool isUser = _messages[index]["isUser"];
+                    final isUser = _messages[index]["isUser"];
                     return Align(
                       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(

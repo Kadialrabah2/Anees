@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatPasswordPage extends StatefulWidget {
   final Widget nextPage;
@@ -15,14 +16,24 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
 
-  final String baseUrl = "https://anees-rus4.onrender.com"; 
+  final String baseUrl = "https://anees-rus4.onrender.com";
 
   Future<void> _checkPassword() async {
     final enteredPassword = passwordController.text.trim();
 
-    if (enteredPassword.isEmpty || enteredPassword.length != 6) {
+    if (enteredPassword.isEmpty || enteredPassword.length != 6 || !RegExp(r'^\d{6}$').hasMatch(enteredPassword)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("أدخل كلمة مرور مكونة من 6 أرقام")),
+        const SnackBar(content: Text("يرجى إدخال كلمة مرور مكونة من 6 أرقام")),
+      );
+      return;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final username = prefs.getString('username') ?? '';
+
+    if (username.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("يرجى تسجيل الدخول أولًا")),
       );
       return;
     }
@@ -34,7 +45,10 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"chat_password": enteredPassword}),
+        body: jsonEncode({
+          "username": username,
+          "password": enteredPassword,
+        }),
       );
 
       setState(() => isLoading = false);
@@ -69,38 +83,50 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 140, 24, 40),
-        child: Column(
-          children: [
-            Image.asset("assets/انيس.png", height: 240),
-            const SizedBox(height: 40),
-            const Text(
-              "كلمة مرور الدخول إلى الشات",
-              style: TextStyle(
-                color: Color(0xFF4F6DA3),
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+      body: Stack(
+        children: [
+          Positioned(
+            top: 50,
+            left: 15,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF4F6DA3), size: 30),
+              onPressed: () => Navigator.pop(context),
             ),
-            const SizedBox(height: 14),
-            const Text(
-              "يرجى إدخال كلمة المرور",
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 140, 24, 40),
+            child: Column(
+              children: [
+                Image.asset("assets/انيس.png", height: 240),
+                const SizedBox(height: 40),
+                const Text(
+                  "كلمة مرور الدخول إلى الشات",
+                  style: TextStyle(
+                    color: Color(0xFF4F6DA3),
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 14),
+                const Text(
+                  "يرجى إدخال كلمة مرور مكونة من 6 أرقام",
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
+                buildPasswordField("كلمة المرور", passwordController),
+                const SizedBox(height: 30),
+                isLoading
+                    ? const CircularProgressIndicator(color: Color(0xFF4F6DA3))
+                    : buildButton("دخول", _checkPassword),
+              ],
             ),
-            const SizedBox(height: 40),
-            buildPasswordField("كلمة المرور", passwordController),
-            const SizedBox(height: 30),
-            isLoading
-                ? const CircularProgressIndicator(color: Color(0xFF4F6DA3))
-                : buildButton("دخول", _checkPassword),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -128,8 +154,8 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
             controller: controller,
             textAlign: TextAlign.center,
             obscureText: true,
+            keyboardType: TextInputType.number,
             decoration: const InputDecoration(
-              hintText: '••••••',
               border: InputBorder.none,
             ),
           ),

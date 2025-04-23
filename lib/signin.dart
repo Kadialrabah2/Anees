@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'password/request_reset_password.dart';
 import 'describe_feeling.dart';
-
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -16,7 +16,6 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController usernameOrEmail = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final String baseUrl = "https://anees-rus4.onrender.com";
-
   bool isPasswordVisible = false;
 
   Future<void> signInRequest(BuildContext context) async {
@@ -43,6 +42,9 @@ class _SignInPageState extends State<SignInPage> {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data is Map<String, dynamic>) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('username', username);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("تسجيل الدخول ناجح: ${data['message']}")),
         );
@@ -158,29 +160,27 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  
-
-Widget buildButton(String text, VoidCallback onPressed) {
-  return SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4F6DA3),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+  Widget buildButton(String text, VoidCallback onPressed) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF4F6DA3),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PhysicalActivityPage extends StatefulWidget {
-  final String? userName;
-
-  const PhysicalActivityPage({Key? key, this.userName}) : super(key: key);
+  const PhysicalActivityPage({Key? key}) : super(key: key);
 
   @override
   _PhysicalActivityPageState createState() => _PhysicalActivityPageState();
@@ -14,58 +13,67 @@ class PhysicalActivityPage extends StatefulWidget {
 class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
-
   final String baseUrl = "https://anees-rus4.onrender.com";
+  String _userName = "رفيق أنيس";
 
   @override
   void initState() {
     super.initState();
-    String name = widget.userName?.isNotEmpty == true ? widget.userName! : "رفيق أنيس";
-    _messages.add({"text": "مرحبًا $name\nما هو نشاطك البدني اليوم؟", "isUser": false});
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedName = prefs.getString('username') ?? "رفيق أنيس";
+    setState(() {
+      _userName = savedName;
+      _messages.add({
+        "text": "مرحبًا $_userName\nما هو نشاطك البدني اليوم؟",
+        "isUser": false,
+      });
+    });
   }
 
   void _sendMessage() async {
-  final text = _messageController.text.trim();
-  if (text.isEmpty) return;
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
 
-  setState(() {
-    _messages.add({"text": text, "isUser": true});
-    _messageController.clear();
-  });
-
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/physical'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "username": widget.userName ?? "unknown",
-        "message": text,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final rawReply = data["response"];
-      final cleanedReply = rawReply
-        .replaceAll("\\n", "\n")
-        .replaceAll("\\t", "\t")
-        .replaceAll("\\r", "")
-        .trim();
-
-      setState(() {
-         _messages.add({"text": cleanedReply.trim(), "isUser": false});
-      });
-
-    } else {
-      throw Exception("HTTP ${response.statusCode}");
-    }
-  } catch (e) {
     setState(() {
-      _messages.add({"text": "فشل الاتصال بالسيرفر", "isUser": false});
+      _messages.add({"text": text, "isUser": true});
+      _messageController.clear();
     });
-  }
-}
 
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/physical'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "username": _userName,
+          "message": text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final rawReply = data["response"];
+        final cleanedReply = rawReply
+            .replaceAll("\\n", "\n")
+            .replaceAll("\\t", "\t")
+            .replaceAll("\\r", "")
+            .trim();
+
+        setState(() {
+          _messages.add({"text": cleanedReply, "isUser": false});
+        });
+      } else {
+        throw Exception("HTTP ${response.statusCode}");
+      }
+    } catch (e) {
+      setState(() {
+        _messages.add({"text": "فشل الاتصال بالسيرفر", "isUser": false});
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

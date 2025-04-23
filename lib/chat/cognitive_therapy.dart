@@ -1,50 +1,36 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HealthyLifestyleService {
-  final String baseUrl = "https://anees-rus4.onrender.com";
-
-  Future<String> sendMessage(String username, String message) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/cognitive'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "username": username,
-        "message": message,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data["response"];
-    } else {
-      throw Exception("Server error: ${response.statusCode}");
-    }
-  }
-}
-
-class HealthyLifestylePage extends StatefulWidget {
-  final String? userName;
-
-  HealthyLifestylePage({this.userName});
+class CognitiveTherapyPage extends StatefulWidget {
+  const CognitiveTherapyPage({Key? key}) : super(key: key);
 
   @override
-  _HealthyLifestylePageState createState() => _HealthyLifestylePageState();
+  _CognitiveTherapyPageState createState() => _CognitiveTherapyPageState();
 }
 
-class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
+class _CognitiveTherapyPageState extends State<CognitiveTherapyPage> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
+  final String baseUrl = "https://anees-rus4.onrender.com";
+  String _userName = "رفيق أنيس";
 
   @override
   void initState() {
     super.initState();
-    String name = widget.userName?.isNotEmpty == true ? widget.userName! : "رفيق أنيس";
-    _messages.add({
-      "text":
-          "أهلًا بك $name\nهل هناك أفكار تشعر أنها تؤثر على حالتك النفسية مؤخرًا؟ أنا هنا لمساعدتك في فهمها والتعامل معها خطوة بخطوة",
-      "isUser": false
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedName = prefs.getString('username') ?? "رفيق أنيس";
+    setState(() {
+      _userName = savedName;
+      _messages.add({
+        "text": "أهلًا بك $_userName\nهل هناك أفكار تشعر أنها تؤثر على حالتك النفسية مؤخرًا؟",
+        "isUser": false,
+      });
     });
   }
 
@@ -58,26 +44,33 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
     });
 
     try {
-      final reply = await HealthyLifestyleService().sendMessage(
-      widget.userName ?? "unknown",
-      text,
+      final response = await http.post(
+        Uri.parse('$baseUrl/cognitive'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "username": _userName,
+          "message": text,
+        }),
       );
 
-// تنظيف الرد من الكلام البرمجي الزايد
-      final cleanedReply = reply
-        .replaceAll("\\n", "\n")
-        .replaceAll("\\t", "\t")
-        .replaceAll("\\r", "")
-        .trim();
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final rawReply = data["response"];
+        final cleanedReply = rawReply
+            .replaceAll("\\n", "\n")
+            .replaceAll("\\t", "\t")
+            .replaceAll("\\r", "")
+            .trim();
 
-
-      setState(() {
-        _messages.add({"text": cleanedReply.trim(), "isUser": false});
-    });
-
+        setState(() {
+          _messages.add({"text": cleanedReply, "isUser": false});
+        });
+      } else {
+        throw Exception("HTTP ${response.statusCode}");
+      }
     } catch (e) {
       setState(() {
-        _messages.add({"text": "فشل الاتصال  بالسيرفر", "isUser": false});
+        _messages.add({"text": "فشل الاتصال بالسيرفر", "isUser": false});
       });
     }
   }
@@ -110,22 +103,17 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
                   itemBuilder: (context, index) {
                     final isUser = _messages[index]["isUser"];
                     return Align(
-                      alignment:
-                          isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                         decoration: BoxDecoration(
-                          color:
-                              isUser ? Colors.white : const Color(0xFF4F6DA3),
+                          color: isUser ? Colors.white : const Color(0xFF4F6DA3),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
-                            bottomLeft:
-                                isUser ? Radius.circular(20) : Radius.zero,
-                            bottomRight:
-                                isUser ? Radius.zero : Radius.circular(20),
+                            bottomLeft: isUser ? Radius.circular(20) : Radius.zero,
+                            bottomRight: isUser ? Radius.zero : Radius.circular(20),
                           ),
                         ),
                         child: Text(
@@ -175,8 +163,7 @@ class _HealthyLifestylePageState extends State<HealthyLifestylePage> {
                       child: const CircleAvatar(
                         backgroundColor: Colors.white,
                         radius: 25,
-                        child: Icon(Icons.send,
-                            color: Color(0xFF4F6DA3), size: 28),
+                        child: Icon(Icons.send, color: Color(0xFF4F6DA3), size: 28),
                       ),
                     ),
                   ],

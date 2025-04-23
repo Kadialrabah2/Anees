@@ -1,45 +1,96 @@
-import 'dart:convert'; 
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProgressTrackerPage extends StatelessWidget {
-  const ProgressTrackerPage({super.key});
+class ProgressTrackerPage extends StatefulWidget {
+  const ProgressTrackerPage({Key? key}) : super(key: key);
+
+  @override
+  _ProgressTrackerPageState createState() => _ProgressTrackerPageState();
+}
+
+class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
+  final String baseUrl = "https://anees-rus4.onrender.com";
+  Future<List<dynamic>>? _combinedFuture;
+  String _username = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    final prefs = await SharedPreferences.getInstance();
+    _username = prefs.getString('username') ?? '';
+
+    if (_username.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("اسم المستخدم غير متوفر")),
+        );
+      }
+      return;
+    }
+
+    setState(() {
+      _combinedFuture = Future.wait([
+        _fetchMoodLevels(),
+        _fetchWeeklyMood(),
+      ]);
+    });
+  }
 
   Future<Map<String, double>> _fetchMoodLevels() async {
-    try {
-  final response = await http.post(
-  Uri.parse('https://anees-rus4.onrender.com/diagnosis'),
-  headers: {'Content-Type': 'application/json'},
-  body: jsonEncode({
-    "username": "testuser", 
-    "message": "hi"
-  }),
-);
+    final response = await http.get(
+      Uri.parse('$baseUrl/user_aggregated_mood_data/$_username'),
+    );
 
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(response.body);
+      final mood = json['average_mood_levels'];
+      return {
+        'مستوى التوتر': (mood['stress'] ?? 0).toDouble(),
+        'مستوى الإجهاد': (mood['anxiety'] ?? 0).toDouble(),
+        'مستوى نوبات الهلع': (mood['panic'] ?? 0).toDouble(),
+        'مستوى الشعور بالوحدة': (mood['loneliness'] ?? 0).toDouble(),
+        'مستوى الإرهاق': (mood['burnout'] ?? 0).toDouble(),
+        'مستوى الإكتئاب': (mood['depression'] ?? 0).toDouble(),
+      };
+    } else if (response.statusCode == 404) {
+      return {
+        'مستوى التوتر': 0,
+        'مستوى الإجهاد': 0,
+        'مستوى نوبات الهلع': 0,
+        'مستوى الشعور بالوحدة': 0,
+        'مستوى الإرهاق': 0,
+        'مستوى الإكتئاب': 0,
+      };
+    } else {
+      throw Exception('فشل الاتصال بالسيرفر - status: ${response.statusCode}');
+    }
+  }
 
-      print("🔍 Status Code: ${response.statusCode}");
-      print("🔍 Response Body: ${response.body}");
+  Future<List<Map<String, dynamic>>> _fetchWeeklyMood() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/get-weekly-mood/$_username'),
+    );
 
-      if (response.statusCode == 200) {
-  final Map<String, dynamic> json = jsonDecode(response.body);
-final mood = json['mood_scores'];
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(response.body);
+      final moods = json['weekly_moods'] as List<dynamic>;
 
-return {
-  'مستوى التوتر': (mood['stress_level'] ?? 0).toDouble(),
-  'مستوى الإجهاد': (mood['anxiety_level'] ?? 0).toDouble(),
-  'مستوى نوبات الهلع': (mood['panic_level'] ?? 0).toDouble(),
-  'مستوى الشعور بالوحدة': (mood['loneliness_level'] ?? 0).toDouble(),
-  'مستوى الإرهاق': (mood['burnout_level'] ?? 0).toDouble(),
-  'مستوى الإكتئاب': (mood['depression_level'] ?? 0).toDouble(),
-};
-
-      } else {
-        throw Exception('فشل الاتصال بالسيرفر');
-      }
-    } catch (e) {
-      print("❌ Error during fetching mood levels: $e");
-      rethrow;
+      return moods.map((e) {
+        return {
+          'date': HttpDate.parse(e['date']),
+          'mood_value': e['mood_value'],
+        };
+      }).toList();
+    } else {
+      throw Exception('فشل في جلب بيانات المزاج الأسبوعي');
     }
   }
 
@@ -96,18 +147,23 @@ return {
     );
   }
 
-  Widget _buildMoodSummary() {
-    const List<IconData> moodIcons = [
+  Widget _buildMoodSummary(List<Map<String, dynamic>> weeklyMood) {
+    const moodIcons = [
       Icons.sentiment_very_dissatisfied,
       Icons.sentiment_dissatisfied,
       Icons.sentiment_neutral,
       Icons.sentiment_satisfied,
       Icons.sentiment_very_satisfied,
-      Icons.sentiment_neutral,
-      Icons.sentiment_satisfied,
     ];
 
-    const days = ['أحد', 'سبت', 'جمعة', 'خميس', 'أربعاء', 'ثلاثاء', 'إثنين'];
+    const daysAr = ['إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد'];
+
+    final Map<int, int> moodMap = {};
+    for (var entry in weeklyMood) {
+      final date = entry['date'] as DateTime;
+      final mood = entry['mood_value'] as int;
+      moodMap[date.weekday] = mood;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -131,12 +187,21 @@ return {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(7, (index) {
+            final dayIndex = index + 1;
+            final moodValue = moodMap[dayIndex] ?? 0;
+            final iconIndex = moodValue.clamp(1, 5) - 1;
+            final dayName = daysAr[index % 7];
+
             return Column(
               children: [
-                Icon(moodIcons[index], size: 30, color: Color(0xFF4F6DA3)),
+                Icon(
+                  moodValue == 0 ? Icons.remove : moodIcons[iconIndex],
+                  size: 30,
+                  color: const Color(0xFF4F6DA3),
+                ),
                 const SizedBox(height: 4),
                 Text(
-                  days[index],
+                  dayName,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w900,
@@ -179,82 +244,70 @@ return {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    if (_combinedFuture == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
-@override
-Widget build(BuildContext context) {
-  return FutureBuilder<Map<String, double>>(
-    future: _fetchMoodLevels(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        );
-      } else if (snapshot.hasError) {
-        return Scaffold(
-          body: Center(child: Text('خطأ: ${snapshot.error}')),
-        );
-      } else {
-        final progressData = snapshot.data!;
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: Scaffold(
-            backgroundColor: const Color(0xFFC2D5F2),
-            body: Stack(
-              children: [
-                Positioned.fill(
-                  child: Opacity(
-                    opacity: 0.50,
-                    child: Image.asset("assets/h.png"),
-                  ),
-                ),
-                SafeArea(
-                  child: Column(
+    return FutureBuilder<List<dynamic>>(
+      future: _combinedFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+
+        if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(child: Text('تعذر عرض البيانات:\n${snapshot.error}')),
+          );
+        }
+
+        try {
+          final Map<String, double> moodData = snapshot.data![0];
+          final List<Map<String, dynamic>> weeklyMood = snapshot.data![1];
+
+          return Directionality(
+            textDirection: TextDirection.rtl,
+            child: Scaffold(
+              backgroundColor: const Color(0xFFC2D5F2),
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ListView(
                     children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 15, top: 10),
-                          child: IconButton(
-                            icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF4F6DA3), size: 30),
-                            onPressed: () => Navigator.pop(context),
-                          ),
+                      const SizedBox(height: 20),
+                      ...moodData.entries.map((e) => _buildIndicator(e.key, e.value)).toList(),
+                      const SizedBox(height: 12),
+                      _buildMoodSummary(weeklyMood),
+                      const SizedBox(height: 30),
+                      const Text(
+                        'توصيات',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF4F6DA3),
                         ),
+                        textAlign: TextAlign.right,
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: ListView(
-                            children: [
-                              const SizedBox(height: 20),
-                              ...progressData.entries.map((e) => _buildIndicator(e.key, e.value)).toList(),
-                              const SizedBox(height: 12),
-                              _buildMoodSummary(),
-                              const SizedBox(height: 30),
-                              const Text(
-                                'توصيات',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xFF4F6DA3),
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
-                              const SizedBox(height: 8),
-                              _buildRecommendationItem("المشاركة في الأنشطة الإجتماعية"),
-                              _buildRecommendationItem("ممارسة الرياضة بانتظام"),
-                              const SizedBox(height: 30),
-                            ],
-                          ),
-                        ),
-                      ),
+                      const SizedBox(height: 8),
+                      _buildRecommendationItem("المشاركة في الأنشطة الإجتماعية"),
+                      _buildRecommendationItem("ممارسة الرياضة بانتظام"),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        );
-      }
-    },
-  );
-}}
+          );
+        } catch (e) {
+          return Scaffold(
+            body: Center(child: Text("تعذر عرض البيانات: $e")),
+          );
+        }
+      },
+    );
+  }
+}
