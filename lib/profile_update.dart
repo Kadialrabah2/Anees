@@ -29,8 +29,8 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   @override
   void initState() {
     super.initState();
-    loadLocalProfile(); // تحميل البيانات المخزنة مؤقتاً
-    fetchUserProfile(widget.userName ?? "أنيس"); // ثم جلب البيانات المحدثة من السيرفر
+    loadLocalProfile(); 
+    fetchUserProfile(widget.userName ?? "أنيس"); 
   }
 
   Future<void> loadLocalProfile() async {
@@ -74,7 +74,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         botNameController.text = data['bot_name'] ?? "";
         chatpasswordController.text = data['chat_password'] ?? "";
       });
-      await saveLocalProfile(); // حفظ البيانات الجديدة محلياً
+      await saveLocalProfile(); 
     }
   }
 
