@@ -863,7 +863,7 @@ def save_daily_mood():
     conn.commit()
     conn.close()
 
-    return {"message": "تم حفظ المزاج اليومي بنجاح ✅", "date": str(today)}
+    return {"message": "تم حفظ المزاج اليومي بنجاح ", "date": str(today)}
 
 
 

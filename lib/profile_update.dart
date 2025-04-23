@@ -23,6 +23,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final String baseUrl = "https://anees-rus4.onrender.com";
   String displayName = "أنيس";
 
+  bool _isMainPasswordVisible = false;
+  bool _isChatPasswordVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     final prefs = await SharedPreferences.getInstance();
     final username = prefs.getString('username');
     if (username == null) return false;
+
+    usernameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    botNameController.clear();
+    chatpasswordController.clear();
 
     setState(() {
       usernameController.text = username;
@@ -92,7 +101,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       body: jsonEncode({
         "username": usernameController.text.trim(),
         "email": emailController.text.trim(),
-        "password": passwordController.text.trim(),
         "bot_name": botNameController.text.trim(),
         "chat_password": chatPassword,
       }),
@@ -194,7 +202,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                         children: [
                           buildProfileField("إسم المستخدم", usernameController),
                           buildProfileField("البريد الإلكتروني", emailController),
-                          buildProfileField("كلمة المرور", passwordController, isPassword: true),
+                          buildProfileField("كلمة المرور", passwordController, isPassword: true, isMainPassword: true),
                           buildProfileField("إسم البوت", botNameController),
                           buildProfileField("رمز المحادثة", chatpasswordController, isPassword: true),
                           const SizedBox(height: 25),
@@ -239,7 +247,10 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     );
   }
 
-  Widget buildProfileField(String title, TextEditingController controller, {bool isPassword = false}) {
+  Widget buildProfileField(String title, TextEditingController controller, {
+    bool isPassword = false,
+    bool isMainPassword = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Column(
@@ -256,7 +267,10 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           const SizedBox(height: 5),
           TextField(
             controller: controller,
-            obscureText: isPassword,
+            readOnly: isMainPassword,
+            obscureText: isPassword
+                ? (isMainPassword ? !_isMainPasswordVisible : !_isChatPasswordVisible)
+                : false,
             textAlign: TextAlign.right,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -266,6 +280,25 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 borderRadius: BorderRadius.circular(32),
                 borderSide: BorderSide.none,
               ),
+              suffixIcon: isPassword
+                  ? IconButton(
+                      icon: Icon(
+                        (isMainPassword ? _isMainPasswordVisible : _isChatPasswordVisible)
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          if (isMainPassword) {
+                            _isMainPasswordVisible = !_isMainPasswordVisible;
+                          } else {
+                            _isChatPasswordVisible = !_isChatPasswordVisible;
+                          }
+                        });
+                      },
+                    )
+                  : null,
             ),
           ),
         ],
