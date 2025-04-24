@@ -85,7 +85,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final moods = json['server_connection_error'] as List<dynamic>;
+      final moods = json['weekly_mood'] as List<dynamic>;
 
       return moods.map((e) {
         return {

@@ -872,6 +872,47 @@ def save_daily_mood():
 
     return {"message": "تم حفظ المزاج اليومي بنجاح ✅", "date": str(today)}
 
+@app.route("/get-weekly-mood/<username>", methods=["GET"])
+def get_weekly_mood(username):
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
+    # التحقق من وجود المستخدم
+    cur.execute("SELECT username FROM users WHERE username = %s", (username,))
+    user = cur.fetchone()
+    if not user:
+        conn.close()
+        raise HTTPException(status_code=404, detail="المستخدم غير موجود")
+
+    # جلب بيانات آخر 7 أيام
+    cur.execute("""
+        SELECT mood_date, mood_value 
+        FROM daily_mood
+        WHERE username = %s
+        ORDER BY mood_date DESC
+        LIMIT 7
+    """, (username,))
+    
+    moods = cur.fetchall()
+    conn.close()
+
+   
+
+    weekly_data = []
+    for mood in moods:
+        weekly_data.append({
+            "date": mood['mood_date'],
+            "mood_value": mood['mood_value']
+        })
+
+    # ترتيب حسب التاريخ (من الأقدم للأحدث)
+    weekly_data_sorted = sorted(weekly_data, key=lambda x: x['date'])
+
+    return {
+        "username": username,
+        "weekly_moods": weekly_data_sorted
+    }
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
