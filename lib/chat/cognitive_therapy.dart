@@ -57,10 +57,11 @@ class _CognitiveTherapyPageState extends State<CognitiveTherapyPage> {
         final data = jsonDecode(response.body);
         final rawReply = data["response"];
         final cleanedReply = rawReply
-            .replaceAll("\\n", "\n")
-            .replaceAll("\\t", "\t")
-            .replaceAll("\\r", "")
-            .trim();
+          .replaceAll(RegExp(r'\\[nrt]'), '\n')
+          .replaceAll(RegExp(r'\\+'), '')
+          .replaceAll(RegExp(r'\s{2,}'), ' ')
+          .replaceAll(RegExp(r'[^\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFFa-zA-Z0-9.,?!؛،…\s]'), '')
+          .trim();
 
         setState(() {
           _messages.add({"text": cleanedReply, "isUser": false});

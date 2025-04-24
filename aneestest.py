@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException
 from psycopg2.extras import RealDictCursor
 import os
+import re
 
 app = Flask(__name__)
 app.debug = True
@@ -292,7 +293,7 @@ def signup():
 @app.route("/signin", methods=["POST"])
 def signin():
     data = request.json
-    username_or_email = data.get("username")  # Can be either username or email
+    username_or_email = data.get("username")  # This could be email or username
     password = data.get("password")
 
     if not username_or_email or not password:
@@ -301,32 +302,24 @@ def signin():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # Check if it's an email (contains "@") or just a username
-    if "@" in username_or_email:
-        cur.execute("SELECT id, username, password FROM users WHERE email = %s", (username_or_email,))
+    # Check if it's an email or username and adjust the query accordingly
+    if "@" in username_or_email:  # Assuming email contains "@"
+        cur.execute("SELECT id, password FROM users WHERE email = %s", (username_or_email,))
     else:
-        cur.execute("SELECT id, username, password FROM users WHERE username = %s", (username_or_email,))
+        cur.execute("SELECT id, password FROM users WHERE username = %s", (username_or_email,))
+   
     user = cur.fetchone()
     cur.close()
     conn.close()
 
-    # If user is found and password is correct
-    if user and check_password_hash(user[2], password):
+    if user and check_password_hash(user[1], password):
+        # session["user_id"] = user[0]  # Store user ID in session
         user_id = user[0]
-        username = user[1]  # Always fetch the real username
-
-        # Store in session for server-side usage
         session["user_id"] = user_id
-        session["username"] = username
-
-        # Return username to the frontend (Flutter)
-        return jsonify({
-            "message": "Login successful",
-            "username": username
-        }), 200
+        print(f"User {user_id} signed in.")
+        return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
-
 
 #profile page  
 @app.route("/profile", methods=["POST"])
@@ -620,7 +613,7 @@ def build_context_prompt(username, message, role_description):
     history = get_conversation_history(username, limit=10)
     context = ""
     for role, msg in reversed(history):
-        context += f"{role}: {msg}\n"
+        context += f"{username}: {msg}\n"
     return f"""{role_description}
 
 {context}
@@ -684,11 +677,15 @@ def diagnosis_route():
         prompt = build_context_prompt(
             username,
             message,
-            "You are a compassionate and supportive mental health assistant. Respond with empathy, clarity, and insight to help the user reflect and cope."
+            "You are a compassionate and supportive mental health assistant. " \
+            "Respond with empathy, clarity, and insight to help the user reflect and cope, " \
+            "but keep your responses short and clear."
         )
 
         llm_response = llm.invoke(prompt)
-        response = getattr(llm_response, "content", str(llm_response)).strip().replace("\n", " ")
+        response = getattr(llm_response, "content", str(llm_response)).strip()
+        response = re.sub(r"[^\u0600-\u06FFa-zA-Z0-9.,?!؛،\s\n]", "", response) 
+
         save_message(username, response, "assistant")
 
         return jsonify({
@@ -716,11 +713,14 @@ def cognitive_route():
         prompt = build_context_prompt(
             username,
             message,
-            "You are a Cognitive Behavioral Therapy (CBT) chatbot. Your goal is to help users identify and challenge negative thoughts using CBT strategies in a supportive tone."
+            "You are a Cognitive Behavioral Therapy (CBT) chatbot. " \
+            "Your goal is to help users identify and challenge negative thoughts using CBT strategies in a supportive tone, " \
+            "but keep your responses short and clear."
         )
 
         llm_response = llm.invoke(prompt)
-        response = getattr(llm_response, "content", str(llm_response)).strip().replace("\n", " ")
+        response = getattr(llm_response, "content", str(llm_response)).strip()
+        response = re.sub(r"[^\u0600-\u06FFa-zA-Z0-9.,?!؛،\s\n]", "", response) 
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
@@ -745,11 +745,16 @@ def act_route():
         prompt = build_context_prompt(
             username,
             message,
-            "You are an Acceptance and Commitment Therapy (ACT) chatbot. Help the user accept their thoughts and feelings without judgment, and encourage actions aligned with their values."
+            "You are an Acceptance and Commitment Therapy (ACT) chatbot. " \
+            "Help the user accept their thoughts and feelings without judgment, "
+            "and encourage actions aligned with their values, " \
+            "but keep your responses short and clear."
         )
 
         llm_response = llm.invoke(prompt)
-        response = getattr(llm_response, "content", str(llm_response)).strip().replace("\n", " ")
+        response = getattr(llm_response, "content", str(llm_response)).strip()
+        response = re.sub(r"[^\u0600-\u06FFa-zA-Z0-9.,?!؛،\s\n]", "", response) 
+
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
@@ -773,11 +778,15 @@ def physical_route():
         prompt = build_context_prompt(
             username,
             message,
-            "You are a physical wellness chatbot that motivates users to stay active and healthy. Offer simple and encouraging physical activity tips based on the user’s input."
+            "You are a physical wellness chatbot that motivates users to stay active and healthy. " \
+            "Offer simple and encouraging physical activity tips based on the user’s input, " \
+            "but keep your responses short and clear."
         )
 
         llm_response = llm.invoke(prompt)
-        response = getattr(llm_response, "content", str(llm_response)).strip().replace("\n", " ")
+        response = getattr(llm_response, "content", str(llm_response)).strip()
+        response = re.sub(r"[^\u0600-\u06FFa-zA-Z0-9.,?!؛،\s\n]", "", response) 
+
         save_message(username, response, "assistant")
 
         return jsonify({"response": response})
@@ -791,6 +800,7 @@ def get_user_aggregated_mood_data(username):
         conn = get_db_connection()
         cur = conn.cursor()
         
+        # استعلام لجمع متوسط بيانات المزاج لمستخدم معين
         cur.execute("""
             SELECT 
                 AVG(stress_level) as avg_stress,
@@ -829,6 +839,7 @@ def get_user_aggregated_mood_data(username):
         if 'cur' in locals(): cur.close()
         if 'conn' in locals(): conn.close()
 
+# حفظ المزاج اليومي
 @app.route("/save-daily-mood/", methods=["POST"])
 def save_daily_mood():
     data = request.get_json()
@@ -844,9 +855,9 @@ def save_daily_mood():
     user = cur.fetchone()
     if not user:
         conn.close()
-        abort(404, description="المستخدم غير موجود")
+        raise HTTPException(status_code=404, detail="المستخدم غير موجود")
 
-    # حذف أي بيانات مزاج لنفس اليوم
+    # حذف أي بيانات مزاج موجودة لنفس اليوم
     cur.execute("""
         DELETE FROM daily_mood 
         WHERE username = %s AND mood_date = %s
@@ -861,34 +872,8 @@ def save_daily_mood():
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "تم حفظ المزاج اليومي بنجاح ✅", "date": str(today)})
-@app.route("/get-weekly-mood/<username>", methods=["GET"])
-def get_weekly_mood(username):
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
+    return {"message": "تم حفظ المزاج اليومي بنجاح ✅", "date": str(today)}
 
-        cur.execute("""
-            SELECT mood_date, mood_value 
-            FROM daily_mood 
-            WHERE username = %s
-            ORDER BY mood_date DESC 
-            LIMIT 7
-        """, (username,))
-
-        rows = cur.fetchall()
-        if not rows:
-            return jsonify({"weekly_moods": []}), 200
-
-        data = [{"date": row[0].strftime("%Y-%m-%d"), "mood_value": row[1]} for row in rows]
-
-        return jsonify({"weekly_moods": data}), 200
-    except Exception as e:
-        print(f"Error fetching weekly mood: {e}")
-        return jsonify({"error": str(e)}), 500
-    finally:
-        if 'cur' in locals(): cur.close()
-        if 'conn' in locals(): conn.close()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
