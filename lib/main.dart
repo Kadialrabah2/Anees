@@ -16,6 +16,12 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  static void setLocale(BuildContext context, Locale newLocale) {
+    final _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?._changeLanguage(newLocale);
+  }
   @override
   State<MyApp> createState() => _MyAppState();
 }

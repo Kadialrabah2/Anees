@@ -52,16 +52,20 @@ class _HomePageState extends State<HomePage> {
     
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
-     /* appBar: AppBar(
+      appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("home")),
         actions: [
           IconButton(
             icon: Icon(Icons.language),
-            onPressed:  ,
+            onPressed:() {
+  Locale currentLocale = Localizations.localeOf(context);
+  Locale newLocale = currentLocale.languageCode == 'ar' ? const Locale('en') : const Locale('ar');
+  MyApp.setLocale(context, newLocale);
+},
             tooltip: AppLocalizations.of(context).translate("switch_language"),
           ),
         ],
-      ),*/
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: [

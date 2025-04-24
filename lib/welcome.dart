@@ -47,7 +47,7 @@ class WelcomePage extends StatelessWidget {
                     children: [
                       TextSpan(text:loc.translate("welcome_description_1")),
                       TextSpan(
-                        text: loc.translate("app_name"),
+                        text: loc.translate("welcome_app_name"),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
