@@ -26,14 +26,13 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
   }
 
   Future<void> _initializeData() async {
-    final loc = AppLocalizations.of(context);
     final prefs = await SharedPreferences.getInstance();
     _username = prefs.getString('username') ?? '';
 
     if (_username.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text(loc.translate("username_not_found"))),
+           SnackBar(content: Text(AppLocalizations.of(context).translate("username_not_found"))),
         );
       }
       return;
@@ -48,7 +47,6 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
   }
 
   Future<Map<String, double>> _fetchMoodLevels() async {
-    final loc = AppLocalizations.of(context);
     final response = await http.get(
       Uri.parse('$baseUrl/user_aggregated_mood_data/$_username'),
     );
@@ -57,24 +55,24 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
       final Map<String, dynamic> json = jsonDecode(response.body);
       final mood = json['average_mood_levels'];
       return {
-        loc.translate("stress_level"): (mood['stress'] ?? 0).toDouble(),
-        loc.translate("anxiety_level"): (mood['anxiety'] ?? 0).toDouble(),
-        loc.translate("panic_level"): (mood['panic'] ?? 0).toDouble(),
-        loc.translate("loneliness_level"): (mood['loneliness'] ?? 0).toDouble(),
-        loc.translate("burnout_level"): (mood['burnout'] ?? 0).toDouble(),
-        loc.translate("depression_level"): (mood['depression'] ?? 0).toDouble(),
+        AppLocalizations.of(context).translate("stress_level"): (mood['stress'] ?? 0).toDouble(),
+        AppLocalizations.of(context).translate("anxiety_level"): (mood['anxiety'] ?? 0).toDouble(),
+        AppLocalizations.of(context).translate("panic_level"): (mood['panic'] ?? 0).toDouble(),
+        AppLocalizations.of(context).translate("loneliness_level"): (mood['loneliness'] ?? 0).toDouble(),
+        AppLocalizations.of(context).translate("burnout_level"): (mood['burnout'] ?? 0).toDouble(),
+        AppLocalizations.of(context).translate("depression_level"): (mood['depression'] ?? 0).toDouble(),
       };
     } else if (response.statusCode == 404) {
       return {
-        loc.translate("stress_level"): 0,
-        loc.translate("anxiety_level"): 0,
-        loc.translate("panic_level"): 0,
-        loc.translate("loneliness_level"): 0,
-        loc.translate("burnout_level"): 0,
-        loc.translate("depression_level"): 0,
+        AppLocalizations.of(context).translate("stress_level"): 0,
+        AppLocalizations.of(context).translate("anxiety_level"): 0,
+        AppLocalizations.of(context).translate("panic_level"): 0,
+        AppLocalizations.of(context).translate("loneliness_level"): 0,
+        AppLocalizations.of(context).translate("burnout_level"): 0,
+        AppLocalizations.of(context).translate("depression_level"): 0,
       };
     } else {
-      throw Exception('${loc.translate("sign_in_failed")}- status: ${response.statusCode}');
+      throw Exception('${AppLocalizations.of(context).translate("sign_in_failed")}- status: ${response.statusCode}');
     }
   }
 
