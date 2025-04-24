@@ -1,11 +1,9 @@
-import 'dart:convert';
+ import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'home.dart';
-import 'app_localizations.dart';
-
 
 class ProgressTrackerPage extends StatefulWidget {
   const ProgressTrackerPage({Key? key}) : super(key: key);
@@ -32,7 +30,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
     if (_username.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text(AppLocalizations.of(context).translate("username_not_found"))),
+          const SnackBar(content: Text("اسم المستخدم غير متوفر")),
         );
       }
       return;
@@ -55,24 +53,24 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
       final Map<String, dynamic> json = jsonDecode(response.body);
       final mood = json['average_mood_levels'];
       return {
-        AppLocalizations.of(context).translate("stress_level"): (mood['stress'] ?? 0).toDouble(),
-        AppLocalizations.of(context).translate("anxiety_level"): (mood['anxiety'] ?? 0).toDouble(),
-        AppLocalizations.of(context).translate("panic_level"): (mood['panic'] ?? 0).toDouble(),
-        AppLocalizations.of(context).translate("loneliness_level"): (mood['loneliness'] ?? 0).toDouble(),
-        AppLocalizations.of(context).translate("burnout_level"): (mood['burnout'] ?? 0).toDouble(),
-        AppLocalizations.of(context).translate("depression_level"): (mood['depression'] ?? 0).toDouble(),
+        'مستوى التوتر': (mood['stress'] ?? 0).toDouble(),
+        'مستوى الإجهاد': (mood['anxiety'] ?? 0).toDouble(),
+        'مستوى نوبات الهلع': (mood['panic'] ?? 0).toDouble(),
+        'مستوى الشعور بالوحدة': (mood['loneliness'] ?? 0).toDouble(),
+        'مستوى الإرهاق': (mood['burnout'] ?? 0).toDouble(),
+        'مستوى الإكتئاب': (mood['depression'] ?? 0).toDouble(),
       };
     } else if (response.statusCode == 404) {
       return {
-        AppLocalizations.of(context).translate("stress_level"): 0,
-        AppLocalizations.of(context).translate("anxiety_level"): 0,
-        AppLocalizations.of(context).translate("panic_level"): 0,
-        AppLocalizations.of(context).translate("loneliness_level"): 0,
-        AppLocalizations.of(context).translate("burnout_level"): 0,
-        AppLocalizations.of(context).translate("depression_level"): 0,
+        'مستوى التوتر': 0,
+        'مستوى الإجهاد': 0,
+        'مستوى نوبات الهلع': 0,
+        'مستوى الشعور بالوحدة': 0,
+        'مستوى الإرهاق': 0,
+        'مستوى الإكتئاب': 0,
       };
     } else {
-      throw Exception('${AppLocalizations.of(context).translate("sign_in_failed")}- status: ${response.statusCode}');
+      throw Exception('فشل الاتصال بالسيرفر - status: ${response.statusCode}');
     }
   }
 
@@ -83,16 +81,16 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final moods = json['weekly_mood'] as List<dynamic>;
+      final moods = json['weekly_moods'] as List<dynamic>;
 
       return moods.map((e) {
         return {
-          'date': DateTime.parse(e['date']),
+          'date': HttpDate.parse(e['date']),
           'mood_value': e['mood_value'],
         };
       }).toList();
     } else {
-      throw Exception(AppLocalizations.of(context).translate("fetch_weekly_mood_failed"));
+      throw Exception('فشل في جلب بيانات المزاج الأسبوعي');
     }
   }
 
@@ -170,12 +168,12 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-         Padding(
+        const Padding(
           padding: EdgeInsets.only(top: 20, bottom: 8),
           child: Align(
             alignment: Alignment.centerRight,
             child: Text(
-              AppLocalizations.of(context).translate("mood_summary"),
+              'ملخص مزاجك',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w900,
@@ -218,6 +216,34 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
     );
   }
 
+  Widget _buildRecommendationItem(String text) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Color(0xFF4F6DA3),
+          fontSize: 16,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_combinedFuture == null) {
@@ -235,7 +261,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
 
         if (snapshot.hasError) {
           return Scaffold(
-            body: Center(child: Text('${AppLocalizations.of(context).translate("unable_to_display_data")}:\n${snapshot.error}')),
+            body: Center(child: Text('تعذر عرض البيانات:\n${snapshot.error}')),
           );
         }
 
@@ -247,49 +273,38 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
             textDirection: TextDirection.rtl,
             child: Scaffold(
               backgroundColor: const Color(0xFFC2D5F2),
-              body: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Opacity(
-                      opacity: 0.7,
-                      child: Image.asset("assets/h.png"),
-                    ),
-                  ),
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ListView(
-                        children: [
-                          const SizedBox(height: 70),
-                          ...moodData.entries.map((e) => _buildIndicator(e.key, e.value)).toList(),
-                          const SizedBox(height: 12),
-                          _buildMoodSummary(weeklyMood),
-                          const SizedBox(height: 30),
-                        ],
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ListView(
+                    children: [
+                      const SizedBox(height: 20),
+                      ...moodData.entries.map((e) => _buildIndicator(e.key, e.value)).toList(),
+                      const SizedBox(height: 12),
+                      _buildMoodSummary(weeklyMood),
+                      const SizedBox(height: 30),
+                      const Text(
+                        'توصيات',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF4F6DA3),
+                        ),
+                        textAlign: TextAlign.right,
                       ),
-                    ),
+                      const SizedBox(height: 8),
+                      _buildRecommendationItem("المشاركة في الأنشطة الإجتماعية"),
+                      _buildRecommendationItem("ممارسة الرياضة بانتظام"),
+                      const SizedBox(height: 30),
+                    ],
                   ),
-                  Positioned(
-                    top: 50,
-                    left: 15,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF4F6DA3), size: 30),
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => const HomePage()),
-                          (route) => false,
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           );
         } catch (e) {
           return Scaffold(
-            body: Center(child: Text("${AppLocalizations.of(context).translate("unable_to_display_data")}: $e")),
+            body: Center(child: Text("تعذر عرض البيانات: $e")),
           );
         }
       },
