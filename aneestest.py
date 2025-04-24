@@ -48,8 +48,6 @@ DB_CONFIG = {
     "port": "5432"
 }
 
-
-
 def save_message(username, message, role):
     conn, cur = None, None
     try:
@@ -568,8 +566,8 @@ def send_message():
         cur.close()
         conn.close()
 
-@app.route("/chat_history/<int:user_id>", methods=["GET"])
-def get_chat_history(user_id):
+@app.route("/chat_history/<int:username>", methods=["GET"])
+def get_chat_history(username):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
@@ -580,7 +578,7 @@ def get_chat_history(user_id):
             FROM messages
             WHERE sender_id = %s OR receiver_id = %s
             ORDER BY timestamp ASC
-        """, (user_id, user_id))
+        """, (username, username))
         messages = cur.fetchall()
 
         if not messages:
