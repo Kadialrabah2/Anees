@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'app_localizations.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -53,6 +54,7 @@ class _SignUpScreenState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
       body: Center(
@@ -62,15 +64,15 @@ class _SignUpScreenState extends State<SignUpPage> {
             children: [
               Image.asset("assets/انيس.png", height: 220, width: 300),
               const SizedBox(height: 20),
-              buildTextField('اسم المستخدم', 'ادخل اسم المستخدم', false, usernameController),
+              buildTextField(loc.translate("username"), loc.translate("enter_username"), false, usernameController),
               const SizedBox(height: 10),
-              buildTextField('البريد الإلكتروني', 'ادخل البريد الإلكتروني', false, emailController),
+              buildTextField(loc.translate("email"), loc.translate("enter_email"), false, emailController),
               const SizedBox(height: 10),
               buildPasswordField(),
               const SizedBox(height: 30),
-              buildButton('إنشاء حساب', () => signUp(context)),
+              buildButton(loc.translate("sign_up"), () => signUp(context)),
               const SizedBox(height: 10),
-              buildButton('تسجيل الدخول', () {
+              buildButton(loc.translate("sign_in"), () {
                 Navigator.pushReplacementNamed(context, '/signin');
               }),
             ],
@@ -122,11 +124,12 @@ class _SignUpScreenState extends State<SignUpPage> {
   }
 
   Widget buildPasswordField() {
+    final loc = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Text(
-          'كلمة المرور',
+         Text(
+          loc.translate("password"),
           style: TextStyle(
             color: Color(0xFF4F6DA3),
             fontWeight: FontWeight.bold,
@@ -147,7 +150,7 @@ class _SignUpScreenState extends State<SignUpPage> {
             textAlign: TextAlign.right,
             obscureText: isPasswordObscured,
             decoration: InputDecoration(
-              hintText: 'ادخل كلمة المرور',
+              hintText: loc.translate("enter_password"),
               hintStyle: TextStyle(
                 color: Colors.black.withOpacity(0.4),
                 fontSize: 15,

@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-{"sts":[{"expiry":1776792534.433196,"host":"8/RrMmQlCD2Gsp14wUCE1P8r7B2C5+yE0+g79IPyRsc=","mode":"force-https","sts_include_subdomains":true,"sts_observed":1745256534.433203}],"version":2}
-=======
-{"sts":[{"expiry":1776791681.145111,"host":"8/RrMmQlCD2Gsp14wUCE1P8r7B2C5+yE0+g79IPyRsc=","mode":"force-https","sts_include_subdomains":true,"sts_observed":1745255681.145115}],"version":2}
->>>>>>> ab5ece1989906b929e9724d73553dad02112e01c

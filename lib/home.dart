@@ -3,18 +3,22 @@ import 'treatment.dart';
 import 'chat/talk_to_me.dart';
 import 'chat/chat_password.dart';
 import 'profile_update.dart';
-import 'emergency.dart';
 import 'progress_tracker.dart';
+import 'app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'main.dart';
+
 
 class HomePage extends StatefulWidget {
+  
   final int initialIndex;
-  const HomePage({Key? key, this.initialIndex = 0}) : super(key: key);
+  const HomePage({Key? key, this.initialIndex = 0,}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> { 
   late int _selectedIndex;
   String errorMessage = "";
 
@@ -41,16 +45,28 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
+ 
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
+     /* appBar: AppBar(
+        title: Text(AppLocalizations.of(context).translate("home")),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.language),
+            onPressed:  ,
+            tooltip: AppLocalizations.of(context).translate("switch_language"),
+          ),
+        ],
+      ),*/
       body: IndexedStack(
         index: _selectedIndex,
         children: [
           buildMainHome(context),
-          Container(), 
+          Container(),
           Container(),
         ],
       ),
@@ -62,10 +78,10 @@ class _HomePageState extends State<HomePage> {
         showUnselectedLabels: false,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "الرئيسية"),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "التقارير"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "حسابي"),
+        items:  [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: AppLocalizations.of(context).translate("home")),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: AppLocalizations.of(context).translate("reports")),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: AppLocalizations.of(context).translate("my_account")),
         ],
       ),
     );
@@ -91,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     buildOptionButton(
                       context,
-                      "تحدث معي",
+                      AppLocalizations.of(context).translate("talk_to_me"),
                       "assets/hs.png",
                       () => Navigator.push(
                         context,
@@ -105,23 +121,12 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
                     buildOptionButton(
                       context,
-                      "ابدأ العلاج",
+                      AppLocalizations.of(context).translate("start_treatment"),
                       "assets/f.png",
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => TreatmentPage()),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    buildOptionButton(
-                      context,
-                      "الطوارئ",
-                      null,
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EmergencyPage()),
-                      ),
-                      isMain: true,
                     ),
                   ],
                 ),

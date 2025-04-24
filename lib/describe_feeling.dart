@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
+import 'app_localizations.dart';
+
+
 
 class DescribeFeelingPage extends StatefulWidget {
   @override
@@ -38,7 +41,7 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
   Future<void> _submitMood() async {
     if (_username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("اسم المستخدم غير متوفر")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("username_not_found"))),
       );
       return;
     }
@@ -64,7 +67,7 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("فشل في إرسال المزاج: ${response.body}")),
+        SnackBar(content: Text("${AppLocalizations.of(context).translate("mood_submit_failed")}: ${response.body}")),
       );
     }
   }
@@ -85,8 +88,8 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 80),
-              const Text(
-                "كيف حالك اليوم؟",
+               Text(
+                AppLocalizations.of(context).translate("describe_feeling_title"),
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -108,9 +111,9 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
                     textAlign: TextAlign.right,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       border: InputBorder.none,
-                      hintText: "عبر عن شعورك هنا ",
+                      hintText: AppLocalizations.of(context).translate("express_your_feelings_here"),
                       hintStyle: TextStyle(color: Colors.grey),
                     ),
                   ),
@@ -126,14 +129,14 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
-                  "إرسال",
+                child:  Text(
+                  AppLocalizations.of(context).translate("submit_button"),
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 40),
-              const Text(
-                "كيف تشعر؟",
+               Text(
+                AppLocalizations.of(context).translate("how_do_you_feel"),
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,

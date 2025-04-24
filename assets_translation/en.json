@@ -5,7 +5,7 @@
     "talk_to_me": "Talk to Me",
     "start_treatment": "Start Treatment",
     "emergency": "Emergency",
-    "welcome": "Welcome {name}",
+    "welcome": "Welcome ",
     "username": "Username",
     "email": "Email",
     "password": "Password",
@@ -17,6 +17,8 @@
     "chat_password_invalid": "Chat password must be 6 digits",
     "emergency_title": "Emergency",
   "emergency_contact_title": "Emergency Contact",
+  "Emergency_authorities": "Emergency authorities",
+    "Psychological_support_links":"Psychological support links",
   "emergency_links_title": "Mental Health Help Centers",
   "add_contact_button": "Add Another Contact",
   "add_link_button": "Add Another Link",
@@ -68,8 +70,21 @@
   "enter_email": "Enter your email",
   "signup_success": "Account created successfully!",
   "signup_failed": "Sign up failed",
-  "server_connection_error": "Error connecting to the server"
-    
+  "server_connection_error": "Error connecting to the server",
+  "treatment_physical": "Physical Activity",
+  "treatment_mindfulness": "Mindfulness",
+  "treatment_cognitive": "Cognitive Therapy",
+  "welcome_title": "Welcome to Anees,\nwhere someone always listens.",
+  "welcome_description_1": "Express yourself with ease and peace, ",
+  "welcome_app_name": "Anees ",
+  "welcome_description_2": "is here\nto accompany you on your journey to better mental health.",
+  "Monday":"Monday",
+  "Tuesday":"Tuesday",
+  "Wednesday":"Wednesday",
+  "Thursday":"Thursday",
+  "Friday":"Friday",
+  "Saturday":"Saturday",
+  "Sunday":"Sunday" 
     
   }
   

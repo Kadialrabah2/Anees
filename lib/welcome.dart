@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import 'signin.dart';
+import 'package:flutter/services.dart';
+import 'app_localizations.dart';
+
 
 class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
       body: Padding(
@@ -17,7 +21,7 @@ class WelcomePage extends StatelessWidget {
             const SizedBox(height: 20),
 
             Text(
-              "أهلًا بك في أنيس،\n حيث تجد من يصغي إليك دائمًا.",
+              loc.translate("welcome_title"),
               style: const TextStyle(
                 color: Color(0xFF4F6DA3),
                 fontSize: 25,
@@ -35,19 +39,19 @@ class WelcomePage extends StatelessWidget {
                 child: RichText(
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.rtl,
-                  text: const TextSpan(
+                  text:  TextSpan(
                     style: TextStyle(
                       color: Color(0xFF4F6DA3),
                       fontSize: 18,
                     ),
                     children: [
-                      TextSpan(text: "عبّر عن نفسك براحة وطمأنينة، "),
+                      TextSpan(text:loc.translate("welcome_description_1")),
                       TextSpan(
-                        text: "أنيس ",
+                        text: loc.translate("app_name"),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
-                          text: "هنا\nليكون رفيق رحلتك نحو صحة نفسية أفضل."),
+                          text: loc.translate("welcome_description_2")),
                     ],
                   ),
                 ),
@@ -56,14 +60,14 @@ class WelcomePage extends StatelessWidget {
 
             const SizedBox(height: 40),
 
-          buildButton('تسجيل الدخول', () {
+          buildButton(loc.translate("sign_in"), () {
             Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => SignInPage()),
             );
               }),
           const SizedBox(height: 15),
-          buildButton('إنشاء حساب', () {
+          buildButton(loc.translate("sign_up"), () {
             Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => SignUpPage()),

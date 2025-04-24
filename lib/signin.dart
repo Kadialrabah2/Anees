@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'password/request_reset_password.dart';
 import 'describe_feeling.dart';
+import 'app_localizations.dart';
+
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -19,13 +21,14 @@ class _SignInPageState extends State<SignInPage> {
   bool isPasswordVisible = false;
 
   Future<void> signInRequest(BuildContext context) async {
+    final loc = AppLocalizations.of(context);
     final Uri url = Uri.parse("$baseUrl/signin");
     final username = usernameController.text.trim();
     final password = passwordController.text.trim();
 
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("الرجاء إدخال اسم المستخدم وكلمة المرور")),
+         SnackBar(content: Text(loc.translate("please_enter_credentials"))),
       );
       return;
     }
@@ -48,7 +51,7 @@ class _SignInPageState extends State<SignInPage> {
         await prefs.setString('password', password);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("تسجيل الدخول ناجح")),
+           SnackBar(content: Text(loc.translate("sign_in_success"))),
         );
 
         Navigator.pushReplacement(
@@ -57,18 +60,19 @@ class _SignInPageState extends State<SignInPage> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("فشل تسجيل الدخول: ${data['error'] ?? response.body}")),
+          SnackBar(content: Text("${loc.translate("sign_in_failed")}: ${data['error'] ?? response.body}")),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("خطأ في الاتصال : $e")),
+        SnackBar(content: Text("${loc.translate("connection_error")} : $e")),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
       body: Center(
@@ -78,9 +82,9 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               Image.asset("assets/انيس.png", height: 220, width: 300),
               const SizedBox(height: 20),
-              buildTextField('اسم المستخدم', "ادخل اسم المستخدم", false, usernameController),
+              buildTextField(loc.translate("username"), loc.translate("enter_username"), false, usernameController),
               const SizedBox(height: 10),
-              buildTextField('كلمة المرور', 'ادخل كلمة المرور', true, passwordController),
+              buildTextField(loc.translate("password"), loc.translate("enter_password"), true, passwordController),
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerLeft,
@@ -91,8 +95,8 @@ class _SignInPageState extends State<SignInPage> {
                       MaterialPageRoute(builder: (context) => const RequestResetPasswordPage()),
                     );
                   },
-                  child: const Text(
-                    "نسيت كلمة المرور",
+                  child:  Text(
+                    loc.translate("forgot_password"),
                     style: TextStyle(
                       color: Color(0xFF4F6DA3),
                       fontSize: 16,
@@ -102,9 +106,9 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              buildButton('تسجيل الدخول', () => signInRequest(context)),
+              buildButton(loc.translate("sign_in"), () => signInRequest(context)),
               const SizedBox(height: 10),
-              buildButton('إنشاء حساب', () {
+              buildButton(loc.translate("sign_up"), () {
                 Navigator.pushNamed(context, "/signup");
               }),
             ],

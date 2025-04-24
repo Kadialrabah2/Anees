@@ -3,12 +3,15 @@ import 'chat/physical_activity.dart';
 import 'chat/mindfulness.dart';
 import 'chat/cognitive_therapy.dart';
 import 'chat/chat_password.dart';
+import 'app_localizations.dart';
+
 
 class TreatmentPage extends StatelessWidget {
   const TreatmentPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFC2D5F2),
       body: Stack(
@@ -38,7 +41,7 @@ class TreatmentPage extends StatelessWidget {
                     children: [
                       buildTreatmentButton(
                         context,
-                        "النشاط البدني",
+                        loc.translate("treatment_physical"),
                         Icons.directions_run,
                         () => Navigator.push(
                           context,
@@ -52,7 +55,7 @@ class TreatmentPage extends StatelessWidget {
                       const SizedBox(height: 20),
                       buildTreatmentButton(
                         context,
-                        "الوعي الذاتي",
+                        loc.translate("treatment_mindfulness"),
                         Icons.psychology,
                         () => Navigator.push(
                           context,
@@ -66,7 +69,7 @@ class TreatmentPage extends StatelessWidget {
                       const SizedBox(height: 20),
                       buildTreatmentButton(
                         context,
-                        "العلاج المعرفي",
+                        loc.translate("treatment_cognitive"),
                         Icons.favorite,
                         () => Navigator.push(
                           context,

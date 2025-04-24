@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
+import 'app_localizations.dart';
+
 
 class ProgressTrackerPage extends StatefulWidget {
   const ProgressTrackerPage({Key? key}) : super(key: key);
@@ -24,13 +26,14 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
   }
 
   Future<void> _initializeData() async {
+    final loc = AppLocalizations.of(context);
     final prefs = await SharedPreferences.getInstance();
     _username = prefs.getString('username') ?? '';
 
     if (_username.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("اسم المستخدم غير متوفر")),
+           SnackBar(content: Text(loc.translate("username_not_found"))),
         );
       }
       return;
@@ -45,6 +48,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
   }
 
   Future<Map<String, double>> _fetchMoodLevels() async {
+    final loc = AppLocalizations.of(context);
     final response = await http.get(
       Uri.parse('$baseUrl/user_aggregated_mood_data/$_username'),
     );
@@ -53,24 +57,24 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
       final Map<String, dynamic> json = jsonDecode(response.body);
       final mood = json['average_mood_levels'];
       return {
-        'مستوى التوتر': (mood['stress'] ?? 0).toDouble(),
-        'مستوى الإجهاد': (mood['anxiety'] ?? 0).toDouble(),
-        'مستوى نوبات الهلع': (mood['panic'] ?? 0).toDouble(),
-        'مستوى الشعور بالوحدة': (mood['loneliness'] ?? 0).toDouble(),
-        'مستوى الإرهاق': (mood['burnout'] ?? 0).toDouble(),
-        'مستوى الإكتئاب': (mood['depression'] ?? 0).toDouble(),
+        loc.translate("stress_level"): (mood['stress'] ?? 0).toDouble(),
+        loc.translate("anxiety_level"): (mood['anxiety'] ?? 0).toDouble(),
+        loc.translate("panic_level"): (mood['panic'] ?? 0).toDouble(),
+        loc.translate("loneliness_level"): (mood['loneliness'] ?? 0).toDouble(),
+        loc.translate("burnout_level"): (mood['burnout'] ?? 0).toDouble(),
+        loc.translate("depression_level"): (mood['depression'] ?? 0).toDouble(),
       };
     } else if (response.statusCode == 404) {
       return {
-        'مستوى التوتر': 0,
-        'مستوى الإجهاد': 0,
-        'مستوى نوبات الهلع': 0,
-        'مستوى الشعور بالوحدة': 0,
-        'مستوى الإرهاق': 0,
-        'مستوى الإكتئاب': 0,
+        loc.translate("stress_level"): 0,
+        loc.translate("anxiety_level"): 0,
+        loc.translate("panic_level"): 0,
+        loc.translate("loneliness_level"): 0,
+        loc.translate("burnout_level"): 0,
+        loc.translate("depression_level"): 0,
       };
     } else {
-      throw Exception('فشل الاتصال بالسيرفر - status: ${response.statusCode}');
+      throw Exception('${loc.translate("sign_in_failed")}- status: ${response.statusCode}');
     }
   }
 
@@ -81,7 +85,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body);
-      final moods = json['weekly_moods'] as List<dynamic>;
+      final moods = json['server_connection_error'] as List<dynamic>;
 
       return moods.map((e) {
         return {
@@ -90,7 +94,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
         };
       }).toList();
     } else {
-      throw Exception('فشل في جلب بيانات المزاج الأسبوعي');
+      throw Exception(AppLocalizations.of(context).translate("fetch_weekly_mood_failed"));
     }
   }
 
@@ -168,12 +172,12 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Padding(
+         Padding(
           padding: EdgeInsets.only(top: 20, bottom: 8),
           child: Align(
             alignment: Alignment.centerRight,
             child: Text(
-              'ملخص مزاجك',
+              AppLocalizations.of(context).translate("mood_summary"),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w900,
@@ -233,7 +237,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
 
         if (snapshot.hasError) {
           return Scaffold(
-            body: Center(child: Text('تعذر عرض البيانات:\n${snapshot.error}')),
+            body: Center(child: Text('${AppLocalizations.of(context).translate("unable_to_display_data")}:\n${snapshot.error}')),
           );
         }
 
@@ -287,7 +291,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
           );
         } catch (e) {
           return Scaffold(
-            body: Center(child: Text("تعذر عرض البيانات: $e")),
+            body: Center(child: Text("${AppLocalizations.of(context).translate("unable_to_display_data")}: $e")),
           );
         }
       },

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signin.dart';
+import 'app_localizations.dart';
 
 class ProfileUpdatePage extends StatefulWidget {
   final String? userName;
@@ -82,7 +83,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     final chatPassword = chatpasswordController.text.trim();
     if (chatPassword.length != 6 || !RegExp(r'^\d+$').hasMatch(chatPassword)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("رمز المحادثة يجب أن يكون 6 أرقام")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("chat_password_invalid"))),
       );
       return;
     }
@@ -104,7 +105,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       });
       await saveLocalProfile();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("تم تحديث البيانات بنجاح")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("update_success"))),
       );
     }
   }
@@ -172,7 +173,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "مرحبًا $displayName",
+                  "${AppLocalizations.of(context).translate("welcome")} $displayName",
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -192,11 +193,11 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                       ),
                       child: Column(
                         children: [
-                          buildProfileField("إسم المستخدم", usernameController),
-                          buildProfileField("البريد الإلكتروني", emailController),
-                          buildProfileField("كلمة المرور", passwordController, isPassword: true, isMainPassword: true),
-                          buildProfileField("إسم البوت", botNameController),
-                          buildProfileField("رمز المحادثة", chatpasswordController, isPassword: true),
+                          buildProfileField(AppLocalizations.of(context).translate("username"), usernameController),
+                          buildProfileField(AppLocalizations.of(context).translate("email"), emailController),
+                          buildProfileField(AppLocalizations.of(context).translate("password"), passwordController, isPassword: true, isMainPassword: true),
+                          buildProfileField(AppLocalizations.of(context).translate("bot_name"), botNameController),
+                          buildProfileField(AppLocalizations.of(context).translate("chat_password"), chatpasswordController, isPassword: true),
                           const SizedBox(height: 25),
                           SizedBox(
                             width: double.infinity,
@@ -207,7 +208,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                                 padding: const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
                               ),
-                              child: const Text("حفظ", style: TextStyle(fontSize: 16, color: Colors.white)),
+                              child:  Text(AppLocalizations.of(context).translate("save"), style: TextStyle(fontSize: 16, color: Colors.white)),
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -220,8 +221,8 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                                 padding: const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
                               ),
-                              child: const Text(
-                                "تسجيل الخروج",
+                              child:  Text(
+                                AppLocalizations.of(context).translate("logout"),
                                 style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),

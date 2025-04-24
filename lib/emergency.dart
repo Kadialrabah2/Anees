@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'app_localizations.dart';
 
 class EmergencyPage extends StatefulWidget {
   @override
@@ -70,7 +71,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
         await saveToStorage();
       }
     } catch (e) {
-      print("خطأ في جلب البيانات: $e");
+      print("${AppLocalizations.of(context).translate("error_fetching_data")}: $e");
     }
   }
 
@@ -118,12 +119,12 @@ class _EmergencyPageState extends State<EmergencyPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("إضافة جهة اتصال جديدة"),
+          title:  Text(AppLocalizations.of(context).translate("add_contact_dialog_title")),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: nameController, decoration: const InputDecoration(labelText: "اسم جهة الاتصال")),
-              TextField(controller: phoneController, decoration: const InputDecoration(labelText: "رقم الهاتف"), keyboardType: TextInputType.phone),
+              TextField(controller: nameController, decoration:  InputDecoration(labelText: AppLocalizations.of(context).translate("name_label"))),
+              TextField(controller: phoneController, decoration:  InputDecoration(labelText: AppLocalizations.of(context).translate("phone_label")), keyboardType: TextInputType.phone),
             ],
           ),
           actions: [
@@ -146,7 +147,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 phoneController.clear();
                 Navigator.pop(context);
               },
-              child: const Text("حفظ"),
+              child:  Text(AppLocalizations.of(context).translate("save")),
             ),
           ],
         );
@@ -193,7 +194,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF4F6DA3),
         elevation: 0,
-        title: const Text("جهات الطوارئ", style: TextStyle(color: Colors.white, fontSize: 22)),
+        title: Text(AppLocalizations.of(context).translate("Emergency_authorities"), style: TextStyle(color: Colors.white, fontSize: 22)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -211,19 +212,19 @@ class _EmergencyPageState extends State<EmergencyPage> {
           Column(
             children: [
               const SizedBox(height: 20),
-              const Text("جهات الاتصال الطارئة", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
+               Text(AppLocalizations.of(context).translate("emergency_contact_title"), style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     for (var contact in emergencyContacts)
                       buildContactCard(contact["name"]!, contact["phone"]!),
-                    buildAddButton("إضافة جهة اتصال أخرى", showContactDialog),
+                    buildAddButton(AppLocalizations.of(context).translate("add_contact_button"), showContactDialog),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-              const Text("روابط الدعم النفسي", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
+               Text(AppLocalizations.of(context).translate("Psychological_support_links"), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4F6DA3))),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -238,7 +239,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                           child: Text(link["name"]!, style: const TextStyle(fontSize: 18, color: Colors.blue)),
                         ),
                       ),
-                    buildAddButton("إضافة رابط آخر", showLinkDialog),
+                    buildAddButton(AppLocalizations.of(context).translate("add_link_button"), showLinkDialog),
                   ],
                 ),
               ),
@@ -255,12 +256,12 @@ class _EmergencyPageState extends State<EmergencyPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("إضافة رابط جديد"),
+          title:  Text(AppLocalizations.of(context).translate("add_link_dialog_title")),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: linkNameController, decoration: const InputDecoration(labelText: "اسم الموقع أو الجهة")),
-              TextField(controller: linkUrlController, decoration: const InputDecoration(labelText: "الرابط الإلكتروني"), keyboardType: TextInputType.url),
+              TextField(controller: linkNameController, decoration:  InputDecoration(labelText:AppLocalizations.of(context).translate("link_name_label"))),
+              TextField(controller: linkUrlController, decoration:  InputDecoration(labelText: AppLocalizations.of(context).translate("link_url_label")), keyboardType: TextInputType.url),
             ],
           ),
           actions: [
@@ -285,7 +286,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 linkUrlController.clear();
                 Navigator.pop(context);
               },
-              child: const Text("حفظ"),
+              child:  Text(AppLocalizations.of(context).translate("save")),
             ),
           ],
         );
