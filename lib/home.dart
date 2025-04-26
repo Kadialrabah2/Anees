@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
         index: _selectedIndex,
         children: [
           buildMainHome(context),
-          Container(),
+          const ProgressTrackerPage(),
           Container(),
         ],
       ),
