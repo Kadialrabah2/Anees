@@ -72,7 +72,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
         AppLocalizations.of(context).translate("depression_level"): 0,
       };
     } else {
-      throw Exception('${AppLocalizations.of(context).translate("sign_in_failed")}- status: ${response.statusCode}');
+      throw Exception('فشل الاتصال بالسيرفر- status: ${response.statusCode}');
     }
   }
 
@@ -92,7 +92,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
         };
       }).toList();
     } else {
-      throw Exception(AppLocalizations.of(context).translate("fetch_weekly_mood_failed"));
+      throw Exception('فشل في جلب بيانات المزاج الأسبوعي');
     }
   }
 

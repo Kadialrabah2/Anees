@@ -58,10 +58,10 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.language),
             onPressed:() {
-  Locale currentLocale = Localizations.localeOf(context);
-  Locale newLocale = currentLocale.languageCode == 'ar' ? const Locale('en') : const Locale('ar');
-  MyApp.setLocale(context, newLocale);
-},
+             Locale currentLocale = Localizations.localeOf(context);
+             Locale newLocale = currentLocale.languageCode == 'ar' ? const Locale('en') : const Locale('ar');
+             MyApp.setLocale(context, newLocale);
+            },
             tooltip: AppLocalizations.of(context).translate("switch_language"),
           ),
         ],
