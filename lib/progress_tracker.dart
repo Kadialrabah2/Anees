@@ -5,7 +5,12 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 import 'app_localizations.dart';
+import 'dart:io';
+import 'package:intl/intl.dart';
 
+DateTime parseDate(String dateString) {
+  return DateFormat('EEE, dd MMM yyyy HH:mm:ss zzz', 'en_US').parse(dateString);
+}
 
 class ProgressTrackerPage extends StatefulWidget {
   const ProgressTrackerPage({Key? key}) : super(key: key);
@@ -87,7 +92,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
 
       return moods.map((e) {
         return {
-          'date': DateTime.parse(e['date']),
+          'date': parseDate(e['date']),
           'mood_value': e['mood_value'],
         };
       }).toList();
@@ -289,7 +294,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
           );
         } catch (e) {
           return Scaffold(
-            body: Center(child: Text("${AppLocalizations.of(context).translate("unable_to_display_data")}: $e")),
+            body: Center(child: Text("تعذر عرض البيانات: $e")),
           );
         }
       },
