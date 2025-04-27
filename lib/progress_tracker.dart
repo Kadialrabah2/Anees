@@ -7,6 +7,7 @@ import 'home.dart';
 import 'app_localizations.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
+import 'dart:ui' as ui;
 
 DateTime parseDate(String dateString) {
   return DateFormat('EEE, dd MMM yyyy HH:mm:ss zzz', 'en_US').parse(dateString);
@@ -145,7 +146,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
                 fontWeight: FontWeight.w900,
                 color: Color(0xFF4F6DA3),
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: ui.TextDirection.rtl,
               textAlign: TextAlign.right,
             ),
           ),
@@ -197,7 +198,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
             final dayIndex = index + 1;
             final moodValue = moodMap[dayIndex] ?? 0;
             final iconIndex = moodValue.clamp(1, 5) - 1;
-            final dayName = daysAr[index % 7];
+            final dayName = AppLocalizations.of(context).translate(daysAr[index % 7]);
 
             return Column(
               children: [
@@ -249,7 +250,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
           final List<Map<String, dynamic>> weeklyMood = snapshot.data![1];
 
           return Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection: ui.TextDirection.rtl ,
             child: Scaffold(
               backgroundColor: const Color(0xFFC2D5F2),
               body: Stack(
