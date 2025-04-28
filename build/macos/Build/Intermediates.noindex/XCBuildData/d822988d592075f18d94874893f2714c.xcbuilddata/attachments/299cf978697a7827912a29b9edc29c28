@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Products/Debug/flutter_localization/flutter_localization.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Products/Debug/flutter_localization/flutter_localization.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "flutter_localization-Swift.h",
+      'external-contents': "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/unextended-interface-header.h",
+    }]
+    }]
+}
