@@ -19,8 +19,10 @@ from fastapi import FastAPI, HTTPException
 from psycopg2.extras import RealDictCursor
 import os
 import re
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.debug = True
 # Configure session
 app.config["SECRET_KEY"] = "12345"
