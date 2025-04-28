@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:anees/app_localizations.dart';
+
 
 class ChatPasswordPage extends StatefulWidget {
   final Widget nextPage;
@@ -23,7 +25,7 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
 
     if (enteredPassword.isEmpty || enteredPassword.length != 6 || !RegExp(r'^\d{6}$').hasMatch(enteredPassword)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("يرجى إدخال كلمة مرور مكونة من 6 أرقام")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("error_empty_password"))),
       );
       return;
     }
@@ -33,7 +35,7 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
 
     if (username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("يرجى تسجيل الدخول أولًا")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("error_login_required"))),
       );
       return;
     }
@@ -60,21 +62,21 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
         );
       } else if (response.statusCode == 403) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("كلمة المرور غير صحيحة")),
+           SnackBar(content: Text(AppLocalizations.of(context).translate("error_incorrect_password"))),
         );
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("يرجى تسجيل الدخول أولًا")),
+           SnackBar(content: Text(AppLocalizations.of(context).translate("error_login_required"))),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("حدث خطأ، حاول مجددًا")),
+           SnackBar(content: Text(AppLocalizations.of(context).translate("error_general"))),
         );
       }
     } catch (e) {
       setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("فشل الاتصال: $e")),
+        SnackBar(content: Text("${AppLocalizations.of(context).translate("connection_failed")}$e")),
       );
     }
   }
@@ -99,8 +101,8 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
               children: [
                 Image.asset("assets/انيس.png", height: 240),
                 const SizedBox(height: 40),
-                const Text(
-                  "كلمة مرور الدخول إلى الشات",
+                 Text(
+                  AppLocalizations.of(context).translate("chat_password_title"),
                   style: TextStyle(
                     color: Color(0xFF4F6DA3),
                     fontSize: 26,
@@ -109,8 +111,8 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 14),
-                const Text(
-                  "يرجى إدخال كلمة مرور مكونة من 6 أرقام",
+                 Text(
+                  AppLocalizations.of(context).translate("chat_password_instruction"),
                   style: TextStyle(
                     color: Colors.black54,
                     fontSize: 16,
@@ -118,11 +120,11 @@ class _ChatPasswordPageState extends State<ChatPasswordPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
-                buildPasswordField("كلمة المرور", passwordController),
+                buildPasswordField(AppLocalizations.of(context).translate("password_label"), passwordController),
                 const SizedBox(height: 30),
                 isLoading
                     ? const CircularProgressIndicator(color: Color(0xFF4F6DA3))
-                    : buildButton("دخول", _checkPassword),
+                    : buildButton(AppLocalizations.of(context).translate("login_button"), _checkPassword),
               ],
             ),
           ),

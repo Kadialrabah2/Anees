@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:anees/app_localizations.dart';
+
 
 class TalkToMePage extends StatefulWidget {
   const TalkToMePage({Key? key}) : super(key: key);
@@ -20,7 +22,7 @@ class _TalkToMePageState extends State<TalkToMePage> {
   void initState() {
     super.initState();
     _messages.add({
-      "text": "أهلًا بك ...\nكيف حالك اليوم؟",
+      "text": AppLocalizations.of(context).translate("welcome_default"),
       "isUser": false,
     });
     _loadUserName();
@@ -32,7 +34,7 @@ class _TalkToMePageState extends State<TalkToMePage> {
     setState(() {
       _userName = savedName;
       _messages[0] = {
-        "text": "أهلًا بك $_userName\nكيف حالك اليوم؟",
+        "text": AppLocalizations.of(context).translate('welcome_user').replaceFirst("{user}", _userName),
         "isUser": false,
       };
     });
@@ -72,11 +74,11 @@ class _TalkToMePageState extends State<TalkToMePage> {
           _messages.add({"text": cleanedReply, "isUser": false});
         });
       } else {
-        _messages.add({"text": "فشل الاتصال بالخادم", "isUser": false});
+        _messages.add({"text": AppLocalizations.of(context).translate("server_failure"), "isUser": false});
       }
     } catch (e) {
       setState(() {
-        _messages.add({"text": "فشل الاتصال بالخادم", "isUser": false});
+        _messages.add({"text": AppLocalizations.of(context).translate("server_failure"), "isUser": false});
       });
     }
   }
@@ -155,9 +157,9 @@ class _TalkToMePageState extends State<TalkToMePage> {
                         child: TextField(
                           controller: _messageController,
                           textAlign: TextAlign.right,
-                          decoration: const InputDecoration(
+                          decoration:  InputDecoration(
                             border: InputBorder.none,
-                            hintText: "...اكتب رسالتك هنا",
+                            hintText: AppLocalizations.of(context).translate("write_message_hint"),
                             hintStyle: TextStyle(color: Colors.grey),
                           ),
                         ),

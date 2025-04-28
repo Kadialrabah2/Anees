@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'reset_password.dart';
+import 'package:anees/app_localizations.dart';
+
 
 class VerifyCodePage extends StatefulWidget {
   final String email;
@@ -18,7 +20,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
 
     if (code.length != 5 || !RegExp(r'^[0-9]+$').hasMatch(code)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("يجب إدخال رمز تحقق صحيح مكون من 5 أرقام")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("error_invalid_code"))),
       );
       return;
     }
@@ -52,8 +54,8 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                 children: [
                   Image.asset("assets/انيس.png", height: 250, width: 300),
                   const SizedBox(height: 20),
-                  const Text(
-                    "إدخال رمز التحقق",
+                   Text(
+                    AppLocalizations.of(context).translate("enter_verification_code"),
                     style: TextStyle(
                       color: Color(0xFF4F6DA3),
                       fontSize: 24,
@@ -62,8 +64,8 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    "تم إرسال رمز التحقق إلى البريد الإلكتروني",
+                   Text(
+                    AppLocalizations.of(context).translate("code_sent_to_email"),
                     style: TextStyle(
                       color: Color(0xFF4F6DA3),
                       fontSize: 16,
@@ -81,11 +83,11 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
-                  buildTextField("رمز التحقق", "أدخل رمز التحقق المكون من 5 أرقام", codeController),
+                  buildTextField(AppLocalizations.of(context).translate("verification_code"), AppLocalizations.of(context).translate("enter_verification_code_hint"), codeController),
                   const SizedBox(height: 20),
                   isLoading
                       ? const CircularProgressIndicator(color: Color(0xFF4F6DA3))
-                      : buildButton("متابعة", () => proceedToResetPage(context)),
+                      : buildButton(AppLocalizations.of(context).translate("continue"), () => proceedToResetPage(context)),
                 ],
               ),
             ),

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../signin.dart';
+import 'package:anees/app_localizations.dart';
+
 
 class ResetPasswordPage extends StatefulWidget {
   final String code;
@@ -27,7 +29,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     if (password.isEmpty || confirmPassword.isEmpty || password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("تأكد من تطابق كلمتي المرور وأنها غير فارغة")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("error_password_mismatch"))),
       );
       return;
     }
@@ -51,7 +53,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("تم تغيير كلمة المرور بنجاح")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("success_password_changed"))),
       );
       Navigator.pushReplacement(
         context,
@@ -59,7 +61,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("فشل تغيير كلمة المرور: ${response.body}")),
+        SnackBar(content: Text("${AppLocalizations.of(context).translate("error_reset_password_failed")} ${response.body}")),
       );
     }
   }
@@ -74,8 +76,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           children: [
             Image.asset("assets/انيس.png", height: 220),
             const SizedBox(height: 30),
-            const Text(
-              "إعادة تعيين كلمة المرور",
+             Text(
+              AppLocalizations.of(context).translate("reset_password_button"),
               style: TextStyle(
                 color: Color(0xFF4F6DA3),
                 fontSize: 24,
@@ -83,15 +85,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               ),
             ),
             const SizedBox(height: 20),
-            buildPasswordField("كلمة المرور الجديدة", passwordController),
+            buildPasswordField(AppLocalizations.of(context).translate("new_password"), passwordController),
             const SizedBox(height: 16),
-            buildPasswordField("تأكيد كلمة المرور", confirmPasswordController),
+            buildPasswordField(AppLocalizations.of(context).translate("confirm_password"), confirmPasswordController),
             const SizedBox(height: 24),
             isLoading
                 ? const CircularProgressIndicator(color: Color(0xFF4F6DA3))
-                : buildButton("إعادة تعيين كلمة المرور", resetPassword),
+                : buildButton(AppLocalizations.of(context).translate("reset_password_button"), resetPassword),
             const SizedBox(height: 10),
-            buildButton("العودة لتسجيل الدخول", () {
+            buildButton(AppLocalizations.of(context).translate("back_to_login"), () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const SignInPage()),
@@ -128,8 +130,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             controller: controller,
             textAlign: TextAlign.right,
             obscureText: true,
-            decoration: const InputDecoration(
-              hintText: 'ادخل كلمة المرور هنا',
+            decoration:  InputDecoration(
+              hintText: AppLocalizations.of(context).translate("enter_password_hint"),
               border: InputBorder.none,
             ),
           ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'verify_code.dart'; 
 import 'package:http/http.dart' as http;
+import 'package:anees/app_localizations.dart';
+
 
 class RequestResetPasswordPage extends StatefulWidget {
   const RequestResetPasswordPage({super.key});
@@ -18,7 +20,7 @@ class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
 
   if (email.isEmpty || !email.contains('@')) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("الرجاء إدخال بريد إلكتروني صالح")),
+       SnackBar(content: Text(AppLocalizations.of(context).translate("error_invalid_email"))),
     );
     return;
   }
@@ -35,7 +37,7 @@ class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("تم إرسال رمز التحقق إلى بريدك الإلكتروني")),
+         SnackBar(content: Text(AppLocalizations.of(context).translate("code_sent_to_email"))),
       );
 
       Navigator.push(
@@ -46,12 +48,12 @@ class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("حدث خطأ: ${response.body}")),
+        SnackBar(content: Text("${AppLocalizations.of(context).translate("error_server")} ${response.body}")),
       );
     }
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("خطأ في الاتصال بالسيرفر: $e")),
+      SnackBar(content: Text("${AppLocalizations.of(context).translate("error_connection")} $e")),
     );
   }
 }
@@ -79,8 +81,8 @@ class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
                 children: [
                   Image.asset("assets/انيس.png", height: 250, width: 300),
                   const SizedBox(height: 20),
-                  const Text(
-                    "إعادة تعيين كلمة المرور",
+                   Text(
+                    AppLocalizations.of(context).translate("reset_password_button"),
                     style: TextStyle(
                       color: Color(0xFF4F6DA3),
                       fontSize: 24,
@@ -89,8 +91,8 @@ class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    "أدخل بريدك الإلكتروني للمتابعة",
+                   Text(
+                    AppLocalizations.of(context).translate("enter_email"),
                     style: TextStyle(
                       color: Color(0xFF4F6DA3),
                       fontSize: 16,
@@ -100,7 +102,7 @@ class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
                   const SizedBox(height: 20),
                   buildEmailField(),
                   const SizedBox(height: 24),
-                  buildButton("إرسال رمز التحقق", goToVerifyPage),
+                  buildButton(AppLocalizations.of(context).translate("send_verification_code"), goToVerifyPage),
                 ],
               ),
             ),
@@ -114,8 +116,8 @@ class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Text(
-          "البريد الإلكتروني",
+         Text(
+          AppLocalizations.of(context).translate("email"),
           style: TextStyle(
             color: Color(0xFF4F6DA3),
             fontWeight: FontWeight.bold,
@@ -133,8 +135,8 @@ class _RequestResetPasswordPageState extends State<RequestResetPasswordPage> {
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
             textAlign: TextAlign.right,
-            decoration: const InputDecoration(
-              hintText: "ادخل بريدك الإلكتروني",
+            decoration:  InputDecoration(
+              hintText: AppLocalizations.of(context).translate("enter_email"),
               border: InputBorder.none,
             ),
           ),

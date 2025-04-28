@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:anees/app_localizations.dart';
+
 
 class PhysicalActivityPage extends StatefulWidget {
   const PhysicalActivityPage({Key? key}) : super(key: key);
@@ -28,7 +30,7 @@ class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
     setState(() {
       _userName = savedName;
       _messages.add({
-        "text": "مرحبًا $_userName\nما هو نشاطك البدني اليوم؟",
+        "text": AppLocalizations.of(context).translate('physical_activity_welcome').replaceFirst("{user}", _userName),
         "isUser": false,
       });
     });
@@ -71,7 +73,7 @@ class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
       }
     } catch (e) {
       setState(() {
-        _messages.add({"text": "فشل الاتصال بالسيرفر", "isUser": false});
+        _messages.add({"text": AppLocalizations.of(context).translate("server_failure_activity"), "isUser": false});
       });
     }
   }
@@ -150,9 +152,9 @@ class _PhysicalActivityPageState extends State<PhysicalActivityPage> {
                         child: TextField(
                           controller: _messageController,
                           textAlign: TextAlign.right,
-                          decoration: const InputDecoration(
+                          decoration:  InputDecoration(
                             border: InputBorder.none,
-                            hintText: "...اكتب رسالتك هنا",
+                            hintText: AppLocalizations.of(context).translate("write_message_hint"),
                             hintStyle: TextStyle(color: Colors.grey),
                           ),
                         ),
