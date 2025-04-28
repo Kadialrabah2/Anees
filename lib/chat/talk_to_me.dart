@@ -22,7 +22,7 @@ class _TalkToMePageState extends State<TalkToMePage> {
   void initState() {
     super.initState();
     _messages.add({
-      "text": AppLocalizations.of(context).translate("welcome_default"),
+      "text": "أهلًا بك ...\nكيف حالك اليوم؟",
       "isUser": false,
     });
     _loadUserName();
