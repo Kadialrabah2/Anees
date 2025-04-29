@@ -119,6 +119,11 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget buildTextField(String label, String hint, bool isPassword, TextEditingController controller) {
+    bool isArabic(String text) {
+    final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+    return arabicRegex.hasMatch(text);
+    }
+   
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -142,7 +147,9 @@ class _SignInPageState extends State<SignInPage> {
           child: TextField(
             controller: controller,
             obscureText: isPassword ? !isPasswordVisible : false,
-            textAlign: TextAlign.right,
+            textAlign: isArabic(hint) ? TextAlign.right : TextAlign.left, 
+            textDirection: isArabic(hint) ? TextDirection.rtl : TextDirection.ltr, 
+
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(color: Colors.black.withOpacity(0.4)),

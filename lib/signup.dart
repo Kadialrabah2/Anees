@@ -83,6 +83,11 @@ class _SignUpScreenState extends State<SignUpPage> {
   }
 
   Widget buildTextField(String label, String hint, bool isPassword, TextEditingController controller, {bool isNumber = false}) {
+    bool isArabic(String text) {
+    final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+    return arabicRegex.hasMatch(text);
+    }
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -106,7 +111,8 @@ class _SignUpScreenState extends State<SignUpPage> {
           child: TextField(
             controller: controller,
             keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-            textAlign: TextAlign.right,
+            textAlign: isArabic(hint) ? TextAlign.right : TextAlign.left, 
+            textDirection: isArabic(hint) ? TextDirection.rtl : TextDirection.ltr,
             obscureText: isPassword,
             decoration: InputDecoration(
               hintText: hint,
