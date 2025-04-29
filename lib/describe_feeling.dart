@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 import 'app_localizations.dart';
 
-
-
 class DescribeFeelingPage extends StatefulWidget {
+  final String userName;
+
+  const DescribeFeelingPage({Key? key, required this.userName}) : super(key: key);
+
   @override
   _DescribeFeelingPageState createState() => _DescribeFeelingPageState();
 }
@@ -15,7 +16,7 @@ class DescribeFeelingPage extends StatefulWidget {
 class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
   final TextEditingController _feelingController = TextEditingController();
   int _selectedMoodIndex = 4;
-  late String _username = "";
+  late String _username;
 
   final List<IconData> moodIcons = [
     Icons.sentiment_very_dissatisfied,
@@ -28,20 +29,13 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
   @override
   void initState() {
     super.initState();
-    _loadUsername();
-  }
-
-  Future<void> _loadUsername() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _username = prefs.getString('username') ?? '';
-    });
+    _username = widget.userName; 
   }
 
   Future<void> _submitMood() async {
     if (_username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(content: Text(AppLocalizations.of(context).translate("username_not_found"))),
+        SnackBar(content: Text(AppLocalizations.of(context).translate("username_not_found"))),
       );
       return;
     }
@@ -62,9 +56,10 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
 
     if (response.statusCode == 200) {
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+  context,
+  MaterialPageRoute(builder: (context) => HomePage(userName: _username)),
+);
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("${AppLocalizations.of(context).translate("mood_submit_failed")}: ${response.body}")),
@@ -90,7 +85,7 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
               const SizedBox(height: 80),
                Text(
                 AppLocalizations.of(context).translate("describe_feeling_title"),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF4F6DA3),
@@ -111,7 +106,7 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
                     textAlign: TextAlign.right,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: AppLocalizations.of(context).translate("express_your_feelings_here"),
                       hintStyle: TextStyle(color: Colors.grey),
@@ -129,15 +124,15 @@ class _DescribeFeelingPageState extends State<DescribeFeelingPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child:  Text(
+                child: Text(
                   AppLocalizations.of(context).translate("submit_button"),
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 40),
-               Text(
+              Text(
                 AppLocalizations.of(context).translate("how_do_you_feel"),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF4F6DA3),

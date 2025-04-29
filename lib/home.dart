@@ -5,12 +5,13 @@ import 'chat/chat_password.dart';
 import 'profile_update.dart';
 import 'progress_tracker.dart';
 import 'app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'main.dart';
 
 class HomePage extends StatefulWidget {
   final int initialIndex;
-  const HomePage({Key? key, this.initialIndex = 0}) : super(key: key);
+  final String userName; 
+
+  const HomePage({Key? key, required this.userName, this.initialIndex = 0}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -18,24 +19,26 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late int _selectedIndex;
-  String errorMessage = "";
+  late String _username; 
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
+    _username = widget.userName; // ✅ ناخذ اليوزر اللي جاينا
   }
 
   void _onItemTapped(int index) {
     if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfileUpdatePage()),
+        MaterialPageRoute(builder: (context) => ProfileUpdatePage(userName: _username)), // ✅ نمرره للصفحة
       );
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProgressTrackerPage()),
+        MaterialPageRoute(builder: (context) => ProgressTrackerPage(userName: _username)
+),
       );
     } else {
       setState(() {
@@ -71,7 +74,7 @@ class _HomePageState extends State<HomePage> {
         index: _selectedIndex,
         children: [
           buildMainHome(context),
-          const ProgressTrackerPage(),
+          ProgressTrackerPage(userName: _username),
           Container(),
         ],
       ),

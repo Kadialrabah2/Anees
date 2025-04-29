@@ -20,55 +20,58 @@ class _SignInPageState extends State<SignInPage> {
   final String baseUrl = "https://anees-rus4.onrender.com";
   bool isPasswordVisible = false;
 
-  Future<void> signInRequest(BuildContext context) async {
-    final loc = AppLocalizations.of(context);
-    final Uri url = Uri.parse("$baseUrl/signin");
-    final username = usernameController.text.trim();
-    final password = passwordController.text.trim();
+ Future<void> signInRequest(BuildContext context) async {
+  final loc = AppLocalizations.of(context);
+  final Uri url = Uri.parse("$baseUrl/signin");
+  final username = usernameController.text.trim();
+  final password = passwordController.text.trim();
 
-    if (username.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(content: Text(loc.translate("please_enter_credentials"))),
-      );
-      return;
-    }
-
-    final requestData = {"username": username, "password": password};
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(requestData),
-      );
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.clear();
-        await prefs.setString('username', username);
-        await prefs.setString('password', password);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text(loc.translate("sign_in_success"))),
-        );
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => DescribeFeelingPage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("${loc.translate("sign_in_failed")}: ${data['error'] ?? response.body}")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${loc.translate("connection_error")} : $e")),
-      );
-    }
+  if (username.isEmpty || password.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(loc.translate("please_enter_credentials"))),
+    );
+    return;
   }
+
+  final requestData = {"username": username, "password": password};
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestData),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      await prefs.setString('username', username);
+      await prefs.setString('password', password);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.translate("sign_in_success"))),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DescribeFeelingPage(userName: username), 
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${loc.translate("sign_in_failed")}: ${data['error'] ?? response.body}")),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("${loc.translate("connection_error")} : $e")),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +126,6 @@ class _SignInPageState extends State<SignInPage> {
     final arabicRegex = RegExp(r'[\u0600-\u06FF]');
     return arabicRegex.hasMatch(text);
     }
-   
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [

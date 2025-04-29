@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 import 'app_localizations.dart';
-import 'dart:io';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 
@@ -14,7 +12,9 @@ DateTime parseDate(String dateString) {
 }
 
 class ProgressTrackerPage extends StatefulWidget {
-  const ProgressTrackerPage({Key? key}) : super(key: key);
+  final String userName; // ✅ هنا نستقبله
+
+  const ProgressTrackerPage({Key? key, required this.userName}) : super(key: key);
 
   @override
   _ProgressTrackerPageState createState() => _ProgressTrackerPageState();
@@ -23,27 +23,16 @@ class ProgressTrackerPage extends StatefulWidget {
 class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
   final String baseUrl = "https://anees-rus4.onrender.com";
   Future<List<dynamic>>? _combinedFuture;
-  String _username = "";
+  late String _username;
 
   @override
   void initState() {
     super.initState();
+    _username = widget.userName; // ✅ ناخذه من البراميتر
     _initializeData();
   }
 
   Future<void> _initializeData() async {
-    final prefs = await SharedPreferences.getInstance();
-    _username = prefs.getString('username') ?? '';
-
-    if (_username.isEmpty) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text(AppLocalizations.of(context).translate("username_not_found"))),
-        );
-      }
-      return;
-    }
-
     setState(() {
       _combinedFuture = Future.wait([
         _fetchMoodLevels(),
@@ -176,13 +165,13 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-         Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 8),
+        Padding(
+          padding: const EdgeInsets.only(top: 20, bottom: 8),
           child: Align(
             alignment: Alignment.centerRight,
             child: Text(
               AppLocalizations.of(context).translate("mood_summary"),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w900,
                 color: Color(0xFF4F6DA3),
@@ -250,7 +239,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
           final List<Map<String, dynamic>> weeklyMood = snapshot.data![1];
 
           return Directionality(
-            textDirection: ui.TextDirection.rtl ,
+            textDirection: ui.TextDirection.rtl,
             child: Scaffold(
               backgroundColor: const Color(0xFFC2D5F2),
               body: Stack(
@@ -283,7 +272,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
                       onPressed: () {
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomePage()),
+                          MaterialPageRoute(builder: (context) => HomePage(userName: _username)),
                           (route) => false,
                         );
                       },

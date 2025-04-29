@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'signin.dart';
 import 'app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileUpdatePage extends StatefulWidget {
-  final String? userName;
+  final String userName; 
 
-  const ProfileUpdatePage({this.userName, Key? key}) : super(key: key);
+  const ProfileUpdatePage({required this.userName, Key? key}) : super(key: key);
 
   @override
   _ProfileUpdatePageState createState() => _ProfileUpdatePageState();
@@ -26,56 +26,46 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
 
   bool _isMainPasswordVisible = false;
   bool _isChatPasswordVisible = false;
+  late String _username;
 
   @override
   void initState() {
     super.initState();
-    loadLocalProfile(); 
-    fetchUserProfile(widget.userName ?? "أنيس"); 
-  }
-
-  Future<void> loadLocalProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final username = prefs.getString('username');
-    if (username == null) return;
-
-    setState(() {
-      usernameController.text = username;
-      displayName = username;
-      emailController.text = prefs.getString('email') ?? "";
-      passwordController.text = prefs.getString('password') ?? "";
-      botNameController.text = prefs.getString('bot_name') ?? "";
-      chatpasswordController.text = prefs.getString('chat_password') ?? "";
-    });
-  }
-
-  Future<void> saveLocalProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('username', usernameController.text.trim());
-    await prefs.setString('email', emailController.text.trim());
-    await prefs.setString('password', passwordController.text.trim());
-    await prefs.setString('bot_name', botNameController.text.trim());
-    await prefs.setString('chat_password', chatpasswordController.text.trim());
+    _username = widget.userName; 
+    fetchUserProfile(_username); 
   }
 
   Future<void> fetchUserProfile(String username) async {
-    final response = await http.post(
-      Uri.parse("$baseUrl/profile"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"username": username}),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse("$baseUrl/profile"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"username": username}),
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      setState(() {
-        usernameController.text = data['username'] ?? "";
-        displayName = data['username'] ?? "أنيس";
-        emailController.text = data['email'] ?? "";
-        passwordController.text = data['password'] ?? "";
-        botNameController.text = data['bot_name'] ?? "";
-        chatpasswordController.text = data['chat_password'] ?? "";
-      });
-      await saveLocalProfile(); 
+      print("Profile Response status: ${response.statusCode}");
+      print("Profile Response body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          usernameController.text = data['username'] ?? "";
+          displayName = data['username'] ?? "أنيس";
+          emailController.text = data['email'] ?? "";
+          passwordController.text = data['password'] ?? "";
+          botNameController.text = data['bot_name'] ?? "";
+          chatpasswordController.text = data['chat_password'] ?? "";
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context).translate("failed_to_fetch_profile"))),
+        );
+      }
+    } catch (e) {
+      print("Exception during fetchProfile: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).translate("connection_error"))),
+      );
     }
   }
 
@@ -103,9 +93,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       setState(() {
         displayName = usernameController.text.trim();
       });
-      await saveLocalProfile();
       ScaffoldMessenger.of(context).showSnackBar(
          SnackBar(content: Text(AppLocalizations.of(context).translate("update_success"))),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text(AppLocalizations.of(context).translate("update_failed"))),
       );
     }
   }
@@ -160,15 +153,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                       backgroundColor: Colors.white,
                       child: Icon(Icons.person, size: 60, color: Color(0xFF4F6DA3)),
                     ),
-                    Positioned(
-                      bottom: 5,
-                      right: 5,
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.edit, size: 18, color: Color(0xFF4F6DA3)),
-                      ),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -199,34 +183,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                           buildProfileField(AppLocalizations.of(context).translate("bot_name"), botNameController),
                           buildProfileField(AppLocalizations.of(context).translate("chat_password"), chatpasswordController, isPassword: true),
                           const SizedBox(height: 25),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: updateUserProfile,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4F6DA3),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-                              ),
-                              child:  Text(AppLocalizations.of(context).translate("save"), style: TextStyle(fontSize: 16, color: Colors.white)),
-                            ),
-                          ),
+                          buildActionButton(AppLocalizations.of(context).translate("save"), updateUserProfile, const Color(0xFF4F6DA3)),
                           const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: _logout,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color.fromARGB(255, 173, 72, 72),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-                              ),
-                              child:  Text(
-                                AppLocalizations.of(context).translate("logout"),
-                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
+                          buildActionButton(AppLocalizations.of(context).translate("logout"), _logout, const Color.fromARGB(255, 173, 72, 72)),
                         ],
                       ),
                     ),
@@ -240,10 +199,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     );
   }
 
-  Widget buildProfileField(String title, TextEditingController controller, {
-    bool isPassword = false,
-    bool isMainPassword = false,
-  }) {
+  Widget buildProfileField(String title, TextEditingController controller, {bool isPassword = false, bool isMainPassword = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Column(
@@ -295,6 +251,21 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildActionButton(String text, VoidCallback onPressed, Color color) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        ),
+        child: Text(text, style: const TextStyle(fontSize: 16, color: Colors.white)),
       ),
     );
   }
