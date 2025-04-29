@@ -164,7 +164,7 @@ class _ProgressTrackerPageState extends State<ProgressTrackerPage> {
       Icons.sentiment_very_satisfied,
     ];
 
-    const daysAr = ['إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد'];
+    const daysAr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     final Map<int, int> moodMap = {};
     for (var entry in weeklyMood) {
