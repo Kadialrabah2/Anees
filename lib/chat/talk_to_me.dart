@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anees/app_localizations.dart';
 
 
@@ -25,19 +24,7 @@ class _TalkToMePageState extends State<TalkToMePage> {
       "text": "أهلًا بك ...\nكيف حالك اليوم؟",
       "isUser": false,
     });
-    _loadUserName();
-  }
-
-  Future<void> _loadUserName() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedName = prefs.getString('username') ?? "رفيق أنيس";
-    setState(() {
-      _userName = savedName;
-      _messages[0] = {
-        "text": AppLocalizations.of(context).translate('welcome_user').replaceFirst("{user}", _userName),
-        "isUser": false,
-      };
-    });
+  
   }
 
   void _sendMessage() async {
