@@ -20,6 +20,29 @@ from psycopg2.extras import RealDictCursor
 import os
 import re
 from flask_cors import CORS
+from langdetect import detect
+
+def build_flexible_prompt(username, message, role_context):
+    try:
+        lang = detect(message)
+        if lang == "ar":
+            style = "رد كأنك صديق يفهم، بكلمات قصيرة وطبيعية، بدون رسمية."
+        else:
+            style = "Reply like a caring friend in short, natural English."
+
+        return build_context_prompt(
+            username,
+            message,
+            f"{role_context} {style}"
+        )
+    except:
+        # fallback to English if language can't be detected
+        return build_context_prompt(
+            username,
+            message,
+            f"{role_context} Reply in short, natural English like a friend."
+        )
+
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -637,6 +660,27 @@ def calculate_mood_level(text):
 
     return mood_scores
 
+def build_flexible_prompt(username, message, role_context):
+    try:
+        lang = detect(message)
+        if lang == "ar":
+            style = "رد كأنك صديق يفهم، بكلمات قصيرة وطبيعية، بدون رسمية."
+        else:
+            style = "Reply like a caring friend in short, natural English."
+
+        return build_context_prompt(
+            username,
+            message,
+            f"{role_context} {style}"
+        )
+    except:
+        # fallback to English if language can't be detected
+        return build_context_prompt(
+            username,
+            message,
+            f"{role_context} Reply in short, natural English like a friend."
+        )
+
 @app.route("/diagnosis", methods=["POST"])
 def diagnosis_route():
     try:
@@ -674,12 +718,10 @@ def diagnosis_route():
         
         conn.commit()
     
-        prompt = build_context_prompt(
+        prompt = build_flexible_prompt(
             username,
-            message,
-            "You are a compassionate and supportive mental health assistant. " \
-            "Respond with empathy, clarity, and insight to help the user reflect and cope, " \
-            "but keep your responses short and clear."
+             message,
+             "You are a supportive mental wellness assistant."
         )
 
         llm_response = llm.invoke(prompt)
@@ -710,14 +752,11 @@ def cognitive_route():
         print(">> Incoming /cognitive")
         save_message(username, message, "user")
 
-        prompt = build_context_prompt(
+        prompt = build_flexible_prompt(
             username,
             message,
-            "You are a Cognitive Behavioral Therapy (CBT) chatbot. " \
-            "Your goal is to help users identify and challenge negative thoughts using CBT strategies in a supportive tone, " \
-            "but keep your responses short and clear."
+             "You are a CBT chatbot that helps the user identify and reframe negative thoughts."
         )
-
         llm_response = llm.invoke(prompt)
         response = getattr(llm_response, "content", str(llm_response)).strip()
         response = re.sub(r"[^\u0600-\u06FFa-zA-Z0-9.,?!؛،\s\n]", "", response) 
@@ -742,14 +781,11 @@ def act_route():
         print(">> Incoming /act")
         save_message(username, message, "user")
 
-        prompt = build_context_prompt(
+        prompt = build_flexible_prompt(
             username,
-            message,
-            "You are an Acceptance and Commitment Therapy (ACT) chatbot. " \
-            "Help the user accept their thoughts and feelings without judgment, "
-            "and encourage actions aligned with their values, " \
-            "but keep your responses short and clear."
-        )
+             message,
+            "You are an ACT chatbot who helps the user accept their emotions and take value-based actions."
+        )           
 
         llm_response = llm.invoke(prompt)
         response = getattr(llm_response, "content", str(llm_response)).strip()
@@ -775,12 +811,10 @@ def physical_route():
         print(">> Incoming /physical")
         save_message(username, message, "user")
 
-        prompt = build_context_prompt(
-            username,
-            message,
-            "You are a physical wellness chatbot that motivates users to stay active and healthy. " \
-            "Offer simple and encouraging physical activity tips based on the user’s input, " \
-            "but keep your responses short and clear."
+        prompt = build_flexible_prompt(
+             username,
+             message,
+             "You are a physical wellness chatbot that shares simple activity advice."
         )
 
         llm_response = llm.invoke(prompt)

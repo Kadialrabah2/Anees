@@ -10,3 +10,4 @@ chromadb
 sentence_transformers
 matplotlib
 flask-cors
+langdetect
