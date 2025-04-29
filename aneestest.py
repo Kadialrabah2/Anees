@@ -22,7 +22,7 @@ import re
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 app.debug = True
 # Configure session
 app.config["SECRET_KEY"] = "12345"
