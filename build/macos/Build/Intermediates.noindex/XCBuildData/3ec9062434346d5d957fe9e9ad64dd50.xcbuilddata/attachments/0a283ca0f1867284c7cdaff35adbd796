@@ -1,0 +1,18 @@
+{
+  "" : {
+    "diagnostics" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/flutter_localization-master.dia",
+    "emit-module-dependencies" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/flutter_localization-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/flutter_localization-master-emit-module.dia",
+    "swift-dependencies" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/flutter_localization-master.swiftdeps"
+  },
+  "/Users/rawankhalid/.pub-cache/hosted/pub.dev/flutter_localization-0.2.1/macos/Classes/FlutterLocalizationPlugin.swift" : {
+    "const-values" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/FlutterLocalizationPlugin.swiftconstvalues",
+    "dependencies" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/FlutterLocalizationPlugin.d",
+    "diagnostics" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/FlutterLocalizationPlugin.dia",
+    "index-unit-output-path" : "/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/FlutterLocalizationPlugin.o",
+    "llvm-bc" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/FlutterLocalizationPlugin.bc",
+    "object" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/FlutterLocalizationPlugin.o",
+    "swift-dependencies" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/FlutterLocalizationPlugin.swiftdeps",
+    "swiftmodule" : "/Users/rawankhalid/Documents/projects/Anees/build/macos/Build/Intermediates.noindex/Pods.build/Debug/flutter_localization.build/Objects-normal/arm64/FlutterLocalizationPlugin~partial.swiftmodule"
+  }
+}

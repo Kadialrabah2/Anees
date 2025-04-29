@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app_localizations.dart';
-
-
 import 'welcome.dart';
-import 'signup.dart';
-import 'signin.dart';
-import 'home.dart';
-import 'describe_feeling.dart';
-import 'chat/talk_to_me.dart';
-import 'progress_tracker.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -53,14 +46,8 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/welcome',
       routes: {
         '/welcome': (context) => WelcomePage(),
-        '/signup': (context) => SignUpPage(),
-        '/signin': (context) => SignInPage(),
-        '/home': (context) => HomePage(),
-        '/describe': (context) => DescribeFeelingPage(),
-        '/chat': (context) => TalkToMePage(),
-        '/progress': (context) => ProgressTrackerPage(),
       },
-     
+  
     );
   }
 }
