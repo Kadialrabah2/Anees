@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anees/app_localizations.dart';
-
 
 class TalkToMePage extends StatefulWidget {
   const TalkToMePage({Key? key}) : super(key: key);
@@ -20,11 +20,21 @@ class _TalkToMePageState extends State<TalkToMePage> {
   @override
   void initState() {
     super.initState();
-    _messages.add({
-      "text": "أهلًا بك ...\nكيف حالك اليوم؟",
-      "isUser": false,
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedName = prefs.getString('username') ?? "رفيق أنيس";
+    setState(() {
+      _userName = savedName;
+      _messages.add({
+        "text": AppLocalizations.of(context)
+            .translate('talk_to_me_welcome')
+            .replaceFirst("{user}", savedName),
+        "isUser": false,
+      });
     });
-  
   }
 
   void _sendMessage() async {
@@ -50,22 +60,31 @@ class _TalkToMePageState extends State<TalkToMePage> {
         final data = jsonDecode(response.body);
         final rawReply = data["response"];
         final cleanedReply = rawReply
-          .replaceAll(RegExp(r'\\[nrt]'), '\n')
-          .replaceAll(RegExp(r'\\+'), '')
-          .replaceAll(RegExp(r'\s{2,}'), ' ')
-          .replaceAll(RegExp(r'[^\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFFa-zA-Z0-9.,?!؛،…\s]'), '')
-          .trim();
-
+            .replaceAll(RegExp(r'\\[nrt]'), '\n')
+            .replaceAll(RegExp(r'\\+'), '')
+            .replaceAll(RegExp(r'\s{2,}'), ' ')
+            .replaceAll(RegExp(r'[^\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFFa-zA-Z0-9.,?!؛،…\s]'), '')
+            .trim();
 
         setState(() {
           _messages.add({"text": cleanedReply, "isUser": false});
         });
       } else {
-        _messages.add({"text": AppLocalizations.of(context).translate("server_failure"), "isUser": false});
+        setState(() {
+          _messages.add({
+            "text":
+                AppLocalizations.of(context).translate("server_failure"),
+            "isUser": false
+          });
+        });
       }
     } catch (e) {
       setState(() {
-        _messages.add({"text": AppLocalizations.of(context).translate("server_failure"), "isUser": false});
+        _messages.add({
+          "text":
+              AppLocalizations.of(context).translate("server_failure"),
+          "isUser": false
+        });
       });
     }
   }
@@ -98,17 +117,22 @@ class _TalkToMePageState extends State<TalkToMePage> {
                   itemBuilder: (context, index) {
                     final isUser = _messages[index]["isUser"];
                     return Align(
-                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isUser ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
                         decoration: BoxDecoration(
-                          color: isUser ? Colors.white : const Color(0xFF4F6DA3),
+                          color:
+                              isUser ? Colors.white : const Color(0xFF4F6DA3),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
-                            bottomLeft: isUser ? Radius.circular(20) : Radius.zero,
-                            bottomRight: isUser ? Radius.zero : Radius.circular(20),
+                            bottomLeft:
+                                isUser ? Radius.circular(20) : Radius.zero,
+                            bottomRight:
+                                isUser ? Radius.zero : Radius.circular(20),
                           ),
                         ),
                         child: Text(
@@ -144,9 +168,10 @@ class _TalkToMePageState extends State<TalkToMePage> {
                         child: TextField(
                           controller: _messageController,
                           textAlign: TextAlign.right,
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: AppLocalizations.of(context).translate("write_message_hint"),
+                            hintText: AppLocalizations.of(context)
+                                .translate("write_message_hint"),
                             hintStyle: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -158,7 +183,8 @@ class _TalkToMePageState extends State<TalkToMePage> {
                       child: const CircleAvatar(
                         backgroundColor: Colors.white,
                         radius: 25,
-                        child: Icon(Icons.send, color: Color(0xFF4F6DA3), size: 28),
+                        child: Icon(Icons.send,
+                            color: Color(0xFF4F6DA3), size: 28),
                       ),
                     ),
                   ],

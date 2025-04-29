@@ -119,7 +119,8 @@
   "enter_verification_code_hint": "Enter the 5-digit verification code",
   "error_invalid_code": "Please enter a valid 5-digit verification code",
   "continue": "Continue",
-  
+  "talk_to_me_welcome": "Welcome {user}...\nHow are you today?",
+
   "new_password": "New Password",
   "confirm_password": "Confirm Password",
   "enter_password_hint": "Enter your password here",

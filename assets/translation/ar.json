@@ -113,7 +113,8 @@
   "success_code_sent": "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
   "error_server": "حدث خطأ:",
   "error_connection": "خطأ في الاتصال بالسيرفر:",
-  
+  "talk_to_me_welcome": "أهلًا بك {user} ...\nكيف حالك اليوم؟",
+
   "enter_verification_code": "إدخال رمز التحقق",
   "code_sent_to_email": "تم إرسال رمز التحقق إلى البريد الإلكتروني",
   "enter_verification_code_hint": "أدخل رمز التحقق المكون من 5 أرقام",
